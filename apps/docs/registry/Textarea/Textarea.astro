@@ -1,0 +1,13 @@
+---
+import { cn } from "../_shared/lib/cn";
+import { textarea } from "./Textarea.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"textarea">, "class"> & {
+  class?: string;
+};
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<textarea class={cn(textarea(), className)} {...rest}></textarea>
