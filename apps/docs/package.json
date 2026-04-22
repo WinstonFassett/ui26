@@ -9,6 +9,10 @@
     "preview": "astro preview",
     "astro": "astro"
   },
+  "devDependencies": {
+    "@winstonfassett/web-dev-mcp-astro": "link:../../../web-dev-mcp/packages/adapter-astro",
+    "@winstonfassett/web-dev-mcp-gateway": "link:../../../web-dev-mcp/packages/gateway"
+  },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
     "@astrojs/starlight": "^0.38.3",

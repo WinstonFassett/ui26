@@ -8,9 +8,11 @@ import react from '@astrojs/react';
 
 import svelte from '@astrojs/svelte';
 
+import webDevMcp from '@winstonfassett/web-dev-mcp-astro';
+
 // https://astro.build/config
 export default defineConfig({
-    integrations: [starlight({
+    integrations: [webDevMcp(), starlight({
         title: 'ui26',
         social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
         sidebar: [

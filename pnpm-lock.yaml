@@ -62,6 +62,13 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+    devDependencies:
+      '@winstonfassett/web-dev-mcp-astro':
+        specifier: link:../../../web-dev-mcp/packages/adapter-astro
+        version: link:../../../web-dev-mcp/packages/adapter-astro
+      '@winstonfassett/web-dev-mcp-gateway':
+        specifier: link:../../../web-dev-mcp/packages/gateway
+        version: link:../../../web-dev-mcp/packages/gateway
 
 packages:
 
