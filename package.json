@@ -1,0 +1,19 @@
+{
+  "name": "ui26",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Winston's cross-framework UI for 2026. Source-distributed wrappers over tailwind-variants.",
+  "author": "Winston Fassett",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "pnpm --filter docs dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint"
+  }
+}
