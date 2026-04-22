@@ -1,0 +1,55 @@
+---
+title: Separator
+description: Dumb Separator primitive. Three wrappers (React, Svelte, Astro) over one shared tailwind-variants config with horizontal/vertical orientation.
+---
+
+import { Separator as SeparatorReact } from "@registry/Separator/Separator.tsx";
+import SeparatorSvelte from "@registry/Separator/Separator.svelte";
+import SeparatorAstro from "@registry/Separator/Separator.astro";
+
+Same `Separator` rendered three times per row — React, Svelte, Astro — all sharing `Separator.tv.ts`. Decorative by default; pass `decorative={false}` for the proper `role="separator"` + `aria-orientation` pairing.
+
+## Horizontal
+
+<div class="not-content grid grid-cols-3 gap-6 my-6">
+  <div>
+    <p class="text-sm">React · above</p>
+    <SeparatorReact class="my-3" client:load />
+    <p class="text-sm">React · below</p>
+  </div>
+  <div>
+    <p class="text-sm">Svelte · above</p>
+    <SeparatorSvelte class="my-3" client:load />
+    <p class="text-sm">Svelte · below</p>
+  </div>
+  <div>
+    <p class="text-sm">Astro · above</p>
+    <SeparatorAstro class="my-3" />
+    <p class="text-sm">Astro · below</p>
+  </div>
+</div>
+
+## Vertical
+
+<div class="not-content grid grid-cols-3 gap-6 my-6">
+  <div class="flex items-center gap-3 h-8">
+    <p class="text-sm">React · left</p>
+    <SeparatorReact orientation="vertical" client:load />
+    <p class="text-sm">right</p>
+  </div>
+  <div class="flex items-center gap-3 h-8">
+    <p class="text-sm">Svelte · left</p>
+    <SeparatorSvelte orientation="vertical" client:load />
+    <p class="text-sm">right</p>
+  </div>
+  <div class="flex items-center gap-3 h-8">
+    <p class="text-sm">Astro · left</p>
+    <SeparatorAstro orientation="vertical" />
+    <p class="text-sm">right</p>
+  </div>
+</div>
+
+## Under the hood
+
+- **Shared config:** `apps/docs/registry/Separator/Separator.tv.ts` — one `orientation` variant (`horizontal` | `vertical`), default `horizontal`.
+- **Wrappers:** `apps/docs/registry/Separator/Separator.{tsx,svelte,astro}` — `<div>` with `role="none"` by default, flipped to `role="separator"` + `aria-orientation` when `decorative={false}` is passed.

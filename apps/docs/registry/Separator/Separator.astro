@@ -1,0 +1,26 @@
+---
+import { cn } from "../_shared/lib/cn";
+import { separator, type SeparatorVariants } from "./Separator.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"div">, "class"> &
+  SeparatorVariants & {
+    class?: string;
+    decorative?: boolean;
+  };
+
+const {
+  orientation = "horizontal",
+  decorative = true,
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<div
+  role={decorative ? "none" : "separator"}
+  aria-orientation={decorative ? undefined : orientation}
+  class={cn(separator({ orientation }), className)}
+  {...rest}
+>
+</div>
