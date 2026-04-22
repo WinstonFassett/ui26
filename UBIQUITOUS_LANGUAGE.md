@@ -10,7 +10,7 @@ Glossary for the ui26 / tvui (tentative) cross-framework design-system project. 
 | **Polyglot component** | Adjective for a **component** that has wrappers for more than one framework. Avoids hard-coding the count (initial 3 = R+S+A, potential future: Vue, Solid, Qwik, Lit). | triad, multi-framework pattern |
 | **Wrapper** | A single per-framework source file (`Button.tsx`, `Button.svelte`, `Button.astro`, future `.vue` / `.ts` Lit / `.solid.tsx`) that consumes the **theme config** and renders the element. | binding, adapter, port |
 | **Wrappers** (plural) | The full set of per-framework files for one **component**. No collective noun needed — just "a component's wrappers". | triad, variants |
-| **Theme config** | The `tailwind-variants` definition (`theme/button.ts`) declaring variants/slots; lives in **core**, imported identically by every **wrapper**. | tv file, variants file, style config |
+| **Theme config** | The `tailwind-variants` definition (e.g. `Button.tv.ts`) declaring variants/slots; colocated with its **component**'s wrappers and imported by each. | tv file, variants file, style config |
 | **Primitive** | A dumb, stateless **component** (Button, Badge, Input, Card, Label, Textarea). Wave 1 scope. | atom, base component |
 | **Compound component** | A stateful, multi-part **component** that composes **primitives** with state (Dialog, Dropdown, Command palette). Wave 3+, *only if wanted* — not a commitment. | complex component, stateful component |
 | **Headless primitive** | A **compound component** whose state is framework-agnostic (Zag/Machina style) and whose rendering is provided by the consumer. Wave 3+ optional. | unstyled primitive |
@@ -20,15 +20,15 @@ Glossary for the ui26 / tvui (tentative) cross-framework design-system project. 
 
 | Term | Definition | Aliases to avoid |
 | --- | --- | --- |
-| **Shared (authoring)** | In-monorepo dir (`registry/_shared/`) holding **theme configs**, `cn`, and **tokens** CSS. **Not published as npm.** Shared only among maintainers to keep wrappers in lockstep; at emit time its contents are inlined or emitted as separate `registry:base` / `registry:lib` entries. | core, @tvui/core |
+| **Shared (authoring)** | In-monorepo dir (`apps/docs/registry/_shared/`) holding `cn` and **tokens** CSS that apply to every component. **Theme configs are NOT here** — they're colocated with their component (e.g. `Button/Button.tv.ts`). Not published as npm; at emit time its contents are inlined or emitted as separate `registry:base` / `registry:lib` entries. | core, @tvui/core |
 | **Registry** | A shadcn-compatible JSON-serving endpoint (`@tvui-react`, `@tvui-svelte`, `@tvui-astro`) — one per framework. | namespace, channel |
 | **Registry entry** | One component's JSON manifest within a **registry** (e.g. `/r/react/button.json`). | manifest, component spec |
-| **Wrapper source** | On-disk **triad** files (`registry/Button/…`) that the build script scans to emit **registry entries**. | authoring source |
+| **Wrapper source** | On-disk wrapper files (`apps/docs/registry/<Component>/…`) that the build script scans to emit **registry entries**. | authoring source |
 | **Source distribution** | The shadcn-style model where the CLI copies **wrapper** source into the consumer's repo; the consumer owns and may edit the code. | copy-paste distribution, shadcn-style |
 | **Prebuilt distribution** | Traditional model: consumer installs a compiled npm package and imports from it; cannot edit source. webcoreui uses this. | library install, npm-only |
 | **Delegator CLI** | Optional `@tvui/cli` — a thin wrapper that detects the consumer's framework and shells out to `shadcn add <registry>/<component>`. Convenience only; stock `npx shadcn add <url>` works without it. Pattern borrowed from Kibo UI. | our CLI, ui26 CLI |
 | **Tokens** | The design-system constants (OKLch colors, spacing, radii, typography) declared as CSS variables, sourced from tix's DESIGN.md. Distributed as a `registry:base` entry — installed once per consumer project. | design tokens, CSS vars |
-| **Inlining** | Build-time transform in `scripts/build-registry.ts` that replaces `import { button } from '../_shared/theme/button'` with the file's literal contents, so each emitted **registry entry** is self-contained and the consumer installs a single file with no extra deps. | bundling, expansion |
+| **Inlining** | Build-time transform (Wave 2, `scripts/build-registry.ts`) that replaces `import { button } from './Button.tv'` with the file's literal contents, so each emitted **registry entry** is self-contained and the consumer installs a single file with no extra deps. | bundling, expansion |
 
 ## Project structure
 
