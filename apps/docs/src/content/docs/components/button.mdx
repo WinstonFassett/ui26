@@ -35,11 +35,21 @@ The same `Button` is rendered below three times — once per framework. All thre
 
 ## Sizes
 
-<div class="not-content flex flex-wrap items-center gap-3 my-6">
-  <ButtonReact size="sm" client:load>Small</ButtonReact>
-  <ButtonReact size="default" client:load>Default</ButtonReact>
-  <ButtonReact size="lg" client:load>Large</ButtonReact>
+<div class="not-content grid grid-cols-4 gap-3 items-center my-6">
+  <ButtonReact size="sm" client:load>React · sm</ButtonReact>
+  <ButtonReact size="default" client:load>React · default</ButtonReact>
+  <ButtonReact size="lg" client:load>React · lg</ButtonReact>
   <ButtonReact size="icon" client:load>⚡</ButtonReact>
+
+  <ButtonSvelte size="sm" client:load>Svelte · sm</ButtonSvelte>
+  <ButtonSvelte size="default" client:load>Svelte · default</ButtonSvelte>
+  <ButtonSvelte size="lg" client:load>Svelte · lg</ButtonSvelte>
+  <ButtonSvelte size="icon" client:load>⚡</ButtonSvelte>
+
+  <ButtonAstro size="sm">Astro · sm</ButtonAstro>
+  <ButtonAstro size="default">Astro · default</ButtonAstro>
+  <ButtonAstro size="lg">Astro · lg</ButtonAstro>
+  <ButtonAstro size="icon">⚡</ButtonAstro>
 </div>
 
 ## Under the hood
