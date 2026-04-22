@@ -1,0 +1,25 @@
+---
+title: Design Tokens
+description: Core color and radius tokens backing ui26's components. Sourced from tix DESIGN.md.
+---
+
+These tokens live in [`registry/_shared/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/registry/_shared/tokens.css) and are mapped to Tailwind utilities via `@theme inline` in this app's global stylesheet. Toggle your theme (top-right) to see them switch.
+
+## Surface tokens
+
+<div class="not-content grid grid-cols-2 gap-3 my-6">
+  <div class="bg-background text-foreground border border-border rounded-md p-4">bg-background</div>
+  <div class="bg-card text-card-foreground border border-border rounded-md p-4">bg-card</div>
+  <div class="bg-primary text-primary-foreground rounded-md p-4">bg-primary</div>
+  <div class="bg-secondary text-secondary-foreground rounded-md p-4">bg-secondary</div>
+  <div class="bg-muted text-muted-foreground rounded-md p-4">bg-muted</div>
+  <div class="bg-accent text-accent-foreground rounded-md p-4">bg-accent</div>
+  <div class="bg-destructive text-destructive-foreground rounded-md p-4">bg-destructive</div>
+  <div class="bg-popover text-popover-foreground border border-border rounded-md p-4">bg-popover</div>
+</div>
+
+## Reference
+
+Each token resolves to a CSS custom property in `:root` (light) and `[data-theme="dark"]` (dark). The full list:
+
+`background`, `foreground`, `card`, `card-foreground`, `popover`, `popover-foreground`, `primary`, `primary-foreground`, `secondary`, `secondary-foreground`, `muted`, `muted-foreground`, `accent`, `accent-foreground`, `destructive`, `destructive-foreground`, `border`, `input`, `ring`, `radius`.

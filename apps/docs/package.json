@@ -18,10 +18,12 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.0.1",
+    "clsx": "^2.1.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "sharp": "^0.34.2",
     "svelte": "^5.55.4",
+    "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   }
