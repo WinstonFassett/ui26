@@ -7,7 +7,7 @@ import { Button as ButtonReact } from "@registry/Button/Button.tsx";
 import ButtonSvelte from "@registry/Button/Button.svelte";
 import ButtonAstro from "@registry/Button/Button.astro";
 
-The same `Button` is rendered below three times — once per framework. All three import the same `button` config from [`registry/_shared/theme/button.ts`](https://github.com/WinstonFassett/ui26/tree/main/registry/_shared/theme/button.ts), so the visual output is identical.
+The same `Button` is rendered below three times — once per framework. All three import the same `button` config from `apps/docs/registry/Button/Button.tv.ts`, so the visual output is identical.
 
 ## Variants
 
@@ -54,6 +54,6 @@ The same `Button` is rendered below three times — once per framework. All thre
 
 ## Under the hood
 
-- **Shared config:** `registry/_shared/theme/button.ts` — a `tv()` call producing the class string.
-- **Wrappers:** `registry/Button/Button.{tsx,svelte,astro}` — thin passthroughs that call `button({variant, size})` with `cn()`.
-- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `registry/_shared/tokens.css` via the `@theme inline` mapping in the docs app's `global.css`.
+- **Shared config:** `apps/docs/registry/Button/Button.tv.ts` — a `tv()` call producing the class string. Colocated with its component.
+- **Wrappers:** `apps/docs/registry/Button/Button.{tsx,svelte,astro}` — thin passthroughs that call `button({variant, size})` with `cn()`.
+- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `apps/docs/registry/_shared/tokens.css` via the `@theme inline` mapping in the docs app's `global.css`.

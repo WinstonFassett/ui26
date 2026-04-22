@@ -35,7 +35,7 @@ export default defineConfig({
         plugins: [tailwindcss()],
         resolve: {
             alias: {
-                '@registry': fileURLToPath(new URL('../../registry', import.meta.url)),
+                '@registry': fileURLToPath(new URL('./registry', import.meta.url)),
             },
         },
     },

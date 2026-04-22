@@ -2,7 +2,7 @@
   import type { HTMLButtonAttributes } from "svelte/elements";
   import type { Snippet } from "svelte";
   import { cn } from "../_shared/lib/cn";
-  import { button, type ButtonVariants } from "../_shared/theme/button";
+  import { button, type ButtonVariants } from "./Button.tv";
 
   type Props = Omit<HTMLButtonAttributes, "size" | "class"> &
     ButtonVariants & {
