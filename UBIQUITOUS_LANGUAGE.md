@@ -13,7 +13,7 @@ Glossary for the ui26 / tvui (tentative) cross-framework design-system project. 
 | **Theme config** | The `tailwind-variants` definition (e.g. `Button.tv.ts`) declaring variants/slots; colocated with its **component**'s wrappers and imported by each. | tv file, variants file, style config |
 | **Primitive** | A dumb, stateless **component** (Button, Badge, Input, Card, Label, Textarea). Wave 1 scope. | atom, base component |
 | **Compound component** | A stateful, multi-part **component** that composes **primitives** with state (Dialog, Dropdown, Command palette). Wave 3+, *only if wanted* — not a commitment. | complex component, stateful component |
-| **Headless primitive** | A **compound component** whose state is framework-agnostic (Zag/Machina style) and whose rendering is provided by the consumer. Wave 3+ optional. | unstyled primitive |
+| **Headless primitive** | A **compound component** whose state is framework-agnostic (Zag/Matchina style) and whose rendering is provided by the consumer. Wave 3+ optional. | unstyled primitive |
 | **Block** | A large compound pattern or page-level assembly (Hero, Profile, FAQ, SocialProof) that stitches multiple **primitives** and **compound components** together. Associated with premium-feel design systems (webcoreui has ~30). **Stretch / far-future scope** — not a Wave 1–3 commitment, but not precluded; the architecture should allow them to land later without restructuring. | recipe, pattern, example |
 
 ## Distribution
@@ -44,7 +44,7 @@ Glossary for the ui26 / tvui (tentative) cross-framework design-system project. 
 | Term | Definition | Aliases to avoid |
 | --- | --- | --- |
 | **Steel thread** | Minimum end-to-end slice that exercises every load-bearing layer (tokens → theme config → triad wrappers → docs rendering) without any polish scope. | MVP, POC, spike |
-| **Wave** | A bounded milestone of scope. Current plan: **Wave 0** = research + inventory. **Wave 1** = primitives + external consumer. **Wave 2** = registry JSON + delegator CLI. **Wave 3+** = headless primitives via Machina, React Native port. | phase, milestone, sprint |
+| **Wave** | A bounded milestone of scope. Current plan: **Wave 0** = research + inventory. **Wave 1** = primitives + external consumer. **Wave 2** = registry JSON + delegator CLI. **Wave 3+** = headless primitives via Matchina, React Native port. | phase, milestone, sprint |
 
 ## Prior art and people
 
@@ -56,8 +56,8 @@ Glossary for the ui26 / tvui (tentative) cross-framework design-system project. 
 | **shadcn/ui** | React-only origin of the registry+CLI model. Uses **`cva`**, not `tv`. | Registry format target. |
 | **shadcn-svelte** | Huntabyte's Svelte port of shadcn. | Closest non-React blueprint; uses same registry schema. |
 | **Ark UI** | Chakra team's cross-framework (React/Vue/Solid/Svelte) headless primitive set. Powered by Zag.js. | Model for **headless primitives** wave. |
-| **Zag.js** | Framework-agnostic finite-state machines powering Ark UI. | Direct analogue to Winston's **Machina**. |
-| **Machina** | Winston's own TypeScript state-machine micro-library. Framework-agnostic. | Planned state engine for ui26's **headless primitives** (Wave 3). |
+| **Zag.js** | Framework-agnostic finite-state machines powering Ark UI. | Direct analogue to Winston's **Matchina**. |
+| **Matchina** | Winston's own TypeScript state-machine micro-library. Framework-agnostic. | Planned state engine for ui26's **headless primitives** (Wave 3). |
 | **Fernando Rojo** | Vercel's Head of Mobile; creator of Solito, Dripsy, Moti. Authored the *"Composition is all you need"* talk at React Universe Conf 2025. | Philosophical north star for component API design. |
 | **tix** / **tix-ui** | Winston's Linear-inspired ticket tracker; its `DESIGN.md` is the canonical **aesthetic voice** source for ui26. | Source of **tokens** and visual opinionation. |
 | **job-search** | Winston's secondary reference app at `~/dev/tries/2026-03-01-job-search`. | Second data point for extractable-primitive inventory. |
@@ -87,7 +87,7 @@ Glossary for the ui26 / tvui (tentative) cross-framework design-system project. 
 
 > **Winston:** "Can we ship the **Dialog** as a **primitive** in Wave 1?"
 
-> **Claude:** "No — **Dialog** is a **compound component** because it's stateful. First-wave scope is **primitives** only. **Dialog** becomes a **headless primitive** in Wave 3 once we wire **Machina** in."
+> **Claude:** "No — **Dialog** is a **compound component** because it's stateful. First-wave scope is **primitives** only. **Dialog** becomes a **headless primitive** in Wave 3 once we wire **Matchina** in."
 
 > **Winston:** "Fine. For the Wave-1 Button **steel thread** — does the consumer install from the **registry** or from **core**?"
 
