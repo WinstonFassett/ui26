@@ -15,5 +15,10 @@
     "dev": "pnpm --filter docs dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.5.0",
+    "tailwind-variants": "^3.2.2"
   }
 }

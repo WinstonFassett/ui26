@@ -1,0 +1,49 @@
+---
+title: Button
+description: Dumb, stateless Button primitive. Three wrappers (React, Svelte, Astro) over one shared tailwind-variants config.
+---
+
+import { Button as ButtonReact } from "@registry/Button/Button.tsx";
+import ButtonSvelte from "@registry/Button/Button.svelte";
+import ButtonAstro from "@registry/Button/Button.astro";
+
+The same `Button` is rendered below three times — once per framework. All three import the same `button` config from [`registry/_shared/theme/button.ts`](https://github.com/WinstonFassett/ui26/tree/main/registry/_shared/theme/button.ts), so the visual output is identical.
+
+## Variants
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <ButtonReact client:load>React · default</ButtonReact>
+  <ButtonSvelte client:load>Svelte · default</ButtonSvelte>
+  <ButtonAstro>Astro · default</ButtonAstro>
+
+  <ButtonReact variant="secondary" client:load>React · secondary</ButtonReact>
+  <ButtonSvelte variant="secondary" client:load>Svelte · secondary</ButtonSvelte>
+  <ButtonAstro variant="secondary">Astro · secondary</ButtonAstro>
+
+  <ButtonReact variant="outline" client:load>React · outline</ButtonReact>
+  <ButtonSvelte variant="outline" client:load>Svelte · outline</ButtonSvelte>
+  <ButtonAstro variant="outline">Astro · outline</ButtonAstro>
+
+  <ButtonReact variant="ghost" client:load>React · ghost</ButtonReact>
+  <ButtonSvelte variant="ghost" client:load>Svelte · ghost</ButtonSvelte>
+  <ButtonAstro variant="ghost">Astro · ghost</ButtonAstro>
+
+  <ButtonReact variant="destructive" client:load>React · destructive</ButtonReact>
+  <ButtonSvelte variant="destructive" client:load>Svelte · destructive</ButtonSvelte>
+  <ButtonAstro variant="destructive">Astro · destructive</ButtonAstro>
+</div>
+
+## Sizes
+
+<div class="not-content flex flex-wrap items-center gap-3 my-6">
+  <ButtonReact size="sm" client:load>Small</ButtonReact>
+  <ButtonReact size="default" client:load>Default</ButtonReact>
+  <ButtonReact size="lg" client:load>Large</ButtonReact>
+  <ButtonReact size="icon" client:load>⚡</ButtonReact>
+</div>
+
+## Under the hood
+
+- **Shared config:** `registry/_shared/theme/button.ts` — a `tv()` call producing the class string.
+- **Wrappers:** `registry/Button/Button.{tsx,svelte,astro}` — thin passthroughs that call `button({variant, size})` with `cn()`.
+- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `registry/_shared/tokens.css` via the `@theme inline` mapping in the docs app's `global.css`.
