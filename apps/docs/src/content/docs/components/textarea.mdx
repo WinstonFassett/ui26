@@ -3,9 +3,9 @@ title: Textarea
 description: Dumb, stateless Textarea primitive. Three wrappers (React, Svelte, Astro) over one shared class config. Error state driven by aria-invalid.
 ---
 
-import { Textarea as TextareaReact } from "@registry/Textarea/Textarea.tsx";
-import TextareaSvelte from "@registry/Textarea/Textarea.svelte";
-import TextareaAstro from "@registry/Textarea/Textarea.astro";
+import { Textarea as TextareaReact } from "@registry/textarea/textarea.tsx";
+import TextareaSvelte from "@registry/textarea/textarea.svelte";
+import TextareaAstro from "@registry/textarea/textarea.astro";
 
 Same `Textarea` rendered three times per row — React, Svelte, Astro. No `variant` or `size` prop: error state comes from `aria-invalid`, height grows with content via `field-sizing-content`.
 

@@ -3,12 +3,12 @@ title: Switch
 description: Dumb, stateless Switch primitive. Three wrappers (React, Svelte, Astro) over one shared class config. Hidden checkbox + styled track/thumb, no JS.
 ---
 
-import { Switch as SwitchReact } from "@registry/Switch/Switch.tsx";
-import SwitchSvelte from "@registry/Switch/Switch.svelte";
-import SwitchAstro from "@registry/Switch/Switch.astro";
-import { Label as LabelReact } from "@registry/Label/Label.tsx";
-import LabelSvelte from "@registry/Label/Label.svelte";
-import LabelAstro from "@registry/Label/Label.astro";
+import { Switch as SwitchReact } from "@registry/switch/switch.tsx";
+import SwitchSvelte from "@registry/switch/switch.svelte";
+import SwitchAstro from "@registry/switch/switch.astro";
+import { Label as LabelReact } from "@registry/label/label.tsx";
+import LabelSvelte from "@registry/label/label.svelte";
+import LabelAstro from "@registry/label/label.astro";
 
 Same `Switch` rendered three times per row — React, Svelte, Astro. Hidden `<input type="checkbox">` drives `:checked` state, which Tailwind's `has-[:checked]:` and `peer-checked:` selectors translate into track color + thumb position. No JS.
 

@@ -3,12 +3,12 @@ title: Label
 description: Dumb, stateless Label primitive. Three wrappers (React, Svelte, Astro) over one shared class config.
 ---
 
-import { Label as LabelReact } from "@registry/Label/Label.tsx";
-import LabelSvelte from "@registry/Label/Label.svelte";
-import LabelAstro from "@registry/Label/Label.astro";
-import { Input as InputReact } from "@registry/Input/Input.tsx";
-import InputSvelte from "@registry/Input/Input.svelte";
-import InputAstro from "@registry/Input/Input.astro";
+import { Label as LabelReact } from "@registry/label/label.tsx";
+import LabelSvelte from "@registry/label/label.svelte";
+import LabelAstro from "@registry/label/label.astro";
+import { Input as InputReact } from "@registry/input/input.tsx";
+import InputSvelte from "@registry/input/input.svelte";
+import InputAstro from "@registry/input/input.astro";
 
 Same `Label` rendered three times per row — React, Svelte, Astro. No `variant` or `size` prop; disabled styling is driven by the `peer` of an adjacent disabled input.
 

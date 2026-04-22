@@ -1,0 +1,13 @@
+---
+import { cn } from "../lib/utils";
+import { checkbox } from "./checkbox.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"input">, "class" | "type"> & {
+  class?: string;
+};
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<input type="checkbox" class={cn(checkbox(), className)} {...rest} />

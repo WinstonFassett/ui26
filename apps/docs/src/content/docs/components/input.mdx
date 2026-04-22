@@ -3,9 +3,9 @@ title: Input
 description: Dumb, stateless Input primitive. Three wrappers (React, Svelte, Astro) over one shared class config. Error state driven by aria-invalid.
 ---
 
-import { Input as InputReact } from "@registry/Input/Input.tsx";
-import InputSvelte from "@registry/Input/Input.svelte";
-import InputAstro from "@registry/Input/Input.astro";
+import { Input as InputReact } from "@registry/input/input.tsx";
+import InputSvelte from "@registry/input/input.svelte";
+import InputAstro from "@registry/input/input.astro";
 
 Same `Input` rendered three times per row — React, Svelte, Astro. No `variant` or `size` prop: error state comes from `aria-invalid`, sizing comes from `className`.
 

@@ -3,9 +3,9 @@ title: Button
 description: Dumb, stateless Button primitive. Three wrappers (React, Svelte, Astro) over one shared tailwind-variants config.
 ---
 
-import { Button as ButtonReact } from "@registry/Button/Button.tsx";
-import ButtonSvelte from "@registry/Button/Button.svelte";
-import ButtonAstro from "@registry/Button/Button.astro";
+import { Button as ButtonReact } from "@registry/button/button.tsx";
+import ButtonSvelte from "@registry/button/button.svelte";
+import ButtonAstro from "@registry/button/button.astro";
 
 The same `Button` is rendered below three times — once per framework. All three import the same `button` config from `apps/docs/registry/Button/Button.tv.ts`, so the visual output is identical.
 
@@ -56,4 +56,4 @@ The same `Button` is rendered below three times — once per framework. All thre
 
 - **Shared config:** `apps/docs/registry/Button/Button.tv.ts` — a `tv()` call producing the class string. Colocated with its component.
 - **Wrappers:** `apps/docs/registry/Button/Button.{tsx,svelte,astro}` — thin passthroughs that call `button({variant, size})` with `cn()`.
-- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `apps/docs/registry/_shared/tokens.css` via the `@theme inline` mapping in the docs app's `global.css`.
+- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `apps/docs/registry/tokens.css` via the `@theme inline` mapping in the docs app's `global.css`.
