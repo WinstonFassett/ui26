@@ -17,7 +17,7 @@ export const button = tv({
       secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
       outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
       ghost: "hover:bg-accent hover:text-accent-foreground",
-      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
+      destructive: "bg-destructive/95 text-destructive-foreground hover:bg-destructive/85 focus-visible:ring-destructive/25",
     },
     size: {
       default: "h-9 px-4 py-2",

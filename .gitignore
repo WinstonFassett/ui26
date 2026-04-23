@@ -35,3 +35,9 @@ npm-debug.log*
 pnpm-debug.log*
 
 .web-dev-mcp
+
+# Spike artifacts
+.spike-screenshots/
+.spike-baseline.mjs
+.spike-after.mjs
+.spike-check.mjs
