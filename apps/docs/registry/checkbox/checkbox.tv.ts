@@ -2,9 +2,9 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const checkbox = tv({
   base: [
-    "size-4 shrink-0 cursor-pointer accent-primary",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring/50",
-    "aria-invalid:outline aria-invalid:outline-2 aria-invalid:outline-destructive",
+    "size-[14px] shrink-0 cursor-pointer accent-primary rounded-[3px]",
+    "focus-visible:outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "aria-invalid:outline aria-invalid:outline-[1.5px] aria-invalid:outline-destructive",
     "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
   ],
   variants: {},

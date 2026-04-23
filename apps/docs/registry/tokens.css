@@ -1,87 +1,82 @@
-/* ui26 design tokens — warm neutral monochrome
+/* ui26 design tokens — warm monochrome, Linear-compact vibe
  *
- * Aesthetic voice: tix-ui (Linear-style, quiet, tool-like, information-dense).
- * Warm-shifted against stock shadcn: chroma ≈ 0.003 at hue 80 (amber-neutral),
- * so the palette feels like bone/off-white and charcoal rather than clinical gray.
- *
- * Taste decisions are documented in TASTE-AUDIT.md at the repo root.
- *
- * Pure CSS custom properties. Consumed by apps/docs/src/styles/global.css
- * where they map to Tailwind utilities via @theme inline.
- * Dark mode: [data-theme="dark"] (Starlight) or .dark (class-based).
+ * Hue shifted to 65 (warmer amber-bone, not clinical).
+ * Borders crisper, destructive muted (less stoplight).
+ * Shadows tinted in light, deeper in dark.
  */
 
 :root {
-  /* Surfaces — warm off-white, not pure #fff. */
-  --background: oklch(0.995 0.002 80);
-  --foreground: oklch(0.18 0.005 80);
+  /* Warm off-white page; card slightly whiter for subtle layering. */
+  --background: oklch(0.985 0.003 65);
+  --foreground: oklch(0.17 0.008 65);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.005 80);
+  --card-foreground: oklch(0.17 0.008 65);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.005 80);
+  --popover-foreground: oklch(0.17 0.008 65);
 
-  /* Primary is near-black warm — matches tix "monochrome + no brand accent". */
-  --primary: oklch(0.22 0.006 80);
-  --primary-foreground: oklch(0.985 0.002 80);
+  /* Near-black warm. Primary CTA anchor. */
+  --primary: oklch(0.2 0.01 65);
+  --primary-foreground: oklch(0.99 0.003 65);
 
-  --secondary: oklch(0.965 0.004 80);
-  --secondary-foreground: oklch(0.22 0.006 80);
-  --muted: oklch(0.965 0.004 80);
-  --muted-foreground: oklch(0.54 0.006 80);
-  --accent: oklch(0.96 0.006 80);
-  --accent-foreground: oklch(0.22 0.006 80);
+  --secondary: oklch(0.955 0.006 65);
+  --secondary-foreground: oklch(0.2 0.01 65);
+  --muted: oklch(0.955 0.006 65);
+  --muted-foreground: oklch(0.5 0.01 65);
+  --accent: oklch(0.945 0.008 65);
+  --accent-foreground: oklch(0.2 0.01 65);
 
-  /* Destructive — held at tix value; ring-color softened in button.tv. */
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0.002 80);
+  /* Destructive — muted burnt red, not stoplight. */
+  --destructive: oklch(0.55 0.16 28);
+  --destructive-foreground: oklch(0.99 0.003 65);
 
-  /* Borders + input carry tint so they don't read as clinical gray. */
-  --border: oklch(0.915 0.004 80);
-  --input: oklch(0.915 0.004 80);
-  --ring: oklch(0.68 0.01 80);
+  /* Borders crisper than stock shadcn — Linear-style edge definition. */
+  --border: oklch(0.9 0.008 65);
+  --input: oklch(0.89 0.008 65);
+  --ring: oklch(0.45 0.015 65);
 
   --radius: 0.625rem;
 
-  /* Tinted shadow colors — warm amber tint at low opacity.
-   * Replaces stock shadcn "black-at-low-opacity" (flagged by taste-skill/redesign).
-   */
-  --shadow-color: 40 25 5;
-  --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.04);
+  /* Tinted shadows — warm amber at low opacity (light), depth (dark). */
+  --shadow-color: 30 20 5;
+  --shadow-xs: 0 1px 1px rgb(var(--shadow-color) / 0.04);
   --shadow-sm: 0 1px 2px rgb(var(--shadow-color) / 0.05), 0 1px 1px rgb(var(--shadow-color) / 0.03);
   --shadow-md: 0 4px 10px -2px rgb(var(--shadow-color) / 0.06), 0 2px 4px rgb(var(--shadow-color) / 0.03);
   --shadow-lg: 0 10px 24px -6px rgb(var(--shadow-color) / 0.08), 0 4px 8px rgb(var(--shadow-color) / 0.04);
+
+  /* Inner highlight for tactile surfaces (Linear/Raycast signature). */
+  --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.08);
 }
 
 [data-theme="dark"],
 .dark {
-  /* Dark surfaces — off-black warm, not pure neutral black. */
-  --background: oklch(0.16 0.004 80);
-  --foreground: oklch(0.975 0.003 80);
-  --card: oklch(0.185 0.004 80);
-  --card-foreground: oklch(0.975 0.003 80);
-  --popover: oklch(0.185 0.004 80);
-  --popover-foreground: oklch(0.975 0.003 80);
+  --background: oklch(0.17 0.006 65);
+  --foreground: oklch(0.97 0.004 65);
+  --card: oklch(0.2 0.006 65);
+  --card-foreground: oklch(0.97 0.004 65);
+  --popover: oklch(0.2 0.006 65);
+  --popover-foreground: oklch(0.97 0.004 65);
 
-  --primary: oklch(0.975 0.003 80);
-  --primary-foreground: oklch(0.22 0.006 80);
-  --secondary: oklch(0.265 0.005 80);
-  --secondary-foreground: oklch(0.975 0.003 80);
-  --muted: oklch(0.265 0.005 80);
-  --muted-foreground: oklch(0.70 0.008 80);
-  --accent: oklch(0.285 0.006 80);
-  --accent-foreground: oklch(0.975 0.003 80);
+  --primary: oklch(0.97 0.004 65);
+  --primary-foreground: oklch(0.2 0.01 65);
+  --secondary: oklch(0.26 0.007 65);
+  --secondary-foreground: oklch(0.97 0.004 65);
+  --muted: oklch(0.26 0.007 65);
+  --muted-foreground: oklch(0.68 0.01 65);
+  --accent: oklch(0.28 0.008 65);
+  --accent-foreground: oklch(0.97 0.004 65);
 
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0.002 80);
+  --destructive: oklch(0.62 0.17 26);
+  --destructive-foreground: oklch(0.99 0.003 65);
 
-  --border: oklch(0.28 0.005 80);
-  --input: oklch(0.28 0.005 80);
-  --ring: oklch(0.46 0.01 80);
+  --border: oklch(0.3 0.008 65);
+  --input: oklch(0.3 0.008 65);
+  --ring: oklch(0.58 0.015 65);
 
-  /* Cooler tinted shadow in dark — subtler, larger blur. */
   --shadow-color: 0 0 0;
-  --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.25);
-  --shadow-sm: 0 1px 2px rgb(var(--shadow-color) / 0.3), 0 1px 1px rgb(var(--shadow-color) / 0.2);
-  --shadow-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.35), 0 2px 4px rgb(var(--shadow-color) / 0.2);
-  --shadow-lg: 0 12px 28px -6px rgb(var(--shadow-color) / 0.4), 0 4px 8px rgb(var(--shadow-color) / 0.25);
+  --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.3);
+  --shadow-sm: 0 1px 2px rgb(var(--shadow-color) / 0.35), 0 1px 1px rgb(var(--shadow-color) / 0.2);
+  --shadow-md: 0 4px 12px -2px rgb(var(--shadow-color) / 0.4), 0 2px 4px rgb(var(--shadow-color) / 0.22);
+  --shadow-lg: 0 12px 28px -6px rgb(var(--shadow-color) / 0.45), 0 4px 8px rgb(var(--shadow-color) / 0.25);
+
+  --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
