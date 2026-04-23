@@ -4,6 +4,7 @@ import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { ReasoningDemo } from "@/components/demos/reasoning-demo";
 import { ListDemo } from "@/components/demos/list-demo";
 import { TableDemo } from "@/components/demos/table-demo";
+import { TypographyDemo } from "@/components/demos/typography-demo";
 ---
 
 <StarlightPage frontmatter={{ title: "Install spike", template: "splash" }}>
@@ -51,6 +52,18 @@ import { TableDemo } from "@/components/demos/table-demo";
     </div>
     <div class="not-content">
       <TableDemo client:only="react" />
+    </div>
+
+    <div>
+      <h2>Kibo typography (registry:style)</h2>
+      <p style="color: var(--muted-foreground); font-size: 0.875rem;">
+        Installed via <code>npx shadcn add https://www.kibo-ui.com/r/typography.json</code>.
+        A <code>registry:style</code> entry — shadcn injects CSS directly into <code>global.css</code>.
+        Apply with <code>class="typography"</code> on any container; opt-out with <code>.not-typography</code>.
+      </p>
+    </div>
+    <div class="not-content">
+      <TypographyDemo />
     </div>
   </section>
 </StarlightPage>
