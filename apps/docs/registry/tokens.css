@@ -23,7 +23,7 @@
   /* Surfaces */
   --background: #f6f5f1;
   --foreground: #15130f;
-  --card: #faf9f6;
+  --card: #ffffff;
   --card-foreground: #15130f;
   --popover: #ffffff;
   --popover-foreground: #15130f;
@@ -42,6 +42,7 @@
   --destructive-foreground: #f6f5f1;
 
   --border: #e3e0d8;
+  --border-soft: #ecebe4;
   --input: #e3e0d8;
   --ring: #15130f;
 
@@ -75,9 +76,9 @@
 [data-theme="dark"] {
   --background: #0e0e0f;
   --foreground: #ececec;
-  --card: #1a1a1c;
+  --card: #141416;
   --card-foreground: #ececec;
-  --popover: #1a1a1c;
+  --popover: #141416;
   --popover-foreground: #ececec;
 
   --primary: #e6d089;
@@ -93,6 +94,7 @@
   --destructive-foreground: #0e0e0f;
 
   --border: #262628;
+  --border-soft: #1e1e20;
   --input: #262628;
   --ring: #e6d089;
 
