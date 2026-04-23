@@ -110,6 +110,14 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 
 ---
 
+### F10 — Tailwind v4 doesn't scan `node_modules` by default
+- **Where**: any installed component that pulls in a lib which emits Tailwind classes at runtime. First hit: AIE reasoning → [streamdown](https://www.npmjs.com/package/streamdown) renders markdown JSX with `list-decimal`, `list-inside`, `[li_&]:pl-6`, etc. written as class strings in its compiled JS.
+- **Observed**: `<ol class="list-decimal list-inside">` rendered, but computed `list-style-type: none` — the Tailwind utility rule was never generated because Tailwind v4's default content scan excludes `node_modules`. Combined with F9's scoped `ol { list-style: none }`, the markdown lost its numbers/bullets.
+- **Cause**: Tailwind v4 scans the project source tree + explicit `@source` paths. `node_modules` is excluded by default to avoid scanning every dep.
+- **Fix**: in [global.css](apps/docs/src/styles/global.css), add `@source "../../node_modules/streamdown/dist";` — path is relative to global.css and must target the installed hoisted lib (pnpm puts it under `apps/docs/node_modules/streamdown`, not repo-root `node_modules`).
+- **Pattern**: add one `@source` per external dep that emits runtime Tailwind classes. Don't wildcard-scan all of `node_modules` — performance hit and most deps don't need it.
+- **Related**: `tw-animate-css` is another case — AIE components use `animate-in / animate-out / fade-out-0 / slide-in-from-top-2`. Those will likely break when installing components that rely on them; deal with when we hit.
+
 ## Wins (don't bury these)
 
 - **Kibo namespaces cleanly** — writes to `src/components/kibo-ui/<name>/`, zero collision with our `@registry/*` tree. Easy to tell ported vs installed code apart at a glance.
@@ -143,6 +151,44 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 **Port-effort estimate if we wanted it permanent**:
 - ~1h — fork into `apps/docs/registry/theme-switcher/` with a `.tv.ts` for the classes + tween-swap for the motion + prop-shape change to accept arbitrary theme entries (editorial/vanilla/dark variants).
 - Or: keep installed-as-is and wrap in a `<Ui26ThemeSwitcher>` adapter (~15 min) — preserves upgrade path from Kibo, loses some native-feel.
+
+---
+
+## Install log — AI Elements reasoning *(spike [8bc4](tickets/))*
+
+**Command**: `npx -y shadcn@latest add https://elements.ai-sdk.dev/api/registry/reasoning.json --yes` from `apps/docs/`
+
+**Files created** (3):
+- `src/components/ai-elements/reasoning.tsx` — the component
+- `src/components/ai-elements/shimmer.tsx` — sibling (streaming-text animation)
+- `src/components/ui/collapsible.tsx` — shadcn primitive (thin wrapper over Radix, via the `radix-ui` umbrella package)
+
+**Deps added to [apps/docs/package.json](apps/docs/package.json)** (6 new):
+- `radix-ui ^1.4.3` (umbrella re-export)
+- `streamdown ^2.5.0` (markdown renderer)
+- `@streamdown/cjk`, `@streamdown/code`, `@streamdown/math`, `@streamdown/mermaid` (plugin set)
+
+**Source edits**: none.
+
+**Demo harness** (`src/components/demos/reasoning-demo.tsx`): 12-line React wrapper composing `<Reasoning defaultOpen><ReasoningTrigger/><ReasoningContent>{markdown}</ReasoningContent></Reasoning>` — needed because Astro's `client:only` doesn't compose React children across the Astro/React boundary cleanly.
+
+**Demo-page edits required to render well**:
+- `client:only="react"` on the island (F6)
+- wrap in `<div class="not-content">` (F7)
+- scoped preflight handled everything except list-style (F9)
+- `@source "../../node_modules/streamdown/dist"` in global.css (F10) — made the numbered list render
+
+**Render status**: ✓ 200 at `/installs`, collapsible opens/closes, markdown renders with numbered list, no console errors.
+
+**Wins specific to AIE**:
+- **Namespaces cleanly** — `src/components/ai-elements/` parallel to `src/components/kibo-ui/`. No collision.
+- **Transitively installs shadcn primitives** — AIE registry declares `collapsible` as a registry dep, shadcn CLI resolved it and wrote `src/components/ui/collapsible.tsx` automatically.
+- **Modern radix pattern** — the installed Collapsible uses `import { Collapsible as CollapsiblePrimitive } from "radix-ui"` (the umbrella), not 20 separate `@radix-ui/react-*` packages. Smaller dep tree.
+- **`data-slot` convention** — shadcn's new styling hooks (e.g. `data-slot="collapsible-trigger"`). Useful for targeted overrides.
+
+**Port-effort estimate if we wanted it permanent**:
+- React-only: essentially already done — just mark it as first-party under `registry/ai-elements/` with our meta conventions. ~30 min.
+- Polyglot: hard. Reasoning = Collapsible + Streamdown. Svelte port needs a Radix-equivalent (bits-ui/melt-ui) and a Svelte markdown-stream lib — no direct Streamdown port exists. Estimate 6-10h + ongoing drift. Recommendation: AIE stays React-only annex.
 
 ---
 

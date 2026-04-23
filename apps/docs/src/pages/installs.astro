@@ -1,10 +1,11 @@
 ---
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
+import { ReasoningDemo } from "@/components/demos/reasoning-demo";
 ---
 
 <StarlightPage frontmatter={{ title: "Install spike", template: "splash" }}>
-  <section style="padding: 2rem 0; display: grid; gap: 1.5rem;">
+  <section style="padding: 2rem 0; display: grid; gap: 2.5rem;">
     <div>
       <h2>Kibo theme-switcher</h2>
       <p style="color: var(--muted-foreground); font-size: 0.875rem;">
@@ -14,6 +15,17 @@ import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
     </div>
     <div class="not-content">
       <ThemeSwitcher client:only="react" className="w-fit" />
+    </div>
+
+    <div>
+      <h2>AI Elements reasoning</h2>
+      <p style="color: var(--muted-foreground); font-size: 0.875rem;">
+        Installed via <code>npx shadcn add https://elements.ai-sdk.dev/api/registry/reasoning.json</code>.
+        No edits to the component source.
+      </p>
+    </div>
+    <div class="not-content">
+      <ReasoningDemo client:only="react" />
     </div>
   </section>
 </StarlightPage>

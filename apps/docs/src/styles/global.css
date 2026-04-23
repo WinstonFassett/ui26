@@ -9,6 +9,13 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
+/* External-dep class scanning — Tailwind v4 doesn't scan node_modules by
+ * default. Streamdown (used by AIE reasoning) emits Tailwind classes at
+ * runtime (list-decimal, list-inside, [li_&]:pl-6, etc.) that would
+ * otherwise never be compiled. Add one @source per external dep that
+ * ships runtime-JSX Tailwind classes. */
+@source "../../node_modules/streamdown/dist";
+
 /* Single tokens source — shared with the shadcn-style registry at /r/base.json */
 @import '../../registry/tokens.css';
 @import './starlight-overrides.css';
