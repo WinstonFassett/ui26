@@ -6,6 +6,7 @@ import { ListDemo } from "@/components/demos/list-demo";
 import { TableDemo } from "@/components/demos/table-demo";
 import { TypographyDemo } from "@/components/demos/typography-demo";
 import { TagsDemo } from "@/components/demos/tags-demo";
+import { CodeBlockDemo } from "@/components/demos/code-block-demo";
 ---
 
 <StarlightPage frontmatter={{ title: "Install spike", template: "splash" }}>
@@ -77,6 +78,17 @@ import { TagsDemo } from "@/components/demos/tags-demo";
     </div>
     <div class="not-content">
       <TagsDemo client:only="react" />
+    </div>
+
+    <div>
+      <h2>Kibo code-block (Shiki)</h2>
+      <p style="color: var(--muted-foreground); font-size: 0.875rem;">
+        Installed via <code>npx shadcn add https://www.kibo-ui.com/r/code-block.json</code>.
+        Shiki syntax highlighting, file tabs, copy button. Three file types swap in place.
+      </p>
+    </div>
+    <div class="not-content">
+      <CodeBlockDemo client:only="react" />
     </div>
   </section>
 </StarlightPage>
