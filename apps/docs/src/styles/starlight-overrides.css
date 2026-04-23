@@ -37,6 +37,16 @@ header.header {
   border-bottom: 1px solid var(--sl-color-hairline);
   padding: 0 16px;
 }
+
+/* Social icons (GitHub) should use text color, not accent */
+header.header .social-links a,
+header.header a[href*="github"] {
+  color: var(--sl-color-text);
+}
+header.header .social-links a:hover,
+header.header a[href*="github"]:hover {
+  color: var(--sl-color-text-accent);
+}
 header.header .site-title {
   font-family: var(--font-serif);
   font-size: 22px;
@@ -44,6 +54,7 @@ header.header .site-title {
   font-weight: 500;
   letter-spacing: -0.01em;
   gap: 10px;
+  color: var(--sl-color-text);
 }
 header.header .site-title img,
 header.header .site-title svg { width: 20px; height: 20px; }
@@ -57,6 +68,8 @@ site-search button[data-open-modal] {
   padding: 4px 10px;
   color: var(--sl-color-gray-2);
   min-width: 360px;
+  min-height: 0;
+  height: auto;
 }
 
 /* Version pill (wrap a <span class="version-pill"> next to site title) */
@@ -133,7 +146,8 @@ site-search button[data-open-modal] {
 }
 
 /* H1 — Newsreader display */
-.sl-markdown-content > h1:first-of-type,
+.main-frame h1,
+.sl-markdown-content h1:first-of-type,
 .hero h1 {
   font-family: var(--font-serif);
   font-weight: 500;
@@ -141,11 +155,14 @@ site-search button[data-open-modal] {
   line-height: 1.02;
   letter-spacing: -0.022em;
   color: var(--sl-color-text);
-  margin: 0;
+  margin: 28px 0 0 0;
+  padding-top: 20px;
 }
-.sl-markdown-content > h1 em,
+.main-frame h1 em,
+.sl-markdown-content h1 em,
 .hero h1 em { font-weight: 400; font-style: italic; }
-.sl-markdown-content > h1 em.dim,
+.main-frame h1 em.dim,
+.sl-markdown-content h1 em.dim,
 .hero h1 em.dim { color: var(--sl-color-gray-2); }
 
 /* H2 / H3 — Geist */
