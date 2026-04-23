@@ -2,7 +2,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const input = tv({
   base: [
-    "flex h-8 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-sm",
+    "flex h-8 w-full min-w-0 rounded-md border border-input bg-transparent px-2.5 py-1 text-sm text-foreground",
     "shadow-[var(--shadow-xs)] transition-[color,box-shadow,border-color] duration-150 outline-none",
     "selection:bg-primary selection:text-primary-foreground",
     "file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground",

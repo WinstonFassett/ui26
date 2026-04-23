@@ -1,7 +1,7 @@
 import { tv, type VariantProps } from "tailwind-variants";
 
 export const card = tv({
-  base: "bg-card text-card-foreground flex flex-col gap-4 rounded-lg border py-5 shadow-[var(--shadow-sm)]",
+  base: "bg-card text-card-foreground flex flex-col gap-4 rounded-lg border py-5",
 });
 
 export const cardHeader = tv({
