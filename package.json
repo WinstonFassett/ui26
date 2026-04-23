@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "dev": "pnpm --filter docs dev",
+    "dev": "pnpm --filter ./apps/docs dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
   },
