@@ -21,7 +21,7 @@ Per `design-taste-frontend`, every design needs three committed dials. I'm picki
 | Dial | Skill default | ui26 choice | Why |
 |---|---|---|---|
 | `DESIGN_VARIANCE` | 8 (asymmetric / masonry) | **3** (predictable grids, tight symmetry) | tix is "tool-like, precise, quiet". Asymmetric bento fights the brief. |
-| `MOTION_INTENSITY` | 6 (fluid CSS + transitions) | **3** (CSS `:hover`/`:active` + sub-180ms entrances) | tix: "No bounces, no springs" |
+| `MOTION_INTENSITY` | 6 (fluid CSS + transitions) | **4** (short CSS transitions + Motion for layout/stagger, MIT) | tix uses `motion` / `framer-motion` in anger: `LayoutGroup`, `AnimatePresence`, CSS-staggered row entry. Durations stay sub-200ms; "no bounces, no springs" means no overshoot physics, not no library. |
 | `VISUAL_DENSITY` | 4 (daily app) | **7** (near-cockpit: `text-sm` default, tight padding) | tix: "High density, compact rows" |
 
 Everything below is consistent with those dials.
@@ -84,7 +84,7 @@ These skills disagree on several axes. tix wins every tiebreak because it's the 
 
 | Axis | design-taste-frontend | minimalist-ui | tix | Resolution |
 |---|---|---|---|---|
-| Motion | "Perpetual micro-interactions" (pulse, typewriter, float in every card) | slow 600ms fade-in, ambient gradient | "No bounces, no springs", no exit animations | **tix.** 150–180ms entrances, no perpetual. |
+| Motion | "Perpetual micro-interactions" (pulse, typewriter, float in every card) | slow 600ms fade-in, ambient gradient | sub-200ms entrances + Motion (`LayoutGroup`, `AnimatePresence`, staggered CSS rows); no overshoot springs | **tix.** Use Motion (MIT, OSS) for layout/presence; keep durations short and easing `cubic-bezier(0.16, 1, 0.3, 1)`. |
 | Headings | `text-4xl md:text-6xl tracking-tighter` | editorial serif (Lyon/Newsreader) | `text-2xl font-bold` system-sans | **tix.** System-ish sans, modest scale. |
 | Radii | aggressive `rounded-[2.5rem]` on cards | `8-12px` | `--radius: 10px` base | **tix.** But *vary* it: tighter inner (6-8px) / softer outer (12-14px). |
 | Background | neutral `#f9fafb` or warm bone `#F7F6F3` | warm bone `#FBFBFA` | `oklch(1 0 0)` pure | **warm off-white.** Moving `--background` to `oklch(0.995 0.002 80)`. |
@@ -133,10 +133,14 @@ Before/after screenshots: `.spike-screenshots/` (gitignored, referenced from aud
 
 ---
 
-## 7. Open questions (for Winston)
+## 7. Resolutions & open questions
 
-None blocking. A few I'd ask before merging, not before shipping the spike:
+Resolved with Winston 2026-04-22:
 
-- Geist vs SF Pro as primary? (Geist is freely hostable via GF; SF Pro needs `@font-face` + license care.)
-- Do we want a single-accent brand color *eventually* (for marketing surfaces) separate from the tix in-app voice? If yes, what?
-- Should the docs site get its own aesthetic layer (denser, more editorial) separate from what the registry emits to consumers?
+- **Fonts: Geist + Geist Mono.** OFL-licensed (SIL Open Font License), hostable anywhere. SF Pro rejected (Apple license). ✓
+- **Motion library: `motion` (framer-motion).** MIT, OSS, already the choice in tix. Reserved for `LayoutGroup`/`AnimatePresence`/staggered entrances when composite primitives land in Wave 3. Not needed for Wave-1 primitives.
+- **Brand color: yes, eventually.** Not this wave. Current near-black primary is the placeholder until marketing surfaces need their own voice.
+
+Still open:
+
+- Should the docs site get its own aesthetic layer (denser, more editorial) separate from what the registry emits to consumers? — undecided.
