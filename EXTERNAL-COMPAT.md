@@ -213,6 +213,18 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 
 ---
 
+### F13 — Installed Kibo source pins icon names from a prior react-icons release
+- **Where**: Kibo code-block hardcodes ~90 imports from `react-icons/si` (filename-icon map: `"*.css": SiCss3`, `"*.ts": SiTypescript`, etc.).
+- **Observed**: shadcn add → clean install → Vite hydration error: `SyntaxError: The requested module 'react-icons_si.js' does not provide an export named 'SiCss3'`.
+- **Cause**: react-icons evolved. `SiCss3` was renamed to `SiCss` in a recent simple-icons upgrade (simple-icons dropped version suffixes). The Kibo source file was written against the old name and ships that way in the registry. Of 66 icons Kibo imports, only 1 (`SiCss3`) was affected at the version we got (`react-icons ^5.6.0`), but the surface area is huge — any future simple-icons rename breaks the build.
+- **Fix**: one-line patch on the installed file — `sed SiCss3 → SiCss`. Trivial; but it's a real source edit (first one so far).
+- **Handling options**:
+  1. **Patch on install** (what we did) — fast, unique to this component. Doc in EXTERNAL-COMPAT alongside the install log so the next person hits it with context.
+  2. **Pin `react-icons` to the Kibo-contemporary version** in `package.json` — would freeze the whole docs tree on an older react-icons. Cost > benefit for a 1-icon fix.
+  3. **Strip the `filenameIconMap`** from the installed source — we're unlikely to use all 90 filename patterns anyway. Smaller blast radius if simple-icons does another rename, but drifts further from upstream Kibo.
+  4. **Upstream PR**: Hayden (Kibo author) probably wants to know. Low-effort to file.
+- **Pattern**: "install but edit ≤1 line" is a different frictional class from "install as-is". Distinguish in install logs.
+
 ## Install log — Kibo list *(spike [a43c](tickets/))*
 
 **Command**: `npx -y shadcn@latest add https://www.kibo-ui.com/r/list.json --yes` from `apps/docs/`
@@ -288,6 +300,56 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 - **Uses Tailwind v4 `--spacing` and `--text-*--line-height`** — takes advantage of the theme tokens from Tailwind v4 setup, so spacing scales coherently with the rest of the site.
 
 **Port-effort estimate**: trivial — it's already CSS-only. If we wanted to own it we'd paste into `registry/tokens.css` or a sibling file, then delete the shadcn-injected block.
+
+---
+
+## Install log — Kibo tags *(spike [4448](tickets/))*
+
+**Command**: `npx -y shadcn@latest add https://www.kibo-ui.com/r/tags.json --yes` from `apps/docs/`
+
+**Files created** (5): `src/components/kibo-ui/tags/index.tsx` + shadcn `badge`, `dialog`, `popover`, `command`. Button was **skipped** (identical to previously installed).
+
+**Deps added**: `cmdk ^1.1.1`. All transitive deps (Radix popover/dialog/slot, `@radix-ui/react-use-controllable-state`, etc.) were already present from earlier installs.
+
+**Source edits**: none.
+
+**Demo harness** (`src/components/demos/tags-demo.tsx`): ~55 lines — controlled multi-select over 14 tix-style tags, pill with X-remove per selected, cmdk search/list underneath.
+
+**Demo-page edits**: `client:only="react"` + `.not-content` wrap. No custom preflight issues.
+
+**Render status**: ✓ popover opens below trigger, cmdk search filters instantly, items toggle, X removes from trigger chips. No console errors.
+
+**Wins**:
+- **Zero skipped installs** — dialog/popover/command were new to us, landed correctly from shadcn, composed straight into Kibo's tags. No overwrites, no conflicts.
+- **cmdk is well-loved** — `cmdk` is Radix's search-list primitive; it's the backbone of VS Code-style command palettes. Getting it via a tags install is a nice side effect.
+- **Controlled by default** — Kibo tags is designed to be controlled from the outside (`value`, `setValue`, `open`, `onOpenChange`). Easy to wire into our own state.
+
+**Port-effort estimate**: 2-4h React port (shadcn cmdk/popover/dialog/badge are substantial primitives). Polyglot: very hard — popover + cmdk don't have direct Svelte equivalents with the same API surface. Defer to headless strategy work (c018).
+
+---
+
+## Install log — Kibo code-block *(spike [4448](tickets/))*
+
+**Command**: `npx -y shadcn@latest add https://www.kibo-ui.com/r/code-block.json --yes` from `apps/docs/`
+
+**Files created** (3): `src/components/kibo-ui/code-block/index.tsx` + `server.tsx` + shadcn `select`. Button skipped again.
+
+**Deps added**: `shiki ^4.0.2`, `@shikijs/transformers ^4.0.2`, `react-icons ^5.6.0` — all declared in the registry metadata.
+
+**Source edits**: **one-line patch** — `SiCss3` → `SiCss` in index.tsx (see F13).
+
+**Demo harness** (`src/components/demos/code-block-demo.tsx`): ~80 lines — 3 files (`install.sh`, `tags-demo.tsx`, `tokens.css`) swap via tab bar; copy button in top-right; line numbers on. Shiki themes `github-light` / `github-dark-default` (Kibo defaults). Styled active tab with our `--accent` underline.
+
+**Demo-page edits**: `client:only="react"` + `.not-content` wrap.
+
+**Render status**: ✓ Shiki highlights TSX/CSS/shell correctly, tab switching instant, copy button works, line numbers monospaced. No console errors after F13 patch.
+
+**Wins**:
+- **Server.tsx ships alongside** — Kibo includes a second file for async server-side highlight. Astro can use it via a server island (untested, but sitting there ready).
+- **Bundle hit is the real cost** — `shiki` pulls hundreds of grammars and themes. If we port, first job is deciding which languages/themes to bundle.
+- **Integrates with our existing Starlight `.expressive-code`** — nothing collides because the Kibo block is `components/kibo-ui/code-block/` and scoped to `.not-content`.
+
+**Port-effort estimate**: 4-6h React port (Kibo's wrapper is moderate; shiki integration requires thought about bundle size). Polyglot hard because shiki client bundle is large and Svelte version would need its own integration. Worth considering: could we use Starlight's existing Expressive Code for prose and Kibo code-block for interactive demos? Sidecar, not either/or.
 
 ---
 
