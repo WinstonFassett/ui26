@@ -1,0 +1,110 @@
+.playroom-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.playroom-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.playroom-select {
+  background: var(--background);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.playroom-chips {
+  display: inline-flex;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+}
+
+.playroom-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+
+.playroom-body {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(0, 2fr);
+  flex: 1;
+  min-height: 0;
+}
+
+.playroom-editor {
+  border-right: 1px solid var(--border);
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.playroom-editor > * {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+.playroom-editor .cm-theme,
+.playroom-editor .cm-editor {
+  height: 100% !important;
+}
+
+.playroom-editor .cm-scroller {
+  overflow: auto;
+}
+
+.playroom-previews {
+  overflow: auto;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: var(--muted);
+}
+
+.playroom-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+.playroom-cell-label {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  padding: 0 0.25rem;
+}
+
+.playroom-iframe {
+  height: 80vh;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  display: block;
+}
+
+.playroom-preview-body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  min-height: 100vh;
+}

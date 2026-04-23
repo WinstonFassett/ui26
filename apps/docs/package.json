@@ -14,15 +14,22 @@
     "@astrojs/starlight": "^0.38.3",
     "@astrojs/starlight-tailwind": "^5.0.0",
     "@astrojs/svelte": "^8.0.5",
+    "@codemirror/lang-javascript": "^6.2.5",
     "@tailwindcss/vite": "^4.1.18",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@uiw/react-codemirror": "^4.25.9",
     "astro": "^6.0.1",
+    "lz-string": "^1.5.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "sharp": "^0.34.2",
+    "sucrase": "^3.35.1",
     "svelte": "^5.55.4",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "playwright": "^1.59.1"
   }
 }
