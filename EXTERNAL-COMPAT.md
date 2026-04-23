@@ -59,6 +59,45 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
   2. Leave as-is; accept the overshoot in exchange for zero drift.
   3. Publish a "ui26 motion profile" and apply it wholesale during install (automation opportunity — see below).
 
+### F7 — Starlight content rhythm margins leak onto installed-component children
+- **Where**: any external component rendered inside a Starlight `<StarlightPage>` (or MDX content area).
+- **Observed**: Kibo theme-switcher's three buttons — active (first) rendered at the correct y, the other two pushed 8px below the pill (beyond the container), with an extra `margin-top: 16px` computed on them. Screenshot of broken state: [installs-shot2](/tmp/installs-shot2.png).
+- **Cause**: Starlight injects `.sl-content > * + * { margin-top: ... }`-style typographic rhythm on every child of the content area, including flex items of nested components.
+- **Fix**: wrap external-component demos in `<div class="not-content">` — Starlight's documented opt-out. Killed the 16px margins that were pushing siblings below the container.
+- **Convention**: every `/installs`, component-doc demo, and kitchen-sink section hosting an external component goes inside `.not-content`.
+
+### F8 — Kibo container is block-level flex (stretches to parent width)
+- **Where**: Kibo theme-switcher base classes `relative isolate flex h-8 rounded-full bg-background p-1 ring-1 ring-border`.
+- **Observed**: container stretched to full content width (1080px) — pill ring extended far past the three icons.
+- **Cause**: `flex` without `inline-flex` / `w-fit` is a block-level flex container. kibo-ui.com's own layouts must wrap it in a narrower flex parent.
+- **Fix in demo**: `<ThemeSwitcher className="w-fit" />`. One className token, passed via the component's own `className` prop.
+- **Handling options**:
+  1. **Consumer-side className** (what we did). Zero drift, per-site decision.
+  2. Post-install patch: swap `flex` → `inline-flex` in the installed file. Automatable.
+  3. Upstream PR to Kibo.
+
+### F9 — Tailwind preflight is intentionally not loaded in apps/docs
+- **Where**: [apps/docs/src/styles/global.css](apps/docs/src/styles/global.css) imports only `tailwindcss/theme.css` + `tailwindcss/utilities.css` (Starlight's recommended setup), not `tailwindcss/preflight.css`.
+- **Why intentional**: preflight would fight Starlight's prose/typography reset. Keeping it off preserves the default docs look.
+- **Consequence**: browser UA defaults leak everywhere. E.g. `button { padding: 1px 6px }` (Chromium default), which Tailwind preflight normally zeroes out. Installed components authored against Tailwind preflight (Kibo, AIE, shadcn) render with unreset button/form geometry — icons overflow content boxes, `m-auto` fails, etc.
+- **Observed symptom**: in Kibo theme-switcher, button padding left icons offset to the left (m-auto resolved to 0 when icon was wider than content box). Separate from F7/F8 — this is the UA-reset issue underneath.
+- **Fix**: scope Tailwind v4's full preflight to `.not-content` descendants via native CSS `@scope`, inside `@layer base` so Tailwind utilities still override (see [starlight-overrides.css](apps/docs/src/styles/starlight-overrides.css)):
+  ```css
+  @layer base {
+    @scope (.not-content) {
+      *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
+      ol, ul, menu { list-style: none; }
+      img, svg, video, canvas, audio, iframe { display: block; vertical-align: middle; }
+      button, input, select, optgroup, textarea { font: inherit; color: inherit; border-radius: 0; ... }
+      /* ...full preflight rules that make sense scoped... */
+    }
+  }
+  ```
+  - **Why `@layer base`**: unlayered rules beat all layered rules. If the scoped reset were unlayered, its `* { margin: 0 }` would override `.m-auto` and other utilities. Putting it in `base` keeps it below `utilities` in the cascade so component classes win.
+  - **Why `@scope`**: native CSS scope (Chrome/Safari/Firefox since 2024), no PostCSS plugin required, rules literally don't fire outside `.not-content`. Kitchen-sink, nav, sidebar all unaffected.
+  - **What's omitted from preflight**: `html`/`:host` rules (scope doesn't wrap html) and `code/kbd/samp/pre` font-family (Starlight owns code typography).
+- **Convention**: every external-component demo container gets `class="not-content"`. One wrapper, full preflight, zero per-install patches.
+
 ### F6 — `"use client"` directive isn't respected by Astro's default hydration
 - **Where**: every AIE + Kibo component (they all ship `"use client"`).
 - **Observed**: installed ThemeSwitcher with `<ThemeSwitcher client:load />` → SSR error storm ("Unable to render ThemeSwitcher"). motion/react + Radix hooks crash in SSR.
@@ -93,7 +132,13 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 
 **Source edits**: none (component file untouched).
 
-**Render status**: ✓ 200 at `/installs`, three theme buttons, no errors.
+**Demo-page edits required to render well**:
+- `client:only="react"` directive on the island (F6)
+- wrap the island in `<div class="not-content">` (F7)
+- `className="w-fit"` on the island (F8)
+- one-time: scoped preflight inside `.not-content` in [starlight-overrides.css](apps/docs/src/styles/starlight-overrides.css) (F9)
+
+**Render status**: ✓ 200 at `/installs`, three theme buttons inline in a fitted pill, no errors.
 
 **Port-effort estimate if we wanted it permanent**:
 - ~1h — fork into `apps/docs/registry/theme-switcher/` with a `.tv.ts` for the classes + tween-swap for the motion + prop-shape change to accept arbitrary theme entries (editorial/vanilla/dark variants).
