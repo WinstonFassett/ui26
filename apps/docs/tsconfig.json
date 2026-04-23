@@ -7,7 +7,8 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
-      "@registry/*": ["./registry/*"]
+      "@registry/*": ["./registry/*"],
+      "@/*": ["./src/*"]
     }
   }
 }
