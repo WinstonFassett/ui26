@@ -1,11 +1,38 @@
-/* Matchina — Starlight overrides
- * Import AFTER tokens.css. These are visual patches on top of Starlight's
- * default theme; they don't restructure the DOM.
- *
- * Load order in src/styles/custom.css:
- *   @import './tokens.css';
- *   @import './starlight-overrides.css';
+/* Starlight bridge + overrides.
+ * Import AFTER registry/tokens.css. Maps Starlight's `--sl-*` namespace onto
+ * our semantic tokens so it follows the active theme, then patches the DOM.
  */
+
+/* ---------- Starlight bridge (theme-agnostic) ---------- */
+
+:where(:root) {
+  --sl-color-bg: var(--background);
+  --sl-color-bg-sidebar: var(--background);
+  --sl-color-bg-nav: var(--background);
+  --sl-color-bg-inline-code: var(--card);
+  --sl-color-bg-hover: var(--muted);
+  --sl-color-hairline: var(--border);
+  --sl-color-hairline-light: var(--border);
+  --sl-color-hairline-shade: var(--border);
+
+  --sl-color-text: var(--foreground);
+  --sl-color-text-accent: var(--accent);
+  --sl-color-text-invert: var(--primary-foreground);
+  --sl-color-gray-1: var(--foreground);
+  --sl-color-gray-2: var(--muted-foreground);
+  --sl-color-gray-3: var(--text-mute);
+  --sl-color-gray-4: var(--border);
+  --sl-color-gray-5: var(--muted);
+  --sl-color-gray-6: var(--card);
+
+  --sl-font: var(--font-sans);
+  --sl-font-system: var(--font-sans);
+  --sl-font-system-mono: var(--font-mono);
+
+  --sl-content-width: 56rem;
+  --sl-nav-height: 44px;
+  --sl-sidebar-width: 240px;
+}
 
 /* ---------- Global ---------- */
 

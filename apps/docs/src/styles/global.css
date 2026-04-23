@@ -1,5 +1,6 @@
 /* Geist + Newsreader fonts are loaded via <link> in apps/docs/astro.config.mjs head.
- * Editorial theme: serif display, mono meta, sharp geometry, warm monochrome.
+ * Default theme: editorial (serif display, warm off-white, gold accent).
+ * Alternate themes opt-in via `data-theme` attribute — see registry/tokens.css.
  */
 
 @layer base, starlight, theme, components, utilities;
@@ -8,11 +9,14 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
-/* Editorial design tokens - overrides Starlight's --sl-* namespace */
-@import './tokens.css';
+/* Single tokens source — shared with the shadcn-style registry at /r/base.json */
+@import '../../registry/tokens.css';
 @import './starlight-overrides.css';
 
-@custom-variant dark (&:is([data-theme="dark"] *));
+/* Tailwind's `dark:` variant fires for any theme ending in `dark`
+ * (editorial `[data-theme="dark"]`, `[data-theme="vanilla-dark"]`, etc.)
+ */
+@custom-variant dark (&:is([data-theme$="dark"] *));
 
 @theme inline {
   --color-background: var(--background);
@@ -35,14 +39,25 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-success: var(--success);
+  --color-warn: var(--warn);
+  --color-info: var(--info);
+  --color-purple: var(--purple);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-text-mute: var(--text-mute);
+  --color-code: var(--code);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --font-serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, 'Cascadia Code', monospace;
+  /* Fonts are indirected through `--font-*` in registry/tokens.css so themes
+   * can swap typography (editorial uses Newsreader serif; vanilla uses system). */
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
 }
 
 @layer base {
@@ -78,6 +93,3 @@
     text-wrap: pretty;
   }
 }
-
-/* Legacy token bridge - now handled by tokens.css and starlight-overrides.css */
-/* @import './starlight-theme.css'; */
