@@ -1,0 +1,366 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import Button from "@registry/button/button.astro";
+import Badge from "@registry/badge/badge.astro";
+import Card from "@registry/card/card.astro";
+import CardHeader from "@registry/card/card-header.astro";
+import CardTitle from "@registry/card/card-title.astro";
+import CardDescription from "@registry/card/card-description.astro";
+import CardContent from "@registry/card/card-content.astro";
+import CardFooter from "@registry/card/card-footer.astro";
+import Input from "@registry/input/input.astro";
+import Textarea from "@registry/textarea/textarea.astro";
+import Checkbox from "@registry/checkbox/checkbox.astro";
+import Switch from "@registry/switch/switch.astro";
+import Label from "@registry/label/label.astro";
+import Separator from "@registry/separator/separator.astro";
+
+const paletteTokens = [
+  { name: "background", var: "--background" },
+  { name: "foreground", var: "--foreground" },
+  { name: "card", var: "--card" },
+  { name: "muted", var: "--muted" },
+  { name: "border", var: "--border" },
+  { name: "ring", var: "--ring" },
+  { name: "accent", var: "--accent" },
+  { name: "success", var: "--success" },
+  { name: "warn", var: "--warn" },
+  { name: "info", var: "--info" },
+  { name: "purple", var: "--purple" },
+  { name: "destructive", var: "--destructive" },
+];
+
+const typeScale = [
+  { tag: "display/xl", cls: "font-serif italic font-medium text-[64px] leading-[1.02] tracking-[-0.022em]", size: "64/500", sample: "Composable state." },
+  { tag: "display/lg", cls: "font-serif font-medium text-[48px] leading-[1.02] tracking-[-0.022em]", size: "48/500", sample: "State, without ceremony." },
+  { tag: "h1", cls: "font-sans font-semibold text-[28px] tracking-[-0.02em]", size: "28/600", sample: "Ticket: Payment retry loop" },
+  { tag: "h2", cls: "font-sans font-semibold text-[20px] tracking-[-0.015em]", size: "20/600", sample: "Transitions, guarded" },
+  { tag: "body", cls: "font-sans text-[13px] leading-[1.55]", size: "13/400", sample: "Matchina handles state transitions, effects, and pattern matching — end-to-end typed." },
+  { tag: "caption", cls: "font-sans text-[11px] text-muted-foreground", size: "11/400", sample: "Last edited 3 hours ago by kai." },
+  { tag: "mono/sm", cls: "font-mono text-[11px]", size: "11/400", sample: "const fetcher = createMachine({ idle: …})" },
+  { tag: "eyebrow", cls: "font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-text-mute", size: "10/500", sample: "now · shipping · api reference" },
+];
+---
+
+<StarlightPage
+  frontmatter={{
+    title: "Kitchen Sink",
+    description:
+      "Every primitive on one page — components in their variants, sizes, and states.",
+    template: "splash",
+  }}
+>
+  <style is:global>
+    /* Kitchen sink is a wide showcase — widen container when this page is mounted. */
+    body:has(.ks-page) .main-frame .content-panel .sl-container { max-width: 1280px; }
+  </style>
+
+  <div class="ks-page">
+
+  {/* ──────────────────────────────────────────────── Hero */}
+  <section class="not-content mb-14">
+    <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute mb-3">
+      Design system · Components reference · v0.4.0
+    </div>
+    <div class="font-serif font-medium text-[72px] leading-[1.02] tracking-[-0.022em] text-foreground">
+      Every part, <span class="italic text-muted-foreground">on</span> <span class="italic">one page</span>.
+    </div>
+    <p class="max-w-[560px] mt-4 text-[15px] leading-[1.55] text-muted-foreground">
+      A working preview of the components that ship with matchina. Pulled from real product
+      surfaces: chat, tickets, docs, settings. Skim top-to-bottom for type, controls, data,
+      and overlays.
+    </p>
+    <div class="flex gap-8 mt-5 font-mono text-[11px] text-muted-foreground">
+      <span><span class="text-foreground">42</span> components</span>
+      <span><span class="text-foreground">9</span> sections</span>
+      <span><span class="text-foreground">2</span> themes</span>
+      <span><span class="text-accent">●</span> gold accent</span>
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 01 · Type */}
+  <section class="not-content my-14">
+    <div class="flex items-center gap-2.5 mb-5 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§01</span>
+      <span>Typography</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="mb-6">
+      <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Type scale</div>
+      <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-[1.5]">
+        Newsreader for display + editorial voice. Geist for product UI. Geist Mono for meta, code, numerics.
+      </div>
+    </div>
+
+    <div class="grid grid-cols-[180px_1fr_120px] gap-x-6 gap-y-4 items-baseline pb-3 border-b border-border">
+      {typeScale.map((r) => (
+        <>
+          <div class="font-mono text-[10px] uppercase tracking-[0.08em] text-text-mute">{r.tag}</div>
+          <div class={`${r.cls} text-foreground`}>{r.sample}</div>
+          <div class="font-mono text-[10px] text-text-mute">{r.size}</div>
+        </>
+      ))}
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 02 · Palette */}
+  <section class="not-content my-10">
+    <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§02</span>
+      <span>Palette</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="grid grid-cols-6 gap-2.5">
+      {paletteTokens.map((s) => (
+        <div class="border border-border rounded overflow-hidden">
+          <div class="h-[52px] border-b border-border" style={`background: var(${s.var})`} />
+          <div class="px-2.5 py-2">
+            <div class="font-mono text-[11px] text-foreground">{s.name}</div>
+            <div class="font-mono text-[10px] text-text-mute mt-0.5">{s.var}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 03 · Buttons */}
+  <section class="not-content my-10">
+    <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§03</span>
+      <span>Buttons</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-5 items-center pb-5 border-b border-border">
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Variants</div>
+      <div class="flex gap-2 items-center flex-wrap">
+        <Button>Create ticket</Button>
+        <Button variant="secondary">Save changes</Button>
+        <Button variant="outline">Cancel</Button>
+        <Button variant="ghost">Discard</Button>
+        <Button variant="destructive">Delete machine</Button>
+        <Button disabled>Disabled</Button>
+      </div>
+
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Sizes</div>
+      <div class="flex gap-2 items-center">
+        <Button size="sm">Small</Button>
+        <Button>Medium</Button>
+        <Button size="lg">Large</Button>
+      </div>
+
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Group</div>
+      <div class="inline-flex border border-border rounded overflow-hidden w-fit">
+        <div class="px-3 py-1.5 text-[12px] text-muted-foreground border-r border-border">All</div>
+        <div class="px-3 py-1.5 text-[12px] text-foreground font-medium bg-muted border-r border-border">Mine</div>
+        <div class="px-3 py-1.5 text-[12px] text-muted-foreground border-r border-border">Assigned</div>
+        <div class="px-3 py-1.5 text-[12px] text-muted-foreground">Watching</div>
+      </div>
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 04 · Badges */}
+  <section class="not-content my-10">
+    <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§04</span>
+      <span>Badges &amp; labels</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-3.5 items-center pb-5 border-b border-border">
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Status</div>
+      <div class="flex gap-1.5 flex-wrap">
+        <Badge>Active</Badge>
+        <Badge variant="outline" class="text-success">● Shipping</Badge>
+        <Badge variant="outline" class="text-warn">● Review</Badge>
+        <Badge variant="destructive">Blocked</Badge>
+        <Badge variant="outline" class="text-info">● In progress</Badge>
+        <Badge variant="outline" class="text-purple">● Draft</Badge>
+        <Badge variant="secondary">Archived</Badge>
+      </div>
+
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Priority</div>
+      <div class="flex gap-1.5">
+        <Badge variant="destructive">P0 · Critical</Badge>
+        <Badge variant="outline" class="text-warn">P1 · High</Badge>
+        <Badge variant="outline" class="text-info">P2 · Medium</Badge>
+        <Badge variant="secondary">P3 · Low</Badge>
+      </div>
+
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Inline tags</div>
+      <div class="flex gap-1.5 flex-wrap">
+        <Badge variant="secondary">#billing</Badge>
+        <Badge variant="secondary">#fetcher</Badge>
+        <Badge variant="secondary">#needs-repro</Badge>
+        <Badge variant="secondary">+3</Badge>
+      </div>
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 05 · Fields */}
+  <section class="not-content my-10">
+    <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§05</span>
+      <span>Fields &amp; forms</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="grid grid-cols-2 gap-7 pb-5 border-b border-border">
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <Label for="ks-workspace">Workspace name <span class="text-accent">*</span></Label>
+          <Input id="ks-workspace" value="Acme Retrospective" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="ks-slug">Slug</Label>
+          <Input id="ks-slug" value="acme-retro" />
+          <div class="font-mono text-[10px] text-text-mute">lowercase · dashes</div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="ks-email">Email</Label>
+          <Input id="ks-email" type="email" placeholder="you@company.com" aria-invalid />
+          <div class="text-[11px] text-destructive flex items-center gap-1.5">
+            <span class="font-mono">✕</span>Already in use — try signing in instead
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="ks-search">Search</Label>
+          <Input id="ks-search" placeholder="Search tickets, docs, people…" />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1.5">
+          <Label for="ks-bug">Bug description</Label>
+          <Textarea id="ks-bug" rows={5}>After clicking 'Retry' in the paying state, the fetcher briefly flashes back to 'idle' before transitioning to 'loading'. Expected: direct paying → loading.</Textarea>
+          <div class="font-mono text-[10px] text-text-mute self-end">198/2000</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 06 · Selection */}
+  <section class="not-content my-10">
+    <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§06</span>
+      <span>Selection controls</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="grid grid-cols-3 gap-7 pb-5 border-b border-border">
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Checkbox</div>
+        <div class="flex flex-col gap-2.5">
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <Checkbox checked class="mt-0.5" />
+            <span>
+              <span class="block text-[13px] text-foreground leading-[1.35]">Enable streaming responses</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Token-by-token updates to the UI.</span>
+            </span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <Checkbox class="mt-0.5" />
+            <span class="text-[13px] text-foreground">Allow guest edits</span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer opacity-50">
+            <Checkbox checked disabled class="mt-0.5" />
+            <span>
+              <span class="block text-[13px] text-foreground">Legacy sync (enterprise)</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Managed by your admin</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Switch</div>
+        <div class="flex flex-col gap-3">
+          <label class="flex items-start gap-3 cursor-pointer">
+            <Switch checked />
+            <span>
+              <span class="block text-[13px] text-foreground">Claude suggestions</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Inline completions while you type.</span>
+            </span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <Switch />
+            <span class="text-[13px] text-foreground">Auto-run effects in dev</span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <Switch checked />
+            <span>
+              <span class="block text-[13px] text-foreground">Telemetry</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Anonymous · opt-out any time</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Separator</div>
+        <div class="flex flex-col gap-3">
+          <div class="text-[13px] text-foreground">Above</div>
+          <Separator />
+          <div class="text-[13px] text-foreground">Below</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ──────────────────────────────────────────────── 07 · Cards */}
+  <section class="not-content my-10">
+    <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+      <span class="text-accent">§07</span>
+      <span>Cards</span>
+      <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Ticket: Payment retry loop</CardTitle>
+          <CardDescription>Flashing back to idle between paying and loading.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div class="flex gap-1.5 flex-wrap">
+            <Badge variant="destructive">P0</Badge>
+            <Badge variant="secondary">#billing</Badge>
+            <Badge variant="secondary">#fetcher</Badge>
+          </div>
+        </CardContent>
+        <CardFooter class="pt-5 border-t border-border mt-4">
+          <Button size="sm" variant="outline">Open</Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Inline suggestion</CardTitle>
+          <CardDescription>Typing: const fet…</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <pre class="font-mono text-[12px] leading-[1.7] bg-code border border-border rounded p-3 overflow-x-auto"><code>{`const fetcher = createMachine({
+  idle: { fetch: 'loading' },
+  loading: effect(fetchUser),
+});`}</code></pre>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Upgrade your plan</CardTitle>
+          <CardDescription>Unlock more projects and seats.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p class="text-[13px] text-muted-foreground">$19/month, cancel anytime.</p>
+        </CardContent>
+        <CardFooter class="pt-5 border-t border-border mt-4">
+          <Button>Upgrade</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  </section>
+  </div>
+</StarlightPage>
