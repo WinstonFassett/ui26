@@ -53,12 +53,21 @@ export default defineConfig({
             },
             {
                 label: 'Reference',
-                autogenerate: { directory: 'reference' },
-            },
-            {
-                label: 'Guides',
                 items: [
-                    { label: 'Example Guide', slug: 'guides/example' },
+                    { label: 'Tokens', slug: 'reference/tokens' },
+                    { label: 'Kitchen Sink', link: '/kitchen-sink' },
+                ],
+            },
+            // {
+            //     label: 'Guides',
+            //     items: [
+            //         { label: 'Example Guide', slug: 'guides/example' },
+            //     ],
+            // },
+            {
+                label: 'Tools',
+                items: [
+                    { label: 'Playroom', link: '/playroom' },
                 ],
             },
         ],
