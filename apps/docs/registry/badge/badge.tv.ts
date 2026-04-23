@@ -3,7 +3,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const badge = tv({
   base: [
     "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden whitespace-nowrap select-none",
-    "rounded-[5px] border border-transparent px-1.5 py-0 text-[11px] font-medium tracking-[0.005em]",
+    "rounded-full border border-transparent px-2 py-0 text-[11px] font-medium tracking-[0.005em]",
     "h-[18px]",
     "transition-[color,background-color,box-shadow] duration-150",
     "outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
