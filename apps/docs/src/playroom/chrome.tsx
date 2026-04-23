@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import CodeMirror, { oneDark } from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
+import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
 import { snippets, defaultSnippet } from "./snippets";
 import { readFromHash, writeToHash } from "./url-state";
@@ -177,7 +178,7 @@ export function Chrome() {
             value={code}
             height="100%"
             style={{ height: "100%" }}
-            theme={oneDark}
+            theme={githubDark}
             extensions={[javascript({ jsx: true, typescript: true })]}
             onChange={setCode}
           />
