@@ -39,7 +39,8 @@ if (!fw) {
 }
 
 const urls = names.map((n) => `${registry}/r/${fw}/${n}.json`);
-const result = spawnSync("npx", ["-y", "shadcn@latest", "add", ...flags, ...urls], {
+const installer = fw === "svelte" ? "shadcn-svelte@latest" : "shadcn@latest";
+const result = spawnSync("npx", ["-y", installer, "add", ...flags, ...urls], {
   stdio: "inherit",
 });
 process.exit(result.status ?? 0);

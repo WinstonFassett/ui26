@@ -1,16 +1,31 @@
-import type { APIRoute } from "astro";
+import type { APIRoute, GetStaticPaths } from "astro";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { UTILS_ITEM } from "../../../registry/registry.meta";
+import {
+  FRAMEWORKS,
+  UTILS_ITEM,
+  type Framework,
+} from "../../../../registry/registry.meta";
 
-const REGISTRY_ROOT = new URL("../../../registry/", import.meta.url);
+const REGISTRY_ROOT = new URL("../../../../registry/", import.meta.url);
 
-export const GET: APIRoute = async () => {
+export const getStaticPaths: GetStaticPaths = () =>
+  FRAMEWORKS.map((fw) => ({ params: { framework: fw } }));
+
+export const GET: APIRoute = async ({ params }) => {
+  const fw = params.framework as Framework;
   const files = await Promise.all(
     UTILS_ITEM.files.map(async (spec) => {
       const abs = fileURLToPath(new URL(spec.path, REGISTRY_ROOT));
       const content = await readFile(abs, "utf8");
-      return { path: spec.path, content, type: spec.type };
+      const base = { path: spec.path, content, type: spec.type } as {
+        path: string;
+        content: string;
+        type: string;
+        target?: string;
+      };
+      if (fw === "svelte") base.target = "utils.ts";
+      return base;
     }),
   );
 

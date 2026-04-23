@@ -1,20 +1,47 @@
 import type { APIRoute, GetStaticPaths } from "astro";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   COMPONENTS,
   FRAMEWORKS,
   filesFor,
   type Framework,
+  type RegistryFile,
 } from "../../../../registry/registry.meta";
 
 const REGISTRY_ROOT = new URL("../../../../registry/", import.meta.url);
 
-function rewriteImports(content: string): string {
+const UTILS_ALIAS: Record<Framework, string> = {
+  react: "@/lib/utils",
+  svelte: "$lib/utils",
+  astro: "@/lib/utils",
+};
+
+function rewriteImports(content: string, fw: Framework): string {
   return content.replace(
     /from\s+(["'])\.\.\/lib\/utils\1/g,
-    'from "@/lib/utils"',
+    `from "${UTILS_ALIAS[fw]}"`,
   );
+}
+
+type EmittedFile = {
+  path: string;
+  content: string;
+  type: string;
+  target?: string;
+};
+
+function buildFile(spec: RegistryFile, content: string, fw: Framework): EmittedFile {
+  if (fw === "svelte") {
+    return {
+      path: spec.path,
+      content,
+      type: "registry:file",
+      target: path.basename(spec.path),
+    };
+  }
+  return { path: spec.path, content, type: spec.type };
 }
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -38,13 +65,13 @@ export const GET: APIRoute = async ({ params, request }) => {
   const files = await Promise.all(
     fileSpecs.map(async (spec) => {
       const abs = fileURLToPath(new URL(spec.path, REGISTRY_ROOT));
-      const content = await readFile(abs, "utf8");
-      return { path: spec.path, content: rewriteImports(content), type: spec.type };
+      const raw = await readFile(abs, "utf8");
+      return buildFile(spec, rewriteImports(raw, fw), fw);
     }),
   );
 
   const registryDependencies = meta.registryDependencies.map((dep) => {
-    if (dep === "utils") return `${origin}/r/utils.json`;
+    if (dep === "utils") return `${origin}/r/${fw}/utils.json`;
     if (dep === "base") return `${origin}/r/base.json`;
     return `${origin}/r/${fw}/${dep}.json`;
   });
