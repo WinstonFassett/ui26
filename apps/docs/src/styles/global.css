@@ -1,5 +1,6 @@
-/* Geist (primary sans) is loaded via <link> in apps/docs/astro.config.mjs head,
- * not via @import, because Starlight injects CSS that breaks @import ordering. */
+/* Geist + Newsreader fonts are loaded via <link> in apps/docs/astro.config.mjs head.
+ * Editorial theme: serif display, mono meta, sharp geometry, warm monochrome.
+ */
 
 @layer base, starlight, theme, components, utilities;
 
@@ -7,7 +8,9 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
-@import '../../registry/tokens.css';
+/* Editorial design tokens - overrides Starlight's --sl-* namespace */
+@import './tokens.css';
+@import './starlight-overrides.css';
 
 @custom-variant dark (&:is([data-theme="dark"] *));
 
@@ -37,6 +40,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
+  --font-serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
   --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Monaco, 'Cascadia Code', monospace;
 }
@@ -75,6 +79,5 @@
   }
 }
 
-/* Design system → Starlight token bridge (outside @layer — beats Starlight's
- * own layer). Full mapping lives in starlight-theme.css. */
-@import './starlight-theme.css';
+/* Legacy token bridge - now handled by tokens.css and starlight-overrides.css */
+/* @import './starlight-theme.css'; */

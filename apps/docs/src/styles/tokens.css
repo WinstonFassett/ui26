@@ -1,0 +1,81 @@
+/* Matchina — Editorial design tokens
+ * Drop-in CSS custom properties for Starlight.
+ * Import from src/styles/custom.css. Starlight reads [data-theme] off <html>.
+ */
+
+:root {
+  /* --- Typography --- */
+  --font-serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-sans:  "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono:  "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Starlight overrides its own font vars — redirect them */
+  --sl-font:         var(--font-sans);
+  --sl-font-system:  var(--font-sans);
+  --sl-font-system-mono: var(--font-mono);
+
+  /* --- Layout --- */
+  --sl-content-width: 56rem;
+  --sl-nav-height:    44px;
+  --sl-sidebar-width: 240px;
+
+  /* --- Light theme (default) --- */
+  --sl-color-bg:               #f6f5f1;
+  --sl-color-bg-sidebar:       #f6f5f1;
+  --sl-color-bg-nav:           #f6f5f1;
+  --sl-color-bg-inline-code:   #faf9f6;
+  --sl-color-bg-hover:         #ecebe4;
+  --sl-color-hairline:         #e3e0d8;
+  --sl-color-hairline-light:   #ecebe4;
+  --sl-color-hairline-shade:   #e3e0d8;
+
+  --sl-color-text:             #15130f;
+  --sl-color-text-accent:      #e6d089;
+  --sl-color-text-invert:      #f6f5f1;
+  --sl-color-gray-1:           #3a362e;
+  --sl-color-gray-2:           #6a665d;
+  --sl-color-gray-3:           #a09b91;
+  --sl-color-gray-4:           #c7c2b7;
+  --sl-color-gray-5:           #ecebe4;
+  --sl-color-gray-6:           #faf9f6;
+
+  --accent:                    #e6d089;
+  --accent-ink:                #15130f;
+
+  /* Syntax tokens (light) */
+  --code-keyword:   #6a3fb5;
+  --code-identifier:#0a6fb3;
+  --code-string:    #a35a00;
+  --code-comment:   #a09b91;
+  --code-highlight: #fff6b3;
+}
+
+[data-theme="dark"] {
+  --sl-color-bg:               #0e0e0f;
+  --sl-color-bg-sidebar:       #0e0e0f;
+  --sl-color-bg-nav:           #0e0e0f;
+  --sl-color-bg-inline-code:   #1a1a1c;
+  --sl-color-bg-hover:         #1a1a1c;
+  --sl-color-hairline:         #262628;
+  --sl-color-hairline-light:   #1e1e20;
+  --sl-color-hairline-shade:   #2e2e30;
+
+  --sl-color-text:             #ececec;
+  --sl-color-text-accent:      #e6d089;
+  --sl-color-text-invert:      #0e0e0f;
+  --sl-color-gray-1:           #c8c8cd;
+  --sl-color-gray-2:           #8a8a90;
+  --sl-color-gray-3:           #56565c;
+  --sl-color-gray-4:           #3a3a3d;
+  --sl-color-gray-5:           #1a1a1c;
+  --sl-color-gray-6:           #131315;
+
+  --accent:                    #e6d089;
+  --accent-ink:                #15130f;
+
+  --code-keyword:   #c8a6ff;
+  --code-identifier:#8fd1ff;
+  --code-string:    #ffd48a;
+  --code-comment:   #56565c;
+  --code-highlight: #2a2a15;
+}

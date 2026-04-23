@@ -1,0 +1,289 @@
+/* Matchina — Starlight overrides
+ * Import AFTER tokens.css. These are visual patches on top of Starlight's
+ * default theme; they don't restructure the DOM.
+ *
+ * Load order in src/styles/custom.css:
+ *   @import './tokens.css';
+ *   @import './starlight-overrides.css';
+ */
+
+/* ---------- Global ---------- */
+
+html, body {
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+a { text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+/* Kill rounded corners almost everywhere. Keep tiny radius only on code-copy buttons. */
+:where(
+  .sidebar, .sidebar *,
+  header.header, header.header *,
+  .sl-markdown-content :is(kbd, code),
+  .content-panel, .content-panel *,
+  .sl-container, .sl-container *
+) {
+  border-radius: 0 !important;
+}
+.expressive-code .copy button { border-radius: 2px !important; }
+
+/* ---------- Top nav ---------- */
+
+header.header {
+  height: var(--sl-nav-height);
+  background: var(--sl-color-bg-nav);
+  border-bottom: 1px solid var(--sl-color-hairline);
+  padding: 0 16px;
+}
+header.header .site-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  gap: 10px;
+}
+header.header .site-title img,
+header.header .site-title svg { width: 20px; height: 20px; }
+
+/* Search pill */
+site-search button[data-open-modal] {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border: 1px solid var(--sl-color-hairline);
+  background: transparent;
+  padding: 4px 10px;
+  color: var(--sl-color-gray-2);
+  min-width: 360px;
+}
+
+/* Version pill (wrap a <span class="version-pill"> next to site title) */
+.version-pill {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--sl-color-gray-3);
+  border: 1px solid var(--sl-color-hairline);
+  padding: 1px 6px;
+  margin-left: 4px;
+}
+
+/* ---------- Sidebar ---------- */
+
+.sidebar-pane {
+  border-right: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-sidebar);
+}
+.sidebar-content { padding: 14px 0; }
+
+/* Section / group titles: mono uppercase micro-label */
+.sidebar-content .group > summary,
+.sidebar-content .large {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+  padding: 16px 16px 6px;
+  font-weight: 400;
+}
+.sidebar-content .group:first-child > summary,
+.sidebar-content > ul > li:first-child .large {
+  padding-top: 2px;
+}
+
+/* Leaf items: tight 3px vertical, Geist 12px */
+.sidebar-content a {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--sl-color-gray-2);
+  padding: 3px 16px !important;
+  border-left: 2px solid transparent;
+  margin-left: -1px;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+}
+.sidebar-content a:hover {
+  color: var(--sl-color-text);
+  background: var(--sl-color-bg-hover);
+}
+.sidebar-content a[aria-current="page"] {
+  color: var(--sl-color-text);
+  background: var(--sl-color-bg-inline-code);
+  border-left-color: var(--accent);
+  font-weight: 500;
+}
+
+/* ---------- Main content ---------- */
+
+.main-frame { padding-top: 0; }
+.content-panel { padding: 48px 56px; border: 0; }
+.content-panel + .content-panel { border-top: 1px solid var(--sl-color-hairline); }
+
+/* Breadcrumbs / rail labels — reusable .eyebrow utility */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+
+/* H1 — Newsreader display */
+.sl-markdown-content > h1:first-of-type,
+.hero h1 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: clamp(40px, 6vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  color: var(--sl-color-text);
+  margin: 0;
+}
+.sl-markdown-content > h1 em,
+.hero h1 em { font-weight: 400; font-style: italic; }
+.sl-markdown-content > h1 em.dim,
+.hero h1 em.dim { color: var(--sl-color-gray-2); }
+
+/* H2 / H3 — Geist */
+.sl-markdown-content h2 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: -0.015em;
+  margin-top: 2.5rem;
+}
+.sl-markdown-content h3 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Body */
+.sl-markdown-content p {
+  font-size: 15px;
+  line-height: 1.55;
+}
+.hero .tagline,
+.sl-markdown-content > p:first-of-type {
+  color: var(--sl-color-gray-2);
+  max-width: 520px;
+}
+
+/* ---------- CTAs ---------- */
+
+.sl-link-button.primary,
+a.action.primary {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  border: 0 !important;
+  padding: 10px 16px !important;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  gap: 10px;
+}
+.sl-link-button.secondary,
+a.action.secondary {
+  background: transparent !important;
+  color: var(--sl-color-text) !important;
+  border: 1px solid var(--sl-color-hairline) !important;
+  padding: 10px 16px !important;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  gap: 10px;
+}
+
+/* ---------- TOC (right rail) ---------- */
+
+.right-sidebar-panel { padding: 48px 24px; }
+.right-sidebar-panel h2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+.right-sidebar-panel a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 4px 0;
+  color: var(--sl-color-gray-2);
+  border-left: 0;
+}
+.right-sidebar-panel a[aria-current="true"] {
+  color: var(--sl-color-text);
+  border-left: 1.5px solid var(--accent);
+  padding-left: 8px;
+  margin-left: -10px;
+}
+
+/* ---------- Code blocks ---------- */
+
+.expressive-code {
+  border: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-inline-code);
+}
+.expressive-code pre {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 14px 20px !important;
+}
+.expressive-code .frame .title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+:not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  background: var(--sl-color-bg-inline-code);
+  border: 1px solid var(--sl-color-hairline);
+  padding: 0.5px 5px;
+}
+
+/* ---------- Focused utilities (optional) ---------- */
+
+.stat-row {
+  display: flex; gap: 48px; margin-top: 28px;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--sl-color-gray-2);
+}
+.stat-row .n {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--sl-color-text);
+  margin-right: 8px;
+}
+
+.hero-card {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-inline-code);
+}
+.hero-card > :first-child { border-right: 1px solid var(--sl-color-hairline); }
+.hero-card .pane-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px 10px;
+  border-bottom: 1px solid var(--sl-color-hairline-light);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
