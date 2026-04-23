@@ -3,6 +3,7 @@ import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { ReasoningDemo } from "@/components/demos/reasoning-demo";
 import { ListDemo } from "@/components/demos/list-demo";
+import { TableDemo } from "@/components/demos/table-demo";
 ---
 
 <StarlightPage frontmatter={{ title: "Install spike", template: "splash" }}>
@@ -38,6 +39,18 @@ import { ListDemo } from "@/components/demos/list-demo";
     </div>
     <div class="not-content">
       <ListDemo client:only="react" />
+    </div>
+
+    <div>
+      <h2>Kibo table (sortable)</h2>
+      <p style="color: var(--muted-foreground); font-size: 0.875rem;">
+        Installed via <code>npx shadcn add https://www.kibo-ui.com/r/table.json</code>.
+        Transitively installs shadcn <code>button</code>, <code>dropdown-menu</code>, and <code>table</code> primitives.
+        Click any column header to sort.
+      </p>
+    </div>
+    <div class="not-content">
+      <TableDemo client:only="react" />
     </div>
   </section>
 </StarlightPage>
