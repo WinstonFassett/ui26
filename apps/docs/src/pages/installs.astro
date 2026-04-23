@@ -2,6 +2,7 @@
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
 import { ReasoningDemo } from "@/components/demos/reasoning-demo";
+import { ListDemo } from "@/components/demos/list-demo";
 ---
 
 <StarlightPage frontmatter={{ title: "Install spike", template: "splash" }}>
@@ -26,6 +27,17 @@ import { ReasoningDemo } from "@/components/demos/reasoning-demo";
     </div>
     <div class="not-content">
       <ReasoningDemo client:only="react" />
+    </div>
+
+    <div>
+      <h2>Kibo list (Linear-style)</h2>
+      <p style="color: var(--muted-foreground); font-size: 0.875rem;">
+        Installed via <code>npx shadcn add https://www.kibo-ui.com/r/list.json</code>.
+        No edits to the component source. Drag tickets between status columns.
+      </p>
+    </div>
+    <div class="not-content">
+      <ListDemo client:only="react" />
     </div>
   </section>
 </StarlightPage>
