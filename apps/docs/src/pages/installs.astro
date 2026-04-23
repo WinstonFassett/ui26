@@ -5,6 +5,7 @@ import { ReasoningDemo } from "@/components/demos/reasoning-demo";
 import { ListDemo } from "@/components/demos/list-demo";
 import { TableDemo } from "@/components/demos/table-demo";
 import { TypographyDemo } from "@/components/demos/typography-demo";
+import { TagsDemo } from "@/components/demos/tags-demo";
 ---
 
 <StarlightPage frontmatter={{ title: "Install spike", template: "splash" }}>
@@ -64,6 +65,18 @@ import { TypographyDemo } from "@/components/demos/typography-demo";
     </div>
     <div class="not-content">
       <TypographyDemo />
+    </div>
+
+    <div>
+      <h2>Kibo tags (multi-select)</h2>
+      <p style="color: var(--muted-foreground); font-size: 0.875rem;">
+        Installed via <code>npx shadcn add https://www.kibo-ui.com/r/tags.json</code>.
+        Transitively installs shadcn <code>badge</code>, <code>dialog</code>, <code>popover</code>, <code>command</code>.
+        Click the trigger to open the cmdk picker; X to remove.
+      </p>
+    </div>
+    <div class="not-content">
+      <TagsDemo client:only="react" />
     </div>
   </section>
 </StarlightPage>
