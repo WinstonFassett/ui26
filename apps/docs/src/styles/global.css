@@ -75,33 +75,6 @@
   }
 }
 
-/* Starlight token overrides — outside @layer so they beat Starlight's own
- * layer. Remap the full accent scale (200..900) to warm neutrals so hero
- * gradients and sidebar states stay in the monochrome voice. */
-:root {
-  --sl-color-accent-low: oklch(0.94 0.006 65);
-  --sl-color-accent: oklch(0.2 0.01 65);
-  --sl-color-accent-high: oklch(0.17 0.008 65);
-  --sl-color-text-accent: oklch(0.2 0.01 65);
-  --sl-color-accent-200: oklch(0.88 0.007 65);
-  --sl-color-accent-400: oklch(0.52 0.01 65);
-  --sl-color-accent-500: oklch(0.36 0.01 65);
-  --sl-color-accent-600: oklch(0.26 0.008 65);
-  --sl-color-accent-700: oklch(0.2 0.01 65);
-  --sl-color-accent-900: oklch(0.11 0.006 65);
-
-  --sl-font: var(--font-sans);
-  --sl-font-mono: var(--font-mono);
-}
-[data-theme="dark"] {
-  --sl-color-accent-low: oklch(0.28 0.008 65);
-  --sl-color-accent: oklch(0.78 0.01 65);
-  --sl-color-accent-high: oklch(0.97 0.004 65);
-  --sl-color-text-accent: oklch(0.88 0.01 65);
-  --sl-color-accent-200: oklch(0.88 0.01 65);
-  --sl-color-accent-400: oklch(0.7 0.01 65);
-  --sl-color-accent-500: oklch(0.55 0.01 65);
-  --sl-color-accent-600: oklch(0.42 0.008 65);
-  --sl-color-accent-700: oklch(0.32 0.007 65);
-  --sl-color-accent-900: oklch(0.22 0.006 65);
-}
+/* Design system → Starlight token bridge (outside @layer — beats Starlight's
+ * own layer). Full mapping lives in starlight-theme.css. */
+@import './starlight-theme.css';
