@@ -110,6 +110,27 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 
 ---
 
+### F11 — shadcn registry `dependencies` are stale vs current component source
+- **Where**: installing Kibo table cascaded `shadcn` primitives (`button`, `dropdown-menu`, `table`). The button it wrote uses `import { cva } from "class-variance-authority"` and `import { Slot } from "radix-ui"`, but the shadcn registry JSON for `button` only lists `@radix-ui/react-slot` as a dep.
+- **Observed**: clean install → Vite 500 on first page load: `Failed to resolve import "class-variance-authority" from "src/components/ui/button.tsx"`. CVA was never added to `package.json`.
+- **Cause**: shadcn's published registry item drifted from the actual source. Dep list was authored when the button used `@radix-ui/react-slot` directly; the source now imports the `radix-ui` umbrella and `class-variance-authority`, but the registry metadata wasn't updated.
+- **Handling**:
+  1. **Manual `pnpm add` after install** (what we did) — one extra step per install until upstream fixes it. Low friction once you know what's missing.
+  2. **Install-time scan**: post-install grep the installed files for top-level imports and diff against `package.json`; install any missing. Automatable per the "ui26 sanitize" tool idea at the bottom.
+  3. **Pin shadcn styles to a known-good snapshot** in our own mirror of the registry — heavy, probably not worth it for now.
+- **Related**: `radix-ui` umbrella was already present (AIE reasoning pulled it in), so we only hit one missing dep. Future installs against cleaner trees may hit more.
+
+### F12 — `registry:style` items inject into `@layer base`, but Starlight overrides are unlayered → injected styles lose
+- **Where**: Kibo typography is a `registry:style` — shadcn splices its CSS directly into [global.css](apps/docs/src/styles/global.css). The target write point is inside our existing `@layer base { ... }` block.
+- **Observed**: after install, `.typography h1`..`h6` rendered at the wrong size — `.typography h3` computed to `margin-top: 0` and `font-size: 16px`. The Kibo rules were present in the stylesheet but had zero effect.
+- **Cause**: [starlight-overrides.css](apps/docs/src/styles/starlight-overrides.css) defines `.sl-markdown-content h3 { font-family...; font-size: 16px; font-weight: 600 }` at file scope (unlayered). Unlayered rules beat any `@layer` in the cascade, regardless of specificity. So `.typography h3:not(.not-typography h3)` (specificity 0,2,2) lost to `.sl-markdown-content h3` (specificity 0,1,1) purely because the latter was unlayered. The injected CSS lived under our `@layer base { ... }` wrap in global.css.
+- **Fix**: move the Kibo-injected `.typography` rules *outside* the `@layer base` block in global.css, so they sit unlayered alongside starlight-overrides. Specificity then decides normally and `.typography h3` wins over `.sl-markdown-content h3`.
+- **Handling options**:
+  1. **Post-install unwrap** (what we did) — edit the `@layer base { ... }` wrap off the injection site once. One-time per `registry:style` install; trivial to script.
+  2. **Wrap Starlight overrides in their own layer** (`@layer starlight { ... }` positioned after `base`). Broader blast radius; would reorder tons of existing rules. Avoid for now.
+  3. **Prefix typography selectors** (`.not-content .typography h3 { ... }`, specificity 0,2,1) — bumps their specificity *while still layered*. No: still loses to unlayered.
+- **Pattern**: `registry:style` is a different install shape from `registry:ui` — verify the injected layer placement every time, and remember unlayered > layered in Starlight.
+
 ### F10 — Tailwind v4 doesn't scan `node_modules` by default
 - **Where**: any installed component that pulls in a lib which emits Tailwind classes at runtime. First hit: AIE reasoning → [streamdown](https://www.npmjs.com/package/streamdown) renders markdown JSX with `list-decimal`, `list-inside`, `[li_&]:pl-6`, etc. written as class strings in its compiled JS.
 - **Observed**: `<ol class="list-decimal list-inside">` rendered, but computed `list-style-type: none` — the Tailwind utility rule was never generated because Tailwind v4's default content scan excludes `node_modules`. Combined with F9's scoped `ol { list-style: none }`, the markdown lost its numbers/bullets.
@@ -189,6 +210,84 @@ Committed under "feat(compat): shadcn CLI prereqs" (separate from any specific-v
 **Port-effort estimate if we wanted it permanent**:
 - React-only: essentially already done — just mark it as first-party under `registry/ai-elements/` with our meta conventions. ~30 min.
 - Polyglot: hard. Reasoning = Collapsible + Streamdown. Svelte port needs a Radix-equivalent (bits-ui/melt-ui) and a Svelte markdown-stream lib — no direct Streamdown port exists. Estimate 6-10h + ongoing drift. Recommendation: AIE stays React-only annex.
+
+---
+
+## Install log — Kibo list *(spike [a43c](tickets/))*
+
+**Command**: `npx -y shadcn@latest add https://www.kibo-ui.com/r/list.json --yes` from `apps/docs/`
+
+**Files created**: `src/components/kibo-ui/list/index.tsx` (1 file)
+
+**Deps added**: `@dnd-kit/core ^6.3.1`, `@dnd-kit/modifiers ^9.0.0` — both present in the registry metadata, installed cleanly.
+
+**Source edits**: none.
+
+**Demo harness** (`src/components/demos/list-demo.tsx`): ~90 lines — 4 status columns with colored dots, 8 tix-style tickets with P0-P3 priorities and `epic`/`spike` tag pills, drag between statuses updates state. Uses `useDraggable`/`useDroppable` primitives via `ListProvider` → `ListGroup` → `ListItems` → `ListItem`.
+
+**Demo-page edits**: `client:only="react"`, wrap in `.not-content`. That's it.
+
+**Render status**: ✓ grid renders, drag between columns updates state, no console errors.
+
+**Wins**:
+- **No Radix required** — dnd-kit is self-contained. Good candidate for polyglot port (Svelte has `svelte-dnd-action`).
+- **API is thin and sane** — list-item content is render-children, so styling every row as a tix-card took 20 lines.
+
+**Port-effort estimate**: ~1h for React port (extract `.tv.ts`). Polyglot adds 3-4h to map dnd-kit ↔ svelte-dnd-action, but doable because the Kibo source is tiny.
+
+---
+
+## Install log — Kibo table *(spike [a43c](tickets/))*
+
+**Command**: `npx -y shadcn@latest add https://www.kibo-ui.com/r/table.json --yes` from `apps/docs/`
+
+**Files created** (4):
+- `src/components/kibo-ui/table/index.tsx` — kibo wrapper
+- `src/components/ui/button.tsx` — shadcn primitive (registryDependency)
+- `src/components/ui/dropdown-menu.tsx` — shadcn primitive
+- `src/components/ui/table.tsx` — shadcn primitive
+
+**Deps added**: `@tanstack/react-table ^8.21.3`, `jotai ^2.19.1` (per Kibo metadata). **Then F11 bit us** — installed button needed `class-variance-authority`, which shadcn's registry doesn't declare. Had to `pnpm add class-variance-authority` manually post-install.
+
+**Source edits**: none.
+
+**Demo harness** (`src/components/demos/table-demo.tsx`): ~100 lines — 5 columns (ID, Title, Status with dot, Priority colored, Updated), 8 tix-style rows, all columns sortable via `TableColumnHeader` + dropdown menu.
+
+**Demo-page edits**: `client:only="react"`, wrap in `.not-content`.
+
+**Render status**: ✓ table renders, headers show sort chevrons, click opens asc/desc dropdown, sorting works across all columns, no console errors.
+
+**Wins**:
+- **Transitively installs shadcn primitives** — one `shadcn add` gives you Kibo table + shadcn's button/table/dropdown-menu, all using the `ui/` convention.
+- **Ticket-table composition is natural** — per-column `cell` render-prop means we can style status/priority freely without fighting the component.
+
+**Port-effort estimate**: 2-3h for a React port (the primitives are substantial — Kibo's wrapper is thin, but shadcn's button/dropdown-menu/table are 100-250 LOC each). Polyglot port: hard, shadcn-style headless tables don't have a widely-adopted Svelte equivalent; tanstack-table does work in Svelte but needs different boilerplate. Defer.
+
+---
+
+## Install log — Kibo typography *(spike [a43c](tickets/))*
+
+**Command**: `npx -y shadcn@latest add https://www.kibo-ui.com/r/typography.json --yes` from `apps/docs/`
+
+**Files created**: none. This is a `registry:style` type — shadcn **injects CSS directly into `global.css`** rather than writing a component file. ~265 lines of rules added inside our `@layer base { ... }` block.
+
+**Deps added**: none.
+
+**Source edits**:
+- Moved the injected `.typography` rules *outside* `@layer base` to fix F12 (Starlight overrides are unlayered and would otherwise always win).
+
+**Demo harness** (`src/components/demos/typography-demo.tsx`): ~50 lines of plain static JSX — `<div className="typography">` wrapping h1-h4, lead/muted/small paragraphs, bullet + ordered lists, blockquote, `code`, `kbd`, `pre`. No interactivity, so no `client:only` needed.
+
+**Demo-page edits**: wrap in `.not-content`.
+
+**Render status**: ✓ after F12 fix: big serif H1 (editorial theme), lead paragraph muted, H2 with border-bottom rhythm, H3 with proper 48px top margin, lists and inline code styled correctly.
+
+**Wins**:
+- **Opt-in by class** — `.typography` root + `.not-typography` descendant escape hatch. Clean coexistence with Starlight prose elsewhere.
+- **Uses our token vocabulary** — `var(--color-foreground)`, `var(--color-border)`, `var(--color-muted)`, `var(--color-primary)`, `var(--text-4xl)`. Zero visual drift after the layer fix.
+- **Uses Tailwind v4 `--spacing` and `--text-*--line-height`** — takes advantage of the theme tokens from Tailwind v4 setup, so spacing scales coherently with the rest of the site.
+
+**Port-effort estimate**: trivial — it's already CSS-only. If we wanted to own it we'd paste into `registry/tokens.css` or a sibling file, then delete the shadcn-injected block.
 
 ---
 
