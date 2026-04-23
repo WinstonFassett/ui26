@@ -64,7 +64,7 @@ Scored only the tells each skill makes explicit. ✓ = ui26 already passes, ✗ 
 | Emoji in markup | design-taste, minimalist | ✓ | none found in registry |
 | Generic `shadcn/ui` unchanged | design-taste | ✗ | tokens are verbatim shadcn defaults |
 | Black shadows at low opacity (vs tinted) | redesign, minimalist | ✗ | all shadows uncoloured |
-| Same radius everywhere | redesign | ✗ | single `--radius` var |
+| Same radius everywhere | redesign | ✓ | `--radius` var drives three sizes via calc (buttons 8px, cards 14px, badges full) |
 | Lucide/Feather exclusive | redesign | – | no icon lib chosen yet |
 | `h-screen` (vs `min-h-[100dvh]`) | design-taste | ✓ | grep clean |
 | `top/left/width/height` animation | design-taste | ✓ | grep clean |
@@ -86,7 +86,7 @@ These skills disagree on several axes. tix wins every tiebreak because it's the 
 |---|---|---|---|---|
 | Motion | "Perpetual micro-interactions" (pulse, typewriter, float in every card) | slow 600ms fade-in, ambient gradient | sub-200ms entrances + Motion (`LayoutGroup`, `AnimatePresence`, staggered CSS rows); no overshoot springs | **tix.** Use Motion (MIT, OSS) for layout/presence; keep durations short and easing `cubic-bezier(0.16, 1, 0.3, 1)`. |
 | Headings | `text-4xl md:text-6xl tracking-tighter` | editorial serif (Lyon/Newsreader) | `text-2xl font-bold` system-sans | **tix.** System-ish sans, modest scale. |
-| Radii | aggressive `rounded-[2.5rem]` on cards | `8-12px` | `--radius: 10px` base | **tix.** But *vary* it: tighter inner (6-8px) / softer outer (12-14px). |
+| Radii | aggressive `rounded-[2.5rem]` on cards | `8-12px` | `--radius: 10px` base | **tix + already done.** Existing code already uses 8px inner (buttons/inputs) and 14px outer (cards). No change. |
 | Background | neutral `#f9fafb` or warm bone `#F7F6F3` | warm bone `#FBFBFA` | `oklch(1 0 0)` pure | **warm off-white.** Moving `--background` to `oklch(0.995 0.002 80)`. |
 | Accent | "one accent, saturation <80%" | pastel spots only | none (monochrome + semantic status colors as icons only) | **tix + pragmatism.** No global "brand" accent. But override Starlight's purple to neutral. |
 | Glassmorphism / noise / grain | yes (at motion-intensity >5) | subtle yes | no | **tix.** Skip. |
@@ -100,7 +100,7 @@ Using `redesign-existing-projects`'s priority ladder, applied in order:
 1. **Font swap** — add Geist Sans + Geist Mono via Google Fonts, set on `<html>`. Biggest instant win. Tailwind defaults keep working via `font-sans`/`font-mono`.
 2. **Palette cleanup** — warm the neutrals (chroma 0 → 0.003 at hue 80), nudge foreground off pure black, use tinted borders.
 3. **Shadows** — recolor to warm-tinted (`rgb(50 30 5 / 0.04)` instead of uncoloured low-opacity black).
-4. **Radii variety** — keep `--radius` at 10px but use it on containers; bump inner elements (inputs, buttons) to 8px (`--radius - 2`) and cards to 14px (`--radius + 4`) via already-present calc vars.
+4. **Radii variety** — *not needed this pass.* The existing code already varies: buttons/inputs `rounded-md` (8px), cards `rounded-xl` (14px), badges `rounded-full`. `--radius` stays at 10px. Noted here only so it's not re-flagged.
 5. **Starlight accent override** — replace default purple with a restrained zinc-based accent so the docs shell stops shouting AI-purple.
 6. **Active feedback audit** — button already has `translate-y-px`. Add same to badge default (when interactive). Leave checkbox/switch (no click-travel room).
 7. **`text-wrap: balance` on headings** — tiny CSS, no risk.
