@@ -18,9 +18,11 @@ The `registry/` tree ships dumb, copy-pasteable code. Theme files are plain data
 
 **Prefer OKLCH.** New palettes should use OKLCH for colors so lightness is perceptually uniform across light/dark pairs. Hex is fine for themes where exact hues matter (Editorial, Brutalist) — don't convert gratuitously.
 
-**`dark` block is overrides only.** Only include tokens that actually change in dark mode. Fonts, `--radius`, and shadow vocabulary typically cascade from the light block — omit them from `dark`. The emitter relies on this: whatever is listed in `dark` gets emitted in the `-dark` CSS block verbatim.
+**Use `{ light, dark }` pairs for mode-specific values; plain strings for mode-invariant ones.** The emitter splits pairs across the light and dark CSS blocks; scalars go in the light block only and cascade. If a token's light and dark values are identical, write it as a plain string — don't write a `{ light: x, dark: x }` pair (the emitter detects the identity and de-dupes anyway, but the intent is clearer as a scalar).
 
-**Shadows must be explicitly set to `none`, not omitted.** Themes without shadows (Editorial, Brutalist) still need `--shadow-xs`, `--shadow-sm`, `--shadow-md`, `--shadow-lg`, `--highlight-inset` written out as `none` in the light block. Omission lets the previous theme's shadow stack leak through — subtle bug.
+**Shadows must be explicitly set to `none`, not omitted.** Themes without shadows (Editorial, Brutalist) still need `shadow-xs`, `shadow-sm`, `shadow-md`, `shadow-lg`, `highlight-inset` written out as `'none'`. Omission lets the previous theme's shadow stack leak through — subtle bug.
+
+**Optional named palette.** Themes may expose a `palette` field — a named record of mode-invariant strings or `{ light, dark }` pairs that tokens reference by identity (`primary: palette.ink`). It's exported on the Theme for introspection, and reduces duplication when several tokens share the same value. Skip it for themes with saturated/literal colors that don't name cleanly (e.g. brutalist's primaries).
 
 **Font stacks always end in a system fallback.** If a webfont 404s, the fallback has to carry the theme. Never stop at a single named font.
 

@@ -6,10 +6,13 @@
  *
  * First theme in the barrel doubles as `:root` so elements without a
  * `data-theme` attribute render with the default palette.
+ *
+ * Each theme has one `tokens` object. Scalar string values go in the light
+ * block only; { light, dark } pairs split across light and dark blocks.
  */
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { themes, type Theme, type Tokens } from '../registry/themes';
+import { themes, type ColorPair, type Theme, type TokenValue, type Tokens } from '../registry/themes';
 
 const OUT_URL = new URL('../registry/tokens.css', import.meta.url);
 
@@ -26,15 +29,40 @@ const HEADER = `/* ui26 design tokens — GENERATED from registry/themes/*.ts.
  */
 `;
 
-function emitVars(tokens: Tokens, indent = '  '): string {
-  const lines: string[] = [];
+function isColorPair(value: TokenValue): value is ColorPair {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as ColorPair).light === 'string' &&
+    typeof (value as ColorPair).dark === 'string'
+  );
+}
+
+function splitTokens(tokens: Tokens): {
+  light: Record<string, string>;
+  dark: Record<string, string>;
+} {
+  const light: Record<string, string> = {};
+  const dark: Record<string, string> = {};
   for (const [key, value] of Object.entries(tokens)) {
-    lines.push(`${indent}--${key}: ${value};`);
+    if (isColorPair(value)) {
+      light[key] = value.light;
+      if (value.dark !== value.light) dark[key] = value.dark;
+    } else {
+      light[key] = value;
+    }
   }
-  return lines.join('\n');
+  return { light, dark };
+}
+
+function emitVars(vars: Record<string, string>, indent = '  '): string {
+  return Object.entries(vars)
+    .map(([key, value]) => `${indent}--${key}: ${value};`)
+    .join('\n');
 }
 
 function emitTheme(theme: Theme, isDefault: boolean): string {
+  const { light, dark } = splitTokens(theme.tokens);
   const parts: string[] = [];
 
   if (theme.description) {
@@ -45,10 +73,10 @@ function emitTheme(theme: Theme, isDefault: boolean): string {
     ? `:root,\n[data-theme="${theme.name}"]`
     : `[data-theme="${theme.name}"]`;
 
-  parts.push(`${lightSelector} {\n${emitVars(theme.tokens)}\n}`);
+  parts.push(`${lightSelector} {\n${emitVars(light)}\n}`);
 
-  if (theme.dark && Object.keys(theme.dark).length > 0) {
-    parts.push(`[data-theme="${theme.name}-dark"] {\n${emitVars(theme.dark)}\n}`);
+  if (Object.keys(dark).length > 0) {
+    parts.push(`[data-theme="${theme.name}-dark"] {\n${emitVars(dark)}\n}`);
   }
 
   return parts.join('\n\n');

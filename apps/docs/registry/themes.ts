@@ -14,9 +14,21 @@
  * The first entry is the default theme — its light block doubles as `:root`
  * in the generated CSS so documents without a `data-theme` attribute render
  * correctly.
+ *
+ * Token values can be:
+ *   - a plain string           → mode-invariant, emitted in the light block
+ *   - a { light, dark } pair   → light value in the light block, dark value
+ *                                in the dark block (skipped if light === dark)
+ * So one `tokens` object is the whole truth. No separate dark-override field.
  */
 
-export type Tokens = Record<string, string>;
+/** A value that differs between light and dark modes. */
+export type ColorPair = { light: string; dark: string };
+
+/** A single token value: either mode-invariant or a light/dark pair. */
+export type TokenValue = string | ColorPair;
+
+export type Tokens = Record<string, TokenValue>;
 
 export type Theme = {
   /** Stable identifier. Written to `<html data-theme="…">` and localStorage. */
@@ -25,10 +37,15 @@ export type Theme = {
   label: string;
   /** Optional one-line description; emitted as a CSS comment. */
   description?: string;
-  /** Light palette + typography + shadow vocabulary. Default when `data-theme="<name>"`. */
+  /**
+   * Optional named palette. When present, tokens typically reference palette
+   * entries by identity (`primary: palette.ink`). Exported on the Theme so
+   * downstream code can introspect — e.g. `editorial.palette?.gold` — without
+   * parsing CSS.
+   */
+  palette?: Record<string, TokenValue>;
+  /** Structural tokens. Values may reference palette entries or be literals. */
   tokens: Tokens;
-  /** Dark overrides — only keys that differ from `tokens` need to be listed. Cascades from the light block. */
-  dark?: Tokens;
 };
 
 import editorial from './themes/editorial';

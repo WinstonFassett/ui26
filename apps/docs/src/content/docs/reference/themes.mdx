@@ -34,7 +34,7 @@ Tailwind's `dark:` variant fires on any selector ending in `dark` via the custom
 
 ## Theme shape
 
-Each theme file exports a plain object:
+Each theme file exports a plain object. Tokens that differ between light and dark are written as `{ light, dark }` pairs inline; tokens that are mode-invariant are plain strings. One `tokens` object is the whole truth — no separate dark-override field.
 
 ```ts
 // registry/themes/<name>.ts
@@ -45,23 +45,56 @@ const sunset: Theme = {
   label: 'Sunset',
   description: 'Warm off-white, tangerine accent, no shadows.',
   tokens: {
-    // Light block — the full contract below.
+    // Mode-invariant: plain string (emitted in light block, cascades).
     'font-sans': '"Inter", system-ui, sans-serif',
-    background: 'oklch(0.98 0.02 60)',
-    foreground: 'oklch(0.2 0.05 30)',
-    // ...
-  },
-  dark: {
-    // Only the tokens that change in dark. Fonts / radius / shadow
-    // vocabulary cascade from the light block.
-    background: 'oklch(0.14 0.04 30)',
-    foreground: 'oklch(0.96 0.02 60)',
-    // ...
+    radius: '0.5rem',
+
+    // Mode-specific: { light, dark } pair (emitter splits across blocks).
+    background: { light: 'oklch(0.98 0.02 60)', dark: 'oklch(0.14 0.04 30)' },
+    foreground: { light: 'oklch(0.2 0.05 30)',  dark: 'oklch(0.96 0.02 60)' },
+    // …
   },
 };
 
 export default sunset;
 ```
+
+### Optional: named palette
+
+Themes can expose a semantic palette for TS-level introspection:
+
+```ts
+const palette = {
+  paper: { light: '#f6f5f1', dark: '#0e0e0f' },
+  ink:   { light: '#15130f', dark: '#ececec' },
+  gold:  '#e6d089',                             // mode-invariant
+  // …
+} as const;
+
+const editorial: Theme = {
+  name: 'editorial',
+  label: 'Editorial',
+  palette,
+  tokens: {
+    background:          palette.paper,
+    foreground:          palette.ink,
+    primary:             { light: palette.ink.light, dark: palette.gold },
+    'primary-foreground':{ light: palette.gold,      dark: palette.ink.light },
+    accent:              palette.gold,
+    // …
+  },
+};
+```
+
+Palettes are optional (not every theme has a semantic vocabulary worth naming — brutalist's saturated primaries don't benefit). When present, the palette is exported on the Theme object so downstream code can read it directly:
+
+```ts
+import editorial from '@registry/themes/editorial';
+editorial.palette?.gold;              // '#e6d089'
+editorial.palette?.paper.dark;        // '#0e0e0f'
+```
+
+No CSS parsing required.
 
 ## Token contract
 
