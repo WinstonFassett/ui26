@@ -62,7 +62,7 @@ export function Picker() {
   --radius: 6px;
 }
 
-[data-theme="dark"] {
+[data-theme="editorial-dark"] {
   --background: oklch(0.14 0.02 260);
   --foreground: oklch(0.95 0.02 80);
 }`,

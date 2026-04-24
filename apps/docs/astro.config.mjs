@@ -14,14 +14,17 @@ import webDevMcp from '@winstonfassett/web-dev-mcp-astro';
 export default defineConfig({
     integrations: [webDevMcp(), starlight({
         title: 'ui26',
+        components: {
+            ThemeProvider: './src/components/starlight/ThemeProvider.astro',
+            ThemeSelect: './src/components/starlight/ThemeSelect.astro',
+        },
         head: [
-            // Inline the critical design tokens + Starlight mapping so the browser
-            // never paints Starlight's cold defaults before our external CSS loads.
-            // Token values here must stay in sync with registry/tokens.css.
-            // Only the vars needed to eliminate visible flash are included.
+            // Inline critical --sl-* vars so Starlight's chrome doesn't paint
+            // cold defaults before external CSS loads. Editorial light is the
+            // unconditional default; any *-dark suffix switches to dark chrome.
+            // Full per-theme palette loads with tokens.css.
             { tag: 'style', content: `
-                /* Editorial theme - light mode defaults */
-                :root,[data-theme="light"]{
+                :root{
                     --sl-color-bg:#f6f5f1;
                     --sl-color-bg-nav:#f6f5f1;
                     --sl-color-bg-sidebar:#f6f5f1;
@@ -30,8 +33,7 @@ export default defineConfig({
                     --sl-color-accent:#e6d089;
                     --sl-color-text-accent:#e6d089;
                 }
-                /* Editorial theme - dark mode */
-                [data-theme="dark"]{
+                [data-theme$="dark"]{
                     --sl-color-bg:#0e0e0f;
                     --sl-color-bg-nav:#0e0e0f;
                     --sl-color-bg-sidebar:#0e0e0f;
@@ -55,6 +57,7 @@ export default defineConfig({
                 label: 'Reference',
                 items: [
                     { label: 'Tokens', slug: 'reference/tokens' },
+                    { label: 'Themes', slug: 'reference/themes' },
                     { label: 'Kitchen Sink', link: '/kitchen-sink' },
                 ],
             },

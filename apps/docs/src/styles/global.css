@@ -21,7 +21,8 @@
 @import './starlight-overrides.css';
 
 /* Tailwind's `dark:` variant fires for any theme ending in `dark`
- * (editorial `[data-theme="dark"]`, `[data-theme="vanilla-dark"]`, etc.)
+ * (`[data-theme="editorial-dark"]`, `[data-theme="tix-dark"]`, etc.).
+ * Themes are compound keys — see registry/tokens.css.
  */
 @custom-variant dark (&:is([data-theme$="dark"] *));
 
@@ -62,7 +63,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* Fonts are indirected through `--font-*` in registry/tokens.css so themes
-   * can swap typography (editorial uses Newsreader serif; vanilla uses system). */
+   * can swap typography (editorial uses Newsreader serif; tix/shad use system). */
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);

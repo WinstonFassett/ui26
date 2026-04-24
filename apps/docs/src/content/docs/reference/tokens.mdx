@@ -20,6 +20,6 @@ These tokens live in [`registry/tokens.css`](https://github.com/WinstonFassett/u
 
 ## Reference
 
-Each token resolves to a CSS custom property in `:root` (light) and `[data-theme="dark"]` (dark). The full list:
+Each token resolves to a CSS custom property, keyed off `<html data-theme>`. Default `:root` is editorial light; dark and alternate themes (editorial, tix, shad, linear, brutalist) use compound keys like `[data-theme="editorial-dark"]` or `[data-theme="shad"]`. The full list:
 
 `background`, `foreground`, `card`, `card-foreground`, `popover`, `popover-foreground`, `primary`, `primary-foreground`, `secondary`, `secondary-foreground`, `muted`, `muted-foreground`, `accent`, `accent-foreground`, `destructive`, `destructive-foreground`, `border`, `input`, `ring`, `radius`.
