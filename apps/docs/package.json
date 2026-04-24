@@ -7,10 +7,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "build:tokens": "tsx scripts/build-tokens.ts",
-    "predev": "tsx scripts/build-tokens.ts",
-    "prebuild": "tsx scripts/build-tokens.ts"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
@@ -52,7 +49,6 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "playwright": "^1.59.1",
-    "tsx": "^4.21.0"
+    "playwright": "^1.59.1"
   }
 }

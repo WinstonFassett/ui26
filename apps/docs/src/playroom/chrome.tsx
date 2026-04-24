@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
-import { themes } from "@registry/themes";
 import { snippets, defaultSnippet } from "./snippets";
 import { readFromHash, writeToHash } from "./url-state";
 
@@ -10,8 +9,17 @@ const WIDTHS = [360, 768, 1280] as const;
 type Width = (typeof WIDTHS)[number];
 type Mode = "light" | "dark";
 
+// Playroom's own list — must stay in sync with registry/tokens.css theme blocks.
+const THEMES = [
+  { name: "editorial", label: "Editorial" },
+  { name: "tix", label: "Tix" },
+  { name: "shad", label: "Shad" },
+  { name: "linear", label: "Linear" },
+  { name: "brutalist", label: "Brutalist" },
+] as const;
+
 const PREVIEW_URL = "/playroom/preview";
-const DEFAULT_THEME = themes[0]?.name ?? "editorial";
+const DEFAULT_THEME = THEMES[0].name;
 
 function postCode(
   frame: HTMLIFrameElement | null | undefined,
@@ -127,7 +135,7 @@ export function Chrome() {
           value={themeName}
           onChange={(e) => setThemeName(e.target.value)}
         >
-          {themes.map((t) => (
+          {THEMES.map((t) => (
             <option key={t.name} value={t.name}>
               {t.label}
             </option>

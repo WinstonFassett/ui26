@@ -5,20 +5,16 @@
  * compound `data-theme` value on <html> before first paint.
  *
  * Storage keys:
- *   ui26-theme-name  → one of the names from the barrel (themes[].name)
+ *   ui26-theme-name  → "editorial" | "tix" | "shad" | "linear" | "brutalist"
  *   ui26-theme-mode  → "light" | "dark" | "auto"
  *
- * Default: first theme in the barrel + auto. Auto follows `prefers-color-scheme`.
+ * Default: editorial + auto. Auto follows `prefers-color-scheme`.
  */
-import { themes } from '@registry/themes';
-
-const themeNames = themes.map((t) => t.name);
-const defaultName = themeNames[0] ?? 'editorial';
 ---
 
-<script is:inline define:vars={{ themeNames, defaultName }}>
+<script is:inline>
   window.Ui26Theme = (() => {
-    const THEMES = themeNames;
+    const THEMES = ['editorial', 'tix', 'shad', 'linear', 'brutalist'];
     const MODES = ['light', 'dark', 'auto'];
     const nameKey = 'ui26-theme-name';
     const modeKey = 'ui26-theme-mode';
@@ -26,7 +22,7 @@ const defaultName = themeNames[0] ?? 'editorial';
     const hasLS = typeof localStorage !== 'undefined';
     const readName = () => {
       const v = hasLS && localStorage.getItem(nameKey);
-      return THEMES.includes(v) ? v : defaultName;
+      return THEMES.includes(v) ? v : 'editorial';
     };
     const readMode = () => {
       const v = hasLS && localStorage.getItem(modeKey);

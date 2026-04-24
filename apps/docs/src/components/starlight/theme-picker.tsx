@@ -1,23 +1,31 @@
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { themes } from "@registry/themes";
 
+type Name = "editorial" | "tix" | "shad" | "linear" | "brutalist";
 type Mode = "light" | "dark" | "auto";
 
 declare global {
   interface Window {
     Ui26Theme: {
-      THEMES: readonly string[];
+      THEMES: readonly Name[];
       MODES: readonly Mode[];
-      getName(): string;
+      getName(): Name;
       getMode(): Mode;
-      setName(name: string): void;
+      setName(name: Name): void;
       setMode(mode: Mode): void;
-      subscribe(fn: (name: string, mode: Mode) => void): () => void;
+      subscribe(fn: (name: Name, mode: Mode) => void): () => void;
     };
   }
 }
+
+const LABELS: Record<Name, string> = {
+  editorial: "Editorial",
+  tix: "Tix",
+  shad: "Shad",
+  linear: "Linear",
+  brutalist: "Brutalist",
+};
 
 const MODE_ICONS: Record<Mode, typeof Sun> = {
   light: Sun,
@@ -25,11 +33,11 @@ const MODE_ICONS: Record<Mode, typeof Sun> = {
   auto: Laptop,
 };
 
+const THEMES: readonly Name[] = ["editorial", "tix", "shad", "linear", "brutalist"];
 const MODES: readonly Mode[] = ["light", "dark", "auto"];
-const DEFAULT_NAME = themes[0]?.name ?? "editorial";
 
 export function ThemePicker() {
-  const [name, setName] = useState<string>(DEFAULT_NAME);
+  const [name, setName] = useState<Name>("editorial");
   const [mode, setMode] = useState<Mode>("auto");
   const [mounted, setMounted] = useState(false);
 
@@ -49,12 +57,12 @@ export function ThemePicker() {
       <select
         aria-label="Select theme"
         className="rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground"
-        onChange={(e) => window.Ui26Theme?.setName(e.target.value)}
+        onChange={(e) => window.Ui26Theme?.setName(e.target.value as Name)}
         value={name}
       >
-        {themes.map((t) => (
-          <option key={t.name} value={t.name}>
-            {t.label}
+        {THEMES.map((n) => (
+          <option key={n} value={n}>
+            {LABELS[n]}
           </option>
         ))}
       </select>
