@@ -2,17 +2,24 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { javascript } from "@codemirror/lang-javascript";
+import { themes } from "@registry/themes";
 import { snippets, defaultSnippet } from "./snippets";
 import { readFromHash, writeToHash } from "./url-state";
 
 const WIDTHS = [360, 768, 1280] as const;
 type Width = (typeof WIDTHS)[number];
-type Theme = "light" | "dark";
+type Mode = "light" | "dark";
 
 const PREVIEW_URL = "/playroom/preview";
+const DEFAULT_THEME = themes[0]?.name ?? "editorial";
 
-function postCode(frame: HTMLIFrameElement | null | undefined, code: string, theme: Theme) {
-  frame?.contentWindow?.postMessage({ type: "code", code, theme }, "*");
+function postCode(
+  frame: HTMLIFrameElement | null | undefined,
+  code: string,
+  themeName: string,
+  mode: Mode,
+) {
+  frame?.contentWindow?.postMessage({ type: "code", code, themeName, mode }, "*");
 }
 
 function GearIcon() {
@@ -35,12 +42,15 @@ function GearIcon() {
 export function Chrome() {
   const [code, setCode] = useState<string>(() => readFromHash() ?? defaultSnippet);
   const [widths, setWidths] = useState<Width[]>([768]);
-  const [themes, setThemes] = useState<Theme[]>(["dark"]);
+  const [modes, setModes] = useState<Mode[]>(["dark"]);
+  const [themeName, setThemeName] = useState<string>(DEFAULT_THEME);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const iframesRef = useRef<Map<string, HTMLIFrameElement>>(new Map());
   const codeRef = useRef(code);
+  const themeNameRef = useRef(themeName);
   const settingsRef = useRef<HTMLDivElement>(null);
   codeRef.current = code;
+  themeNameRef.current = themeName;
 
   useEffect(() => {
     const t = setTimeout(() => writeToHash(code), 200);
@@ -49,18 +59,18 @@ export function Chrome() {
 
   useEffect(() => {
     for (const [key, frame] of iframesRef.current.entries()) {
-      const theme = key.split(":")[1] as Theme;
-      postCode(frame, code, theme);
+      const mode = key.split(":")[1] as Mode;
+      postCode(frame, code, themeName, mode);
     }
-  }, [code]);
+  }, [code, themeName]);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (!event.data || event.data.type !== "ready") return;
       for (const [key, frame] of iframesRef.current.entries()) {
         if (frame.contentWindow === event.source) {
-          const theme = key.split(":")[1] as Theme;
-          postCode(frame, codeRef.current, theme);
+          const mode = key.split(":")[1] as Mode;
+          postCode(frame, codeRef.current, themeNameRef.current, mode);
         }
       }
     };
@@ -80,10 +90,10 @@ export function Chrome() {
   }, [settingsOpen]);
 
   const cells = useMemo(() => {
-    const out: { key: string; w: Width; t: Theme }[] = [];
-    for (const t of themes) for (const w of widths) out.push({ key: `${w}:${t}`, w, t });
+    const out: { key: string; w: Width; m: Mode }[] = [];
+    for (const m of modes) for (const w of widths) out.push({ key: `${w}:${m}`, w, m });
     return out;
-  }, [widths, themes]);
+  }, [widths, modes]);
 
   const snippetOnPick = (name: string) => {
     const s = snippets.find((s) => s.name === name);
@@ -95,6 +105,7 @@ export function Chrome() {
       <header className="playroom-header">
         <strong className="playroom-title">ui26</strong>
         <select
+          aria-label="Snippet"
           className="playroom-select"
           value=""
           onChange={(e) => {
@@ -106,6 +117,19 @@ export function Chrome() {
           {snippets.map((s) => (
             <option key={s.name} value={s.name}>
               {s.group} / {s.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          aria-label="Theme"
+          className="playroom-select"
+          value={themeName}
+          onChange={(e) => setThemeName(e.target.value)}
+        >
+          {themes.map((t) => (
+            <option key={t.name} value={t.name}>
+              {t.label}
             </option>
           ))}
         </select>
@@ -147,22 +171,22 @@ export function Chrome() {
               </div>
 
               <div className="playroom-settings-section">
-                <div className="playroom-settings-label">Themes</div>
+                <div className="playroom-settings-label">Modes</div>
                 <div className="playroom-settings-chips">
-                  {(["light", "dark"] as const).map((t) => (
-                    <label key={t} className="playroom-chip">
+                  {(["light", "dark"] as const).map((m) => (
+                    <label key={m} className="playroom-chip">
                       <input
                         type="checkbox"
-                        checked={themes.includes(t)}
+                        checked={modes.includes(m)}
                         onChange={(e) =>
-                          setThemes((prev) =>
+                          setModes((prev) =>
                             e.target.checked
-                              ? ([...prev, t] as Theme[])
-                              : prev.filter((x) => x !== t),
+                              ? ([...prev, m] as Mode[])
+                              : prev.filter((x) => x !== m),
                           )
                         }
                       />
-                      {t}
+                      {m}
                     </label>
                   ))}
                 </div>
@@ -184,10 +208,10 @@ export function Chrome() {
           />
         </div>
         <div className="playroom-previews">
-          {cells.map(({ key, w, t }) => (
+          {cells.map(({ key, w, m }) => (
             <div key={key} className="playroom-cell">
               <div className="playroom-cell-label">
-                {w}px · {t}
+                {w}px · {m}
               </div>
               <iframe
                 ref={(el) => {
@@ -196,11 +220,11 @@ export function Chrome() {
                 }}
                 src={PREVIEW_URL}
                 onLoad={(e) => {
-                  postCode(e.currentTarget, codeRef.current, t);
+                  postCode(e.currentTarget, codeRef.current, themeNameRef.current, m);
                 }}
                 style={{ width: w }}
                 className="playroom-iframe"
-                title={`${w}px ${t}`}
+                title={`${w}px ${m}`}
               />
             </div>
           ))}

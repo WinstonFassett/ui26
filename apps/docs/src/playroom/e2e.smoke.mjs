@@ -49,7 +49,7 @@ await verifyFirstIframe();
 // Exercise every snippet
 for (const s of snippets) {
   // Pick snippet via the select
-  await page.selectOption(".playroom-select", s.name).catch(() => {});
+  await page.selectOption('[aria-label="Snippet"]', s.name).catch(() => {});
   await page.waitForTimeout(800);
   const frames = page.frames().filter((f) => f.url().includes("/playroom/preview"));
   // At least one frame should have some rendered content

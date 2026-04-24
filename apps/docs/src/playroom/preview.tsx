@@ -4,7 +4,7 @@ import { compile } from "./transform";
 import { moduleScope } from "./namespace";
 
 type Msg =
-  | { type: "code"; code: string; theme: "light" | "dark" }
+  | { type: "code"; code: string; themeName: string; mode: "light" | "dark" }
   | { type: "ready" };
 
 export function Preview() {
@@ -42,9 +42,8 @@ export function Preview() {
       const msg = event.data;
       if (!msg || typeof msg !== "object") return;
       if (msg.type === "code") {
-        document.documentElement.dataset.theme = msg.theme;
-        if (msg.theme === "dark") document.documentElement.classList.add("dark");
-        else document.documentElement.classList.remove("dark");
+        document.documentElement.dataset.theme =
+          msg.mode === "dark" ? `${msg.themeName}-dark` : msg.themeName;
         render(msg.code);
       }
     };
