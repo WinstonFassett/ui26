@@ -5,7 +5,7 @@
  * compound `data-theme` value on <html> before first paint.
  *
  * Storage keys:
- *   ui26-theme-name  → "editorial" | "tix" | "shad" | "linear" | "brutalist"
+ *   ui26-theme-name  → "editorial" | "tix" | "shad" | "neon-synthwave" | "cyberpunk-neon" | "pastel-kawaii" | "zen-garden"
  *   ui26-theme-mode  → "light" | "dark" | "auto"
  *
  * Default: editorial + auto. Auto follows `prefers-color-scheme`.
@@ -14,7 +14,7 @@
 
 <script is:inline>
   window.Ui26Theme = (() => {
-    const THEMES = ['editorial', 'tix', 'shad', 'linear', 'brutalist'];
+    const THEMES = ['editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'pastel-kawaii', 'zen-garden'];
     const MODES = ['light', 'dark', 'auto'];
     const nameKey = 'ui26-theme-name';
     const modeKey = 'ui26-theme-mode';

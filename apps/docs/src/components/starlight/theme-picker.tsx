@@ -2,7 +2,14 @@ import { Laptop, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
-type Name = "editorial" | "tix" | "shad" | "linear" | "brutalist";
+type Name =
+  | "editorial"
+  | "tix"
+  | "shad"
+  | "neon-synthwave"
+  | "cyberpunk-neon"
+  | "pastel-kawaii"
+  | "zen-garden";
 type Mode = "light" | "dark" | "auto";
 
 declare global {
@@ -23,8 +30,10 @@ const LABELS: Record<Name, string> = {
   editorial: "Editorial",
   tix: "Tix",
   shad: "Shad",
-  linear: "Linear",
-  brutalist: "Brutalist",
+  "neon-synthwave": "Synthwave",
+  "cyberpunk-neon": "Cyberpunk",
+  "pastel-kawaii": "Kawaii",
+  "zen-garden": "Zen Garden",
 };
 
 const MODE_ICONS: Record<Mode, typeof Sun> = {
@@ -33,7 +42,15 @@ const MODE_ICONS: Record<Mode, typeof Sun> = {
   auto: Laptop,
 };
 
-const THEMES: readonly Name[] = ["editorial", "tix", "shad", "linear", "brutalist"];
+const THEMES: readonly Name[] = [
+  "editorial",
+  "tix",
+  "shad",
+  "neon-synthwave",
+  "cyberpunk-neon",
+  "pastel-kawaii",
+  "zen-garden",
+];
 const MODES: readonly Mode[] = ["light", "dark", "auto"];
 
 export function ThemePicker() {

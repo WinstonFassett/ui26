@@ -14,8 +14,10 @@ const THEMES = [
   { name: "editorial", label: "Editorial" },
   { name: "tix", label: "Tix" },
   { name: "shad", label: "Shad" },
-  { name: "linear", label: "Linear" },
-  { name: "brutalist", label: "Brutalist" },
+  { name: "neon-synthwave", label: "Synthwave" },
+  { name: "cyberpunk-neon", label: "Cyberpunk" },
+  { name: "pastel-kawaii", label: "Kawaii" },
+  { name: "zen-garden", label: "Zen Garden" },
 ] as const;
 
 const PREVIEW_URL = "/playroom/preview";

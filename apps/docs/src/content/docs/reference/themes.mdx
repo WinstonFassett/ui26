@@ -12,7 +12,7 @@ State lives on `<html data-theme>` as a compound key:
 | Shape | Example |
 |---|---|
 | `<name>` | `editorial`, `tix`, `shad` |
-| `<name>-dark` | `editorial-dark`, `linear-dark` |
+| `<name>-dark` | `editorial-dark`, `neon-synthwave-dark` |
 
 One dropdown picks the theme; one toggle picks light/dark/auto. Both write to `localStorage` (`ui26-theme-name`, `ui26-theme-mode`) and to the compound `data-theme` attribute pre-paint.
 
@@ -94,16 +94,16 @@ In [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps
 In [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro), add the key to the `THEMES` allowlist inside the inline script:
 
 ```js
-const THEMES = ['editorial', 'tix', 'shad', 'linear', 'brutalist', 'sunset'];
+const THEMES = ['editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset'];
 ```
 
 In [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx), add the key to the local `THEMES` array, extend the `Name` union, and add a `LABELS` entry:
 
 ```tsx
-type Name = 'editorial' | 'tix' | 'shad' | 'linear' | 'brutalist' | 'sunset';
+type Name = 'editorial' | 'tix' | 'shad' | 'neon-synthwave' | 'cyberpunk-neon' | 'sunset';
 
 const THEMES: readonly Name[] = [
-  'editorial', 'tix', 'shad', 'linear', 'brutalist', 'sunset',
+  'editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset',
 ];
 
 const LABELS: Record<Name, string> = {
