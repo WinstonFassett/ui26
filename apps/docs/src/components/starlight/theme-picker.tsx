@@ -9,7 +9,14 @@ type Name =
   | "neon-synthwave"
   | "cyberpunk-neon"
   | "pastel-kawaii"
-  | "zen-garden";
+  | "zen-garden"
+  | "bubblegum-pop"
+  | "retro-arcade"
+  | "tropical-paradise"
+  | "steampunk-cogs"
+  | "space-odyssey"
+  | "vintage-vinyl"
+  | "misty-harbor";
 type Mode = "light" | "dark" | "auto";
 
 declare global {
@@ -34,6 +41,13 @@ const LABELS: Record<Name, string> = {
   "cyberpunk-neon": "Cyberpunk",
   "pastel-kawaii": "Kawaii",
   "zen-garden": "Zen Garden",
+  "bubblegum-pop": "Bubblegum",
+  "retro-arcade": "Retro Arcade",
+  "tropical-paradise": "Tropical",
+  "steampunk-cogs": "Steampunk",
+  "space-odyssey": "Space Odyssey",
+  "vintage-vinyl": "Vintage Vinyl",
+  "misty-harbor": "Misty Harbor",
 };
 
 const MODE_ICONS: Record<Mode, typeof Sun> = {
@@ -50,6 +64,13 @@ const THEMES: readonly Name[] = [
   "cyberpunk-neon",
   "pastel-kawaii",
   "zen-garden",
+  "bubblegum-pop",
+  "retro-arcade",
+  "tropical-paradise",
+  "steampunk-cogs",
+  "space-odyssey",
+  "vintage-vinyl",
+  "misty-harbor",
 ];
 const MODES: readonly Mode[] = ["light", "dark", "auto"];
 

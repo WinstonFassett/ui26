@@ -18,6 +18,13 @@ const THEMES = [
   { name: "cyberpunk-neon", label: "Cyberpunk" },
   { name: "pastel-kawaii", label: "Kawaii" },
   { name: "zen-garden", label: "Zen Garden" },
+  { name: "bubblegum-pop", label: "Bubblegum" },
+  { name: "retro-arcade", label: "Retro Arcade" },
+  { name: "tropical-paradise", label: "Tropical" },
+  { name: "steampunk-cogs", label: "Steampunk" },
+  { name: "space-odyssey", label: "Space Odyssey" },
+  { name: "vintage-vinyl", label: "Vintage Vinyl" },
+  { name: "misty-harbor", label: "Misty Harbor" },
 ] as const;
 
 const PREVIEW_URL = "/playroom/preview";
