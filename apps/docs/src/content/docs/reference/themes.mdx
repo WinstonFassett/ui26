@@ -98,7 +98,7 @@ No CSS parsing required.
 
 ## Token contract
 
-Every theme's light block must define (at minimum):
+Every theme's `tokens` must define (at minimum):
 
 **Surfaces**
 `--background` `--foreground` `--card` `--card-foreground` `--popover` `--popover-foreground`
@@ -121,7 +121,7 @@ Every theme's light block must define (at minimum):
 **Fonts** (only if the theme diverges from the default stack)
 `--font-sans` `--font-serif` `--font-mono`
 
-The dark block only lists tokens that change. If a value is identical to the light block (typically `--radius`, fonts, or shadow vocabulary), leave it out of `dark` — the emitter doesn't duplicate it in the generated CSS, and it cascades at runtime.
+Tokens that differ between light and dark are written as `{ light, dark }` pairs; tokens that are mode-invariant (typically `radius`, fonts, or some shadow shapes) are plain strings. The emitter splits pairs across CSS blocks; scalars go in the light block only and cascade to dark at runtime.
 
 ## Adding a theme
 
@@ -129,7 +129,7 @@ Say we're adding `sunset`.
 
 ### 1. Write the theme file
 
-Create [`registry/themes/sunset.ts`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/themes/sunset.ts) using the shape above. Fill in the full light block and the dark overrides.
+Create [`registry/themes/sunset.ts`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/themes/sunset.ts) using the shape above. Fill in the full token contract — use `{ light, dark }` pairs for tokens that change between modes.
 
 ### 2. Register in the barrel
 
