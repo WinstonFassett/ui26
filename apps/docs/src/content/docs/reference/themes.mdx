@@ -134,11 +134,3 @@ Open a page, pick `Sunset` in the header dropdown, toggle light/dark/auto. Check
 - Components on `/kitchen-sink` and `/installs` look cohesive
 
 If a token is missing, you'll see a flash of an unrelated theme's value (the cascade falls through to the previous theme block). Any missing var = missing block entry.
-
-## Gotchas
-
-- **Don't number tokens.** No `--panel2`, `--surface-1`. Use the semantic names above; map any numbered source tokens at the call site.
-- **Keep the dark block minimal.** Only override what differs. Redefining identical values is noise.
-- **Shadows must be set, not omitted.** Use `none` for Editorial/Brutalist-style themes. Omission falls back to the previous theme's shadow stack — subtle bug.
-- **Font stacks should end in a system fallback.** Themes ship as CSS — if a webfont 404s, the fallback carries the theme.
-- **The inline FOUC CSS in `astro.config.mjs`** only covers the `--sl-*` Starlight chrome vars with Editorial defaults. It's fine — tokens.css loads milliseconds later and overrides.
