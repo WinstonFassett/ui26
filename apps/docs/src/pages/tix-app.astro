@@ -1,0 +1,316 @@
+---
+/*
+ * Full-screen overlay of the tix main list view, themed through ui26 tokens.
+ * Mirrors http://ui26-tix.localhost:1355/ as a reference surface for testing
+ * how well registry components + themes fit a real product layout.
+ *
+ * Standalone (not StarlightPage) so the viewport matches tix-ui 1:1.
+ * Top-right corner carries the theme picker so themes can be swapped live.
+ */
+import "../styles/global.css";
+import ThemeProvider from "../components/starlight/ThemeProvider.astro";
+import { ThemePicker } from "../components/starlight/theme-picker";
+import Button from "@registry/button/button.astro";
+import Badge from "@registry/badge/badge.astro";
+
+const folders = [
+  { label: "tickets", count: 35, open: true },
+];
+
+type SidebarItem = {
+  label: string;
+  active?: boolean;
+  count?: number;
+  dot?: string;
+};
+type SidebarSection = { title: string | null; items: SidebarItem[] };
+const sidebarSections: SidebarSection[] = [
+  {
+    title: null,
+    items: [
+      { label: "All Issues", active: true },
+      { label: "Activity" },
+    ],
+  },
+  {
+    title: "Status",
+    items: [
+      { label: "Open", count: 4, dot: "var(--warn)" },
+      { label: "In Progress", count: 1, dot: "oklch(0.85 0.17 90)" },
+      { label: "In Review", count: 8, dot: "var(--info)" },
+      { label: "On Hold", count: 3, dot: "var(--muted-foreground)" },
+      { label: "Done", count: 13, dot: "var(--purple)" },
+      { label: "Closed", count: 6, dot: "var(--text-mute)" },
+    ],
+  },
+  {
+    title: "Type",
+    items: [
+      { label: "Task", count: 14 },
+      { label: "Bug", count: 1 },
+      { label: "Feature", count: 13 },
+      { label: "Epic", count: 2 },
+    ],
+  },
+  {
+    title: "Tags",
+    items: [
+      { label: "spike", count: 7 },
+      { label: "themes", count: 5 },
+      { label: "dx", count: 2 },
+      { label: "types", count: 1 },
+      { label: "registry", count: 1 },
+      { label: "followup", count: 1 },
+      { label: "docs", count: 1 },
+    ],
+  },
+];
+
+type Row = {
+  id: string;
+  title: string;
+  priority: "low" | "med" | "high";
+  type?: string;
+  tags?: string[];
+  date: string;
+};
+
+type Group = {
+  status: string;
+  count: number;
+  tone: string; // css color value for the group header tint + status dot
+  rows: Row[];
+};
+
+const groups: Group[] = [
+  {
+    status: "Open",
+    count: 4,
+    tone: "var(--warn)",
+    rows: [
+      { id: "1465", title: "Reconcile Tix theme with Tix UI", priority: "med", type: "task", date: "Apr 23" },
+      { id: "706d", title: "Themes: dev-server watcher auto-rebuilds tokens.css", priority: "med", type: "feature", tags: ["themes", "dx"], date: "Apr 24" },
+      { id: "c5d4", title: "Try new editorial theme in matchina docs", priority: "med", type: "task", date: "Apr 24" },
+      { id: "fd9c", title: "Core Shad CN Themes", priority: "med", type: "task", date: "Apr 24" },
+    ],
+  },
+  {
+    status: "In Progress",
+    count: 1,
+    tone: "oklch(0.85 0.17 90)",
+    rows: [
+      { id: "d127", title: "Try mixing with external components", priority: "med", type: "epic", date: "Apr 23" },
+    ],
+  },
+  {
+    status: "In Review",
+    count: 8,
+    tone: "var(--info)",
+    rows: [
+      { id: "1c6d", title: "Button wrappers render in docs (steel thread)", priority: "med", type: "task", date: "Apr 22" },
+      { id: "d605", title: "Kickoff ticket", priority: "med", type: "epic", tags: ["vision"], date: "Apr 22" },
+      { id: "91da", title: "Playroom UI feedback", priority: "med", type: "bug", date: "Apr 23" },
+      { id: "9281", title: "Tech design: pluggable full-theme system", priority: "med", type: "feature", date: "Apr 23" },
+      { id: "e6e2", title: "Port kitchen sink into playroom snippets", priority: "med", type: "task", date: "Apr 23" },
+      { id: "f861", title: "implement an astro react playroom", priority: "med", type: "feature", date: "Apr 22" },
+      { id: "819f", title: "Matchina theme + kitchen sink: session handoff", priority: "med", type: "task", tags: ["docs", "themes", "handoff"], date: "Apr 23" },
+      { id: "f1e9", title: "Testing + automation findings from inspiration repos", priority: "med", type: "feature", date: "Apr 22" },
+    ],
+  },
+  {
+    status: "On Hold",
+    count: 3,
+    tone: "var(--muted-foreground)",
+    rows: [
+      { id: "2358", title: "Deploy to netlify - prereqs", priority: "med", type: "task", date: "Apr 23" },
+      { id: "18e0", title: "Themes: tighten Tokens to a known-key union (TokenKey)", priority: "med", type: "feature", tags: ["themes", "dx", "types"], date: "Apr 24" },
+      { id: "a314", title: "Investigate svelte-kit consumer parity", priority: "low", type: "task", date: "Apr 21" },
+    ],
+  },
+];
+
+const priorityBars: Record<Row["priority"], string> = {
+  low: "░░▇",
+  med: "░▅▇",
+  high: "▃▅▇",
+};
+---
+
+<!doctype html>
+<html lang="en" data-theme="tix">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>tix · ui26 overlay</title>
+    {/* Standalone pages don't get Starlight's preflight. Restore the border-box
+       default + zero-margin body that the rest of the app assumes. */}
+    <style is:global>
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; }
+    </style>
+    <script is:inline>
+      // Default this page to the tix theme on first visit; respect user's
+      // choice after they pick something in the theme picker.
+      try {
+        if (!localStorage.getItem('ui26-theme-name')) {
+          localStorage.setItem('ui26-theme-name', 'tix');
+        }
+      } catch (_) {}
+    </script>
+    <ThemeProvider />
+  </head>
+  <body class="font-sans antialiased bg-background text-foreground">
+    <div class="fixed bottom-2 right-2 z-50 rounded-md border border-border bg-card p-1 shadow-sm">
+      <ThemePicker client:load />
+    </div>
+
+    <div class="flex h-svh bg-background text-foreground overflow-hidden">
+      {/* ─────────────── Sidebar */}
+      <aside class="shrink-0 flex flex-col bg-background overflow-hidden lg:py-2 border-r border-border" style="width:220px">
+        <div class="flex flex-col px-4 py-2" style="min-width:220px">
+          <span class="text-sm font-semibold font-mono tracking-tight text-foreground">tix</span>
+          <span class="text-[11px] text-text-mute font-mono">ui26</span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-2">
+          <div class="px-3 mt-4 mb-1">
+            <span class="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Folders</span>
+          </div>
+          <div class="px-2">
+            {folders.map((f) => (
+              <div class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm bg-accent/60 cursor-pointer">
+                <span class="text-muted-foreground font-mono text-[11px] w-4">▾</span>
+                <span class="flex-1 truncate text-sm font-medium">{f.label}</span>
+                <span class="ml-auto text-xs text-muted-foreground">{f.count}</span>
+              </div>
+            ))}
+          </div>
+
+          {sidebarSections.map((section) => (
+            <>
+              {section.title && (
+                <div class="px-3 mt-4 mb-1">
+                  <span class="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">{section.title}</span>
+                </div>
+              )}
+              <div class="px-2 mt-1">
+                {section.items.map((it) => (
+                  <div class:list={[
+                    "flex items-center gap-2 rounded-md px-2 py-1 text-sm cursor-pointer transition-colors",
+                    it.active
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                  ]}>
+                    {it.dot !== undefined ? (
+                      <span class="inline-block w-2.5 h-2.5 rounded-full border-2" style={`border-color:${it.dot}`}></span>
+                    ) : (
+                      <span class="inline-block w-2.5 h-2.5"></span>
+                    )}
+                    <span class="flex-1 truncate">{it.label}</span>
+                    {it.count !== undefined && (
+                      <span class="ml-auto text-xs text-muted-foreground">{it.count}</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          ))}
+        </nav>
+
+        <div class="px-3 pb-2 pt-1 border-t border-border">
+          <div class="flex items-center gap-2 text-[11px] text-text-mute font-mono">
+            <span class="w-2 h-2 rounded-full bg-success" />
+            <span>synced · 2m ago</span>
+          </div>
+        </div>
+      </aside>
+
+      {/* ─────────────── Main */}
+      <div class="flex-1 h-svh overflow-hidden lg:p-2">
+        <div class="lg:border lg:border-border lg:rounded-md overflow-hidden flex flex-col h-full bg-background">
+          {/* Header */}
+          <div class="w-full flex justify-between items-center border-b border-border py-1.5 px-6 h-10">
+            <div class="flex items-center gap-2">
+              <span class="text-muted-foreground font-mono text-[13px]">▦</span>
+              <span class="text-sm font-medium text-foreground">All Issues</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <Button size="sm" variant="outline" class="h-7 px-2 text-xs text-muted-foreground gap-2">
+                <span>Search</span>
+                <kbd class="font-mono text-[10px] bg-muted text-muted-foreground rounded border border-border px-1 py-px">⌘K</kbd>
+              </Button>
+              <Button size="sm" variant="outline" class="h-7 px-2 text-xs gap-2">
+                <span>＋ New</span>
+                <kbd class="font-mono text-[10px] bg-muted text-muted-foreground rounded border border-border px-1 py-px">C</kbd>
+              </Button>
+            </div>
+          </div>
+
+          {/* Filter bar */}
+          <div class="w-full flex justify-between items-center border-b border-border py-1.5 px-6 h-10">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="font-mono text-[11px] text-text-mute tracking-[0.06em] uppercase">Grouped by status</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <Button size="sm" variant="secondary" class="h-7 px-2 text-xs gap-1">⇅ Display</Button>
+            </div>
+          </div>
+
+          {/* List */}
+          <div class="flex-1 flex min-h-0 overflow-hidden">
+            <div class="flex-1 overflow-auto min-w-0">
+              {groups.map((g) => (
+                <div>
+                  <div
+                    class="sticky top-0 z-10 w-full h-10 flex items-center justify-between px-6 cursor-pointer select-none"
+                    style={`background-color: color-mix(in srgb, ${g.tone} 6%, var(--background));`}
+                  >
+                    <div class="flex items-center gap-2">
+                      <span class="text-muted-foreground font-mono text-[11px]">▾</span>
+                      <span
+                        class="inline-block w-2.5 h-2.5 rounded-full border-2"
+                        style={`border-color:${g.tone}`}
+                      />
+                      <span class="text-sm font-medium text-foreground">{g.status}</span>
+                      <span class="text-sm text-muted-foreground">{g.count}</span>
+                    </div>
+                  </div>
+                  {g.rows.map((r) => (
+                    <div class="group relative w-full flex items-center h-10 px-6 cursor-pointer outline-none hover:bg-accent bg-background border-b border-border">
+                      <span class="w-6 shrink-0 flex items-center justify-center text-muted-foreground/40 font-mono text-[11px]">⋮⋮</span>
+                      <span class="w-8 shrink-0 flex items-center justify-center text-muted-foreground font-mono text-[11px]">{priorityBars[r.priority]}</span>
+                      <span class="w-14 shrink-0 text-sm text-muted-foreground font-medium font-mono truncate">{r.id}</span>
+                      <span class="w-8 shrink-0 flex items-center justify-center">
+                        <span class="inline-block w-3 h-3 rounded-full border-2" style={`border-color:${g.tone}`} />
+                      </span>
+                      <span class="flex-1 min-w-0 truncate text-sm font-semibold text-foreground">{r.title}</span>
+
+                      {r.tags && r.tags.length > 0 && (
+                        <div class="flex items-center ml-2 overflow-visible gap-1 shrink-0">
+                          {r.tags.map((t) => (
+                            <Badge variant="outline" class="text-[10px] px-1.5 py-0 h-5 font-medium">{t}</Badge>
+                          ))}
+                        </div>
+                      )}
+
+                      <div class="flex items-center gap-2 ml-2 shrink-0">
+                        {r.type && (
+                          <span class="inline-block text-[10px] font-mono tracking-wide uppercase text-text-mute">{r.type}</span>
+                        )}
+                        <span class="w-6 h-6 rounded-full border border-dashed border-muted-foreground/30 shrink-0" />
+                        <span class="text-xs text-muted-foreground shrink-0 inline-block">{r.date}</span>
+                        <button class="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-accent text-muted-foreground font-mono text-[13px]">⋯</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
+
+              <div class="h-12" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
