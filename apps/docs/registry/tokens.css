@@ -1,34 +1,28 @@
-/* ui26 design tokens — single source of truth.
+/* ui26 design tokens — GENERATED from registry/themes/*.ts.
+ *
+ * Do not edit by hand. Run `pnpm build:tokens` in apps/docs to regenerate,
+ * or edit a theme file under registry/themes/ and save. The barrel at
+ * registry/themes.ts lists which themes are active.
  *
  * Themes are compound keys on `<html data-theme>`:
- *   (none) / "editorial"     → editorial light (default, matchina target)
- *   "editorial-dark"         → editorial dark
- *   "tix" / "tix-dark"       → warm OKLCH monochrome (prior "vanilla")
- *   "shad" / "shad-dark"     → zinc-neutral shadcn-standard
- *   "linear" / "linear-dark" → Linear-inspired, violet accent, tight density
- *   "brutalist" / "brutalist-dark" → mono display, hard borders, no shadows
- *
- * Add a theme with a `[data-theme="<name>"]` + `[data-theme="<name>-dark"]`
- * pair. Tailwind's `dark:` variant matches any selector ending in `dark`
- * (see global.css @custom-variant).
+ *   (none) / "<first-theme>"  → default light (matches `:root`)
+ *   "<name>"                   → that theme's light block
+ *   "<name>-dark"              → that theme's dark overrides (cascades from light)
  */
+
+/* editorial — Default. Serif display (Newsreader) + Geist, warm off-white, gold accent, no shadows (1px rules + background tiers). */
 
 :root,
 [data-theme="editorial"] {
-  /* Fonts — Editorial (serif display + Geist sans/mono) */
   --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-serif: "Newsreader", "Iowan Old Style", Georgia, serif;
   --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Surfaces */
   --background: #f6f5f1;
   --foreground: #15130f;
   --card: #ffffff;
   --card-foreground: #15130f;
   --popover: #ffffff;
   --popover-foreground: #15130f;
-
-  /* Anchors — near-black primary with gold inversion */
   --primary: #15130f;
   --primary-foreground: #e6d089;
   --secondary: #ecebe4;
@@ -37,34 +31,21 @@
   --muted-foreground: #6a665d;
   --accent: #e6d089;
   --accent-foreground: #15130f;
-
   --destructive: #9f4a4a;
   --destructive-foreground: #f6f5f1;
-
   --border: #e3e0d8;
   --border-soft: #ecebe4;
   --input: #e3e0d8;
   --ring: #15130f;
-
   --radius: 0.25rem;
-
-  /* Status layer */
   --success: #2f7a3a;
   --warn: #a35a00;
   --info: #1f5ab8;
   --purple: #6a3fb5;
-
-  /* Accent companions */
   --accent-ink: #15130f;
   --accent-soft: rgba(230, 208, 137, 0.35);
-
-  /* Text third tier — dimmer than muted-foreground */
   --text-mute: #a09b91;
-
-  /* Code block background */
   --code: #faf9f6;
-
-  /* Editorial carries no shadows — hierarchy is 1px rules + background tiers. */
   --shadow-color: 0 0 0;
   --shadow-xs: none;
   --shadow-sm: none;
@@ -80,7 +61,6 @@
   --card-foreground: #ececec;
   --popover: #141416;
   --popover-foreground: #ececec;
-
   --primary: #e6d089;
   --primary-foreground: #15130f;
   --secondary: #262628;
@@ -89,47 +69,34 @@
   --muted-foreground: #8a8a90;
   --accent: #e6d089;
   --accent-foreground: #15130f;
-
   --destructive: #b54a4a;
   --destructive-foreground: #0e0e0f;
-
   --border: #262628;
   --border-soft: #1e1e20;
   --input: #262628;
   --ring: #e6d089;
-
-  /* Status layer (dark tones) */
   --success: #8fd1a3;
   --warn: #e6b86a;
   --info: #8fb9d6;
   --purple: #b89dd8;
-
-  /* Accent companions */
   --accent-ink: #15130f;
   --accent-soft: rgba(230, 208, 137, 0.14);
-
   --text-mute: #56565c;
   --code: #1a1a1c;
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * Tix — original ui26 warm monochrome in OKLCH (previously "vanilla").
- * Toned-down sibling of editorial. Geist only (no serif display).
- * Keeps tinted shadows; borders crisper, destructive muted.
- * ───────────────────────────────────────────────────────────────────────── */
+/* tix — Warm OKLCH monochrome (originally "vanilla"). Toned-down sibling of editorial. Geist only. Tinted shadows, crisper borders, muted destructive. */
 
 [data-theme="tix"] {
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
   --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
-
   --background: oklch(0.985 0.003 65);
   --foreground: oklch(0.17 0.008 65);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.17 0.008 65);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.17 0.008 65);
-
   --primary: oklch(0.2 0.01 65);
   --primary-foreground: oklch(0.99 0.003 65);
   --secondary: oklch(0.955 0.006 65);
@@ -138,28 +105,20 @@
   --muted-foreground: oklch(0.5 0.01 65);
   --accent: oklch(0.945 0.008 65);
   --accent-foreground: oklch(0.2 0.01 65);
-
   --destructive: oklch(0.55 0.16 28);
   --destructive-foreground: oklch(0.99 0.003 65);
-
   --border: oklch(0.9 0.008 65);
   --input: oklch(0.89 0.008 65);
   --ring: oklch(0.45 0.015 65);
-
   --radius: 0.25rem;
-
   --success: oklch(0.55 0.15 145);
   --warn: oklch(0.55 0.15 55);
   --info: oklch(0.48 0.18 255);
   --purple: oklch(0.48 0.2 290);
-
   --accent-ink: oklch(0.17 0.008 65);
   --accent-soft: oklch(0.95 0.04 85 / 0.35);
-
   --text-mute: oklch(0.66 0.012 65);
   --code: oklch(0.99 0.002 80);
-
-  /* Tinted shadows — warm amber at low opacity. */
   --shadow-color: 30 20 5;
   --shadow-xs: 0 1px 1px rgb(var(--shadow-color) / 0.04);
   --shadow-sm: 0 1px 2px rgb(var(--shadow-color) / 0.05), 0 1px 1px rgb(var(--shadow-color) / 0.03);
@@ -169,17 +128,12 @@
 }
 
 [data-theme="tix-dark"] {
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
-  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
-
   --background: oklch(0.17 0.006 65);
   --foreground: oklch(0.97 0.004 65);
   --card: oklch(0.2 0.006 65);
   --card-foreground: oklch(0.97 0.004 65);
   --popover: oklch(0.2 0.006 65);
   --popover-foreground: oklch(0.97 0.004 65);
-
   --primary: oklch(0.97 0.004 65);
   --primary-foreground: oklch(0.2 0.01 65);
   --secondary: oklch(0.26 0.007 65);
@@ -188,25 +142,19 @@
   --muted-foreground: oklch(0.68 0.01 65);
   --accent: oklch(0.28 0.008 65);
   --accent-foreground: oklch(0.97 0.004 65);
-
   --destructive: oklch(0.62 0.17 26);
   --destructive-foreground: oklch(0.99 0.003 65);
-
   --border: oklch(0.3 0.008 65);
   --input: oklch(0.3 0.008 65);
   --ring: oklch(0.58 0.015 65);
-
   --success: oklch(0.78 0.12 150);
   --warn: oklch(0.78 0.12 80);
   --info: oklch(0.72 0.1 240);
   --purple: oklch(0.68 0.14 300);
-
   --accent-ink: oklch(0.17 0.008 65);
   --accent-soft: oklch(0.95 0.04 85 / 0.14);
-
   --text-mute: oklch(0.45 0.01 65);
   --code: oklch(0.22 0.005 65);
-
   --shadow-color: 0 0 0;
   --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.3);
   --shadow-sm: 0 1px 2px rgb(var(--shadow-color) / 0.35), 0 1px 1px rgb(var(--shadow-color) / 0.2);
@@ -215,23 +163,18 @@
   --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * Shad — shadcn-default reference. Zinc neutrals, moderate radius,
- * system sans, subtle lift shadows. The familiar shadcn feel.
- * ───────────────────────────────────────────────────────────────────────── */
+/* shad — Shadcn-default reference. Zinc neutrals, moderate radius, system sans, subtle lift shadows. The familiar shadcn feel. */
 
 [data-theme="shad"] {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
-
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -240,28 +183,21 @@
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
-
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-
   --border: oklch(0.922 0 0);
   --border-soft: oklch(0.955 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
-
   --radius: 0.5rem;
-
   --success: oklch(0.6 0.15 145);
   --warn: oklch(0.65 0.15 70);
   --info: oklch(0.55 0.17 240);
   --purple: oklch(0.55 0.2 300);
-
   --accent-ink: oklch(0.205 0 0);
   --accent-soft: oklch(0.97 0 0 / 0.6);
-
   --text-mute: oklch(0.7 0 0);
   --code: oklch(0.97 0 0);
-
   --shadow-color: 0 0 0;
   --shadow-xs: 0 1px 2px 0 rgb(var(--shadow-color) / 0.05);
   --shadow-sm: 0 1px 3px 0 rgb(var(--shadow-color) / 0.1), 0 1px 2px -1px rgb(var(--shadow-color) / 0.1);
@@ -271,17 +207,12 @@
 }
 
 [data-theme="shad-dark"] {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, "Cascadia Code", monospace;
-
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
@@ -290,29 +221,20 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.985 0 0);
-
   --border: oklch(1 0 0 / 0.1);
   --border-soft: oklch(1 0 0 / 0.05);
   --input: oklch(1 0 0 / 0.15);
   --ring: oklch(0.556 0 0);
-
-  --radius: 0.5rem;
-
   --success: oklch(0.75 0.13 150);
   --warn: oklch(0.78 0.14 80);
   --info: oklch(0.7 0.14 240);
   --purple: oklch(0.68 0.17 300);
-
   --accent-ink: oklch(0.985 0 0);
   --accent-soft: oklch(0.269 0 0 / 0.6);
-
   --text-mute: oklch(0.5 0 0);
   --code: oklch(0.205 0 0);
-
-  --shadow-color: 0 0 0;
   --shadow-xs: 0 1px 2px 0 rgb(var(--shadow-color) / 0.4);
   --shadow-sm: 0 1px 3px 0 rgb(var(--shadow-color) / 0.5), 0 1px 2px -1px rgb(var(--shadow-color) / 0.4);
   --shadow-md: 0 4px 6px -1px rgb(var(--shadow-color) / 0.5), 0 2px 4px -2px rgb(var(--shadow-color) / 0.4);
@@ -320,23 +242,18 @@
   --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.04);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * Linear — Linear-inspired. Tight density, violet accent, minimal borders,
- * crisp small radius. Inter Display as display face (falls back to Inter).
- * ───────────────────────────────────────────────────────────────────────── */
+/* linear — Linear-inspired. Tight density, violet accent, minimal borders, crisp small radius. Inter Display as display face. */
 
 [data-theme="linear"] {
   --font-sans: "Inter Display", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-serif: "Inter Display", "Inter", ui-serif, Georgia, serif;
   --font-mono: "Berkeley Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
   --background: oklch(0.995 0.002 280);
   --foreground: oklch(0.18 0.015 280);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.015 280);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.015 280);
-
   --primary: oklch(0.55 0.22 285);
   --primary-foreground: oklch(0.99 0.005 285);
   --secondary: oklch(0.96 0.005 280);
@@ -345,28 +262,21 @@
   --muted-foreground: oklch(0.52 0.015 280);
   --accent: oklch(0.55 0.22 285);
   --accent-foreground: oklch(0.99 0.005 285);
-
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: oklch(0.99 0 0);
-
   --border: oklch(0.93 0.006 280);
   --border-soft: oklch(0.96 0.004 280);
   --input: oklch(0.92 0.006 280);
   --ring: oklch(0.55 0.22 285);
-
   --radius: 0.375rem;
-
   --success: oklch(0.62 0.16 150);
   --warn: oklch(0.7 0.16 75);
   --info: oklch(0.6 0.18 240);
   --purple: oklch(0.55 0.22 285);
-
   --accent-ink: oklch(0.99 0.005 285);
   --accent-soft: oklch(0.55 0.22 285 / 0.1);
-
   --text-mute: oklch(0.65 0.012 280);
   --code: oklch(0.97 0.004 280);
-
   --shadow-color: 20 10 40;
   --shadow-xs: 0 1px 1px rgb(var(--shadow-color) / 0.04);
   --shadow-sm: 0 1px 2px rgb(var(--shadow-color) / 0.05);
@@ -376,17 +286,12 @@
 }
 
 [data-theme="linear-dark"] {
-  --font-sans: "Inter Display", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --font-serif: "Inter Display", "Inter", ui-serif, Georgia, serif;
-  --font-mono: "Berkeley Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
   --background: oklch(0.13 0.015 280);
   --foreground: oklch(0.97 0.005 280);
   --card: oklch(0.17 0.018 280);
   --card-foreground: oklch(0.97 0.005 280);
   --popover: oklch(0.17 0.018 280);
   --popover-foreground: oklch(0.97 0.005 280);
-
   --primary: oklch(0.68 0.2 285);
   --primary-foreground: oklch(0.13 0.015 280);
   --secondary: oklch(0.22 0.018 280);
@@ -395,28 +300,20 @@
   --muted-foreground: oklch(0.68 0.015 280);
   --accent: oklch(0.68 0.2 285);
   --accent-foreground: oklch(0.13 0.015 280);
-
   --destructive: oklch(0.68 0.2 25);
   --destructive-foreground: oklch(0.99 0 0);
-
   --border: oklch(0.25 0.018 280);
   --border-soft: oklch(0.2 0.018 280);
   --input: oklch(0.27 0.018 280);
   --ring: oklch(0.68 0.2 285);
-
-  --radius: 0.375rem;
-
   --success: oklch(0.75 0.14 150);
   --warn: oklch(0.78 0.14 75);
   --info: oklch(0.7 0.15 240);
   --purple: oklch(0.7 0.2 285);
-
   --accent-ink: oklch(0.13 0.015 280);
   --accent-soft: oklch(0.68 0.2 285 / 0.18);
-
   --text-mute: oklch(0.48 0.015 280);
   --code: oklch(0.18 0.018 280);
-
   --shadow-color: 0 0 0;
   --shadow-xs: 0 1px 2px rgb(var(--shadow-color) / 0.3);
   --shadow-sm: 0 1px 3px rgb(var(--shadow-color) / 0.35);
@@ -425,23 +322,18 @@
   --highlight-inset: inset 0 1px 0 rgb(255 255 255 / 0.05);
 }
 
-/* ─────────────────────────────────────────────────────────────────────────
- * Brutalist — high-contrast, hard borders, zero radius, no shadows.
- * Mono display, saturated destructive/accent. Ugly-on-purpose.
- * ───────────────────────────────────────────────────────────────────────── */
+/* brutalist — High-contrast, hard borders, zero radius, no shadows. Mono display, saturated destructive/accent. Ugly-on-purpose. */
 
 [data-theme="brutalist"] {
   --font-sans: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-serif: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
   --background: #ffffff;
   --foreground: #000000;
   --card: #ffffff;
   --card-foreground: #000000;
   --popover: #ffffff;
   --popover-foreground: #000000;
-
   --primary: #000000;
   --primary-foreground: #ffff00;
   --secondary: #ffff00;
@@ -450,28 +342,21 @@
   --muted-foreground: #000000;
   --accent: #ff3b00;
   --accent-foreground: #ffffff;
-
   --destructive: #ff0000;
   --destructive-foreground: #ffffff;
-
   --border: #000000;
   --border-soft: #000000;
   --input: #000000;
   --ring: #ff3b00;
-
   --radius: 0rem;
-
   --success: #00a000;
   --warn: #ff8800;
   --info: #0000ff;
   --purple: #8800ff;
-
   --accent-ink: #000000;
   --accent-soft: #ffff00;
-
   --text-mute: #666666;
   --code: #f0f0f0;
-
   --shadow-color: 0 0 0;
   --shadow-xs: none;
   --shadow-sm: none;
@@ -481,17 +366,12 @@
 }
 
 [data-theme="brutalist-dark"] {
-  --font-sans: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
   --background: #000000;
   --foreground: #ffffff;
   --card: #000000;
   --card-foreground: #ffffff;
   --popover: #000000;
   --popover-foreground: #ffffff;
-
   --primary: #ffff00;
   --primary-foreground: #000000;
   --secondary: #ff3b00;
@@ -500,32 +380,19 @@
   --muted-foreground: #ffffff;
   --accent: #00ff00;
   --accent-foreground: #000000;
-
   --destructive: #ff0044;
   --destructive-foreground: #ffffff;
-
   --border: #ffffff;
   --border-soft: #ffffff;
   --input: #ffffff;
   --ring: #00ff00;
-
-  --radius: 0rem;
-
   --success: #00ff00;
   --warn: #ffaa00;
   --info: #00ffff;
   --purple: #ff00ff;
-
   --accent-ink: #ffffff;
   --accent-soft: #ff3b00;
-
   --text-mute: #888888;
   --code: #1a1a1a;
-
   --shadow-color: 255 255 255;
-  --shadow-xs: none;
-  --shadow-sm: none;
-  --shadow-md: 4px 4px 0 0 rgb(var(--shadow-color) / 1);
-  --shadow-lg: 6px 6px 0 0 rgb(var(--shadow-color) / 1);
-  --highlight-inset: none;
 }
