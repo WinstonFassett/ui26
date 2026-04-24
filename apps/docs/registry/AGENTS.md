@@ -22,7 +22,7 @@ The `registry/` tree ships dumb, copy-pasteable code. Theme files are plain data
 
 **Shadows must be explicitly set to `none`, not omitted.** Themes without shadows (Editorial, Brutalist) still need `shadow-xs`, `shadow-sm`, `shadow-md`, `shadow-lg`, `highlight-inset` written out as `'none'`. Omission lets the previous theme's shadow stack leak through — subtle bug.
 
-**Optional named palette.** Themes may expose a `palette` field — a named record of mode-invariant strings or `{ light, dark }` pairs that tokens reference by identity (`primary: palette.ink`). It's exported on the Theme for introspection, and reduces duplication when several tokens share the same value. Skip it for themes with saturated/literal colors that don't name cleanly (e.g. brutalist's primaries).
+**Named palette (preferred).** Each theme should expose a `palette` field — a named record of mode-invariant strings or `{ light, dark }` pairs that tokens reference by identity (`primary: palette.ink`). Keeps token definitions readable, avoids repeating oklch/hex literals, and is exported on the Theme for TS-level introspection. The `palette` field is typed as optional so legacy/third-party theme files don't break, but all five in-tree themes define one — match that pattern. For saturated themes like brutalist, mix atomic color names (`yellow`, `orange`) with role-based pairs (`ink`, `paper`) so both the shout colors and the structural flip have identity.
 
 **Font stacks always end in a system fallback.** If a webfont 404s, the fallback has to carry the theme. Never stop at a single named font.
 

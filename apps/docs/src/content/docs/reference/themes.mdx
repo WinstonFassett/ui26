@@ -86,7 +86,7 @@ const editorial: Theme = {
 };
 ```
 
-Palettes are optional (not every theme has a semantic vocabulary worth naming — brutalist's saturated primaries don't benefit). When present, the palette is exported on the Theme object so downstream code can read it directly:
+Every in-tree theme defines a palette. The field is typed as optional so a copied-out theme can omit it, but in practice you should always write one — it keeps tokens readable and gives downstream code a stable surface to introspect:
 
 ```ts
 import editorial from '@registry/themes/editorial';
