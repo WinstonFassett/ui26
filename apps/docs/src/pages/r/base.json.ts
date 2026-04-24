@@ -2,7 +2,12 @@ import type { APIRoute } from "astro";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 
-const TOKENS_CSS_URL = new URL("../../../registry/tokens.css", import.meta.url);
+// Serve the default theme's tokens. `tokens.css` is now a thin index of
+// @import lines, so read the first (default) theme file directly.
+const DEFAULT_THEME_CSS_URL = new URL(
+  "../../../registry/themes/editorial.css",
+  import.meta.url,
+);
 
 function parseTokensCss(css: string) {
   const blocks: { selector: string; vars: Record<string, string> }[] = [];
@@ -26,7 +31,7 @@ function parseTokensCss(css: string) {
 }
 
 export const GET: APIRoute = async () => {
-  const css = await readFile(fileURLToPath(TOKENS_CSS_URL), "utf8");
+  const css = await readFile(fileURLToPath(DEFAULT_THEME_CSS_URL), "utf8");
   const { light, dark } = parseTokensCss(css);
   const item = {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
