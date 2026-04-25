@@ -1,6 +1,8 @@
 import { Laptop, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { ThemeSwitcher } from "@/components/kibo-ui/theme-switcher";
+
 
 type Name =
   | "editorial"
@@ -104,9 +106,13 @@ export function ThemePicker() {
           </option>
         ))}
       </select>
-      <div
+      <ThemeSwitcher className="w-fit" onChange={(m) => window.Ui26Theme?.setMode(
+        m == "system" ? "auto" : m as Mode
+      )} />
+      
+      {/* <div
         aria-label="Select mode"
-        className="flex items-center rounded-md border border-border bg-background p-0.5"
+        className="flex items-center rounded-full border border-border bg-background p-0.5"
         role="group"
       >
         {MODES.map((m) => {
@@ -117,7 +123,7 @@ export function ThemePicker() {
               aria-label={m}
               aria-pressed={active}
               className={cn(
-                "flex h-6 w-6 items-center justify-center rounded-sm transition-colors",
+                "flex h-6 w-6 items-center justify-center rounded-full transition-colors",
                 active
                   ? "bg-secondary text-foreground"
                   : "text-muted-foreground hover:text-foreground",
@@ -130,7 +136,7 @@ export function ThemePicker() {
             </button>
           );
         })}
-      </div>
+      </div> */}
     </div>
   );
 }

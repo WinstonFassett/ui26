@@ -44,18 +44,6 @@ html, body {
 
 a { text-underline-offset: 3px; text-decoration-thickness: 1px; }
 
-/* Editorial shell stays sharp — the nav, sidebar, and inline prose kbd/code
- * read as identity. Content components (buttons, cards, badges, inputs…)
- * keep their own radii so shape lives at the component layer. */
-:where(
-  .sidebar, .sidebar *,
-  header.header, header.header *,
-  .sl-markdown-content :is(kbd, code)
-) {
-  border-radius: 0 !important;
-}
-.expressive-code .copy button { border-radius: 2px !important; }
-
 /* ---------- Top nav ---------- */
 
 header.header {
