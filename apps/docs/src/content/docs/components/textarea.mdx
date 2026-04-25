@@ -1,41 +1,24 @@
 ---
 title: Textarea
-description: Dumb, stateless Textarea primitive. Three wrappers (React, Svelte, Astro) over one shared class config. Error state driven by aria-invalid.
+description: Stateless Textarea primitive. Error state driven by aria-invalid. Auto-grows with content via field-sizing-content.
 ---
 
-import { Textarea as TextareaReact } from "@registry/textarea/textarea.tsx";
-import TextareaSvelte from "@registry/textarea/textarea.svelte";
 import TextareaAstro from "@registry/textarea/textarea.astro";
-
-Same `Textarea` rendered three times per row — React, Svelte, Astro. No `variant` or `size` prop: error state comes from `aria-invalid`, height grows with content via `field-sizing-content`.
 
 ## Default
 
-<div class="not-content grid grid-cols-3 gap-3 my-6">
-  <TextareaReact placeholder="React · type here" client:load />
-  <TextareaSvelte placeholder="Svelte · type here" client:load />
-  <TextareaAstro placeholder="Astro · type here" />
+<div class="not-content my-6 max-w-sm">
+  <TextareaAstro placeholder="Type here" />
 </div>
 
-## Invalid (`aria-invalid`)
+## Invalid
 
-<div class="not-content grid grid-cols-3 gap-3 my-6">
-  <TextareaReact aria-invalid="true" defaultValue="too short" client:load />
-  <TextareaSvelte aria-invalid={true} value="too short" client:load />
+<div class="not-content my-6 max-w-sm">
   <TextareaAstro aria-invalid="true">too short</TextareaAstro>
 </div>
 
 ## Disabled
 
-<div class="not-content grid grid-cols-3 gap-3 my-6">
-  <TextareaReact disabled placeholder="React · disabled" client:load />
-  <TextareaSvelte disabled placeholder="Svelte · disabled" client:load />
-  <TextareaAstro disabled placeholder="Astro · disabled" />
+<div class="not-content my-6 max-w-sm">
+  <TextareaAstro disabled placeholder="Disabled" />
 </div>
-
-## Under the hood
-
-- **Shared config:** `apps/docs/registry/Textarea/Textarea.tv.ts` — base classes only, no variants today.
-- **Wrappers:** `apps/docs/registry/Textarea/Textarea.{tsx,svelte,astro}` — thin passthroughs rendering `<textarea>`.
-- **Auto-grow:** `field-sizing-content` lets the textarea grow with its content without JS.
-- **Error state:** pass `aria-invalid` rather than a prop.

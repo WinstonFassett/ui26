@@ -1,0 +1,42 @@
+---
+sidebar:
+  hidden: true
+title: Badge
+description: Dumb, stateless Badge primitive. Three wrappers (React, Svelte, Astro) over one shared tailwind-variants config.
+---
+
+import { Badge as BadgeReact } from "@registry/badge/badge.tsx";
+import BadgeSvelte from "@registry/badge/badge.svelte";
+import BadgeAstro from "@registry/badge/badge.astro";
+
+Same `Badge` rendered three times per row — React, Svelte, Astro — all sharing `Badge.tv.ts`.
+
+## Variants
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <BadgeReact client:load>React · default</BadgeReact>
+  <BadgeSvelte client:load>Svelte · default</BadgeSvelte>
+  <BadgeAstro>Astro · default</BadgeAstro>
+
+  <BadgeReact variant="secondary" client:load>React · secondary</BadgeReact>
+  <BadgeSvelte variant="secondary" client:load>Svelte · secondary</BadgeSvelte>
+  <BadgeAstro variant="secondary">Astro · secondary</BadgeAstro>
+
+  <BadgeReact variant="outline" client:load>React · outline</BadgeReact>
+  <BadgeSvelte variant="outline" client:load>Svelte · outline</BadgeSvelte>
+  <BadgeAstro variant="outline">Astro · outline</BadgeAstro>
+
+  <BadgeReact variant="ghost" client:load>React · ghost</BadgeReact>
+  <BadgeSvelte variant="ghost" client:load>Svelte · ghost</BadgeSvelte>
+  <BadgeAstro variant="ghost">Astro · ghost</BadgeAstro>
+
+  <BadgeReact variant="destructive" client:load>React · destructive</BadgeReact>
+  <BadgeSvelte variant="destructive" client:load>Svelte · destructive</BadgeSvelte>
+  <BadgeAstro variant="destructive">Astro · destructive</BadgeAstro>
+</div>
+
+## Under the hood
+
+- **Shared config:** `apps/docs/registry/Badge/Badge.tv.ts` — colocated `tv()` call.
+- **Wrappers:** `apps/docs/registry/Badge/Badge.{tsx,svelte,astro}` — thin passthroughs rendering `<span>` with `cn(badge({variant}), className)`.
+- **Error state:** driven by `aria-invalid` rather than a `destructive` *ambient* variant — pass `aria-invalid` when surfacing a validation error.

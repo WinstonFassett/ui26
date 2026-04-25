@@ -1,0 +1,63 @@
+---
+sidebar:
+  hidden: true
+title: Switch
+description: Dumb, stateless Switch primitive. Three wrappers (React, Svelte, Astro) over one shared class config. Hidden checkbox + styled track/thumb, no JS.
+---
+
+import { Switch as SwitchReact } from "@registry/switch/switch.tsx";
+import SwitchSvelte from "@registry/switch/switch.svelte";
+import SwitchAstro from "@registry/switch/switch.astro";
+import { Label as LabelReact } from "@registry/label/label.tsx";
+import LabelSvelte from "@registry/label/label.svelte";
+import LabelAstro from "@registry/label/label.astro";
+
+Same `Switch` rendered three times per row — React, Svelte, Astro. Hidden `<input type="checkbox">` drives `:checked` state, which Tailwind's `has-[:checked]:` and `peer-checked:` selectors translate into track color + thumb position. No JS.
+
+## Default
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <SwitchReact client:load />
+  <SwitchSvelte client:load />
+  <SwitchAstro />
+</div>
+
+## Checked
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <SwitchReact defaultChecked client:load />
+  <SwitchSvelte checked client:load />
+  <SwitchAstro checked />
+</div>
+
+## With label
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <LabelReact client:load>
+    <SwitchReact id="notify-react" client:load />
+    React · notifications
+  </LabelReact>
+  <LabelSvelte client:load>
+    <SwitchSvelte id="notify-svelte" client:load />
+    Svelte · notifications
+  </LabelSvelte>
+  <LabelAstro>
+    <SwitchAstro id="notify-astro" />
+    Astro · notifications
+  </LabelAstro>
+</div>
+
+## Disabled
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <SwitchReact disabled client:load />
+  <SwitchSvelte disabled defaultChecked client:load />
+  <SwitchAstro disabled checked />
+</div>
+
+## Under the hood
+
+- **Shared config:** `apps/docs/registry/Switch/Switch.tv.ts` — two `tv()` calls (`switchRoot` track + `switchThumb`). No variants.
+- **Wrappers:** `apps/docs/registry/Switch/Switch.{tsx,svelte,astro}` — a `<label>` wrapping a visually-hidden native `<input type="checkbox">` and a styled thumb `<span>`.
+- **State:** driven entirely by `:checked` on the input. `has-[:checked]:` on the root flips track color, `peer-checked:` on the thumb flips translate-x.
+- **Error state:** pass `aria-invalid` on the Switch and `has-[[aria-invalid=true]]:` on the root surfaces the destructive ring.

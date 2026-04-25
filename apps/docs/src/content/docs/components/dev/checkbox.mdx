@@ -1,0 +1,63 @@
+---
+sidebar:
+  hidden: true
+title: Checkbox
+description: Dumb, stateless Checkbox primitive. Three wrappers (React, Svelte, Astro) over one shared class config. Native input[type=checkbox] themed via accent-color.
+---
+
+import { Checkbox as CheckboxReact } from "@registry/checkbox/checkbox.tsx";
+import CheckboxSvelte from "@registry/checkbox/checkbox.svelte";
+import CheckboxAstro from "@registry/checkbox/checkbox.astro";
+import { Label as LabelReact } from "@registry/label/label.tsx";
+import LabelSvelte from "@registry/label/label.svelte";
+import LabelAstro from "@registry/label/label.astro";
+
+Same `Checkbox` rendered three times per row — React, Svelte, Astro. Native `<input type="checkbox">` themed via Tailwind's `accent-color`. No JS, no state.
+
+## Default
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <CheckboxReact client:load />
+  <CheckboxSvelte client:load />
+  <CheckboxAstro />
+</div>
+
+## Checked
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <CheckboxReact defaultChecked client:load />
+  <CheckboxSvelte checked client:load />
+  <CheckboxAstro checked />
+</div>
+
+## With label
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <LabelReact client:load>
+    <CheckboxReact id="tos-react" client:load />
+    React · accept terms
+  </LabelReact>
+  <LabelSvelte client:load>
+    <CheckboxSvelte id="tos-svelte" client:load />
+    Svelte · accept terms
+  </LabelSvelte>
+  <LabelAstro>
+    <CheckboxAstro id="tos-astro" />
+    Astro · accept terms
+  </LabelAstro>
+</div>
+
+## Disabled
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <CheckboxReact disabled client:load />
+  <CheckboxSvelte disabled client:load />
+  <CheckboxAstro disabled />
+</div>
+
+## Under the hood
+
+- **Shared config:** `apps/docs/registry/Checkbox/Checkbox.tv.ts` — base classes only, no variants.
+- **Wrappers:** `apps/docs/registry/Checkbox/Checkbox.{tsx,svelte,astro}` — thin passthroughs rendering `<input type="checkbox">`.
+- **Theming:** `accent-primary` maps the native checkbox color to our primary token — zero custom SVG, browser-native rendering.
+- **Error state:** pass `aria-invalid` rather than a prop.
