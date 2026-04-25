@@ -1,7 +1,5 @@
 import type { APIRoute, GetStaticPaths } from "astro";
-import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import {
   COMPONENTS,
   FRAMEWORKS,
@@ -10,7 +8,21 @@ import {
   type RegistryFile,
 } from "../../../../registry/registry.meta";
 
-const REGISTRY_ROOT = new URL("../../../../registry/", import.meta.url);
+// Inline at build time — path resolution via `new URL(..., import.meta.url)`
+// breaks once Astro bundles these modules into dist/.prerender/chunks/.
+const RAW_FILES = import.meta.glob("../../../../registry/**/*", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+function loadRegistryFile(relPath: string): string {
+  const suffix = `/registry/${relPath}`;
+  for (const [key, content] of Object.entries(RAW_FILES)) {
+    if (key.endsWith(suffix)) return content;
+  }
+  throw new Error(`Registry file not found: ${relPath}`);
+}
 
 const UTILS_ALIAS: Record<Framework, string> = {
   react: "@/lib/utils",
@@ -54,7 +66,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   return paths;
 };
 
-export const GET: APIRoute = async ({ params, request }) => {
+export const GET: APIRoute = ({ params, request }) => {
   const fw = params.framework as Framework;
   const name = params.component!;
   const meta = COMPONENTS.find((c) => c.name === name);
@@ -62,13 +74,10 @@ export const GET: APIRoute = async ({ params, request }) => {
 
   const origin = new URL(request.url).origin;
   const fileSpecs = filesFor(name, fw);
-  const files = await Promise.all(
-    fileSpecs.map(async (spec) => {
-      const abs = fileURLToPath(new URL(spec.path, REGISTRY_ROOT));
-      const raw = await readFile(abs, "utf8");
-      return buildFile(spec, rewriteImports(raw, fw), fw);
-    }),
-  );
+  const files = fileSpecs.map((spec) => {
+    const raw = loadRegistryFile(spec.path);
+    return buildFile(spec, rewriteImports(raw, fw), fw);
+  });
 
   const registryDependencies = meta.registryDependencies.map((dep) => {
     if (dep === "utils") return `${origin}/r/${fw}/utils.json`;

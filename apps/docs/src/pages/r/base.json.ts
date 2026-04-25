@@ -1,13 +1,10 @@
 import type { APIRoute } from "astro";
-import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
 
 // Serve the default theme's tokens. `tokens.css` is now a thin index of
-// @import lines, so read the first (default) theme file directly.
-const DEFAULT_THEME_CSS_URL = new URL(
-  "../../../registry/themes/editorial.css",
-  import.meta.url,
-);
+// @import lines, so read the first (default) theme file directly. Inlined at
+// build time via ?raw since `new URL(..., import.meta.url)` breaks once Astro
+// bundles this module into dist/.prerender/chunks/.
+import DEFAULT_THEME_CSS from "../../../registry/themes/editorial.css?raw";
 
 function parseTokensCss(css: string) {
   const blocks: { selector: string; vars: Record<string, string> }[] = [];
@@ -30,9 +27,8 @@ function parseTokensCss(css: string) {
   return { light, dark };
 }
 
-export const GET: APIRoute = async () => {
-  const css = await readFile(fileURLToPath(DEFAULT_THEME_CSS_URL), "utf8");
-  const { light, dark } = parseTokensCss(css);
+export const GET: APIRoute = () => {
+  const { light, dark } = parseTokensCss(DEFAULT_THEME_CSS);
   const item = {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: "base",
