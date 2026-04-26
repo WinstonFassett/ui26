@@ -42,3 +42,8 @@ pnpm-debug.log*
 
 # web-dev-mcp runtime logs
 .web-dev-mcp/
+
+.agents/
+.claude/
+.windsurf/
+skills-lock.json
