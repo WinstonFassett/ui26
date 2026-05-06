@@ -8,8 +8,6 @@ import react from '@astrojs/react';
 
 import svelte from '@astrojs/svelte';
 
-import webDevMcp from '@winstonfassett/webdev-astro';
-
 // Always bake the canonical production URL into registry JSON's absolute deps,
 // even on Netlify preview deploys — consumers install from one URL.
 // Netlify sets URL to the main site URL on every deploy.
@@ -18,7 +16,7 @@ const site = process.env.SITE_URL || process.env.URL || undefined;
 // https://astro.build/config
 export default defineConfig({
     site,
-    integrations: [webDevMcp(), starlight({
+    integrations: [starlight({
         title: 'ui26',
         components: {
             ThemeProvider: './src/components/starlight/ThemeProvider.astro',
