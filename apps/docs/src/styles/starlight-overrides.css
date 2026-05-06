@@ -116,11 +116,8 @@ site-search button[data-open-modal] kbd {
   border-radius: 0;
 }
 
-/* Fix theme selector height to match theme toggle buttons */
+/* Fix theme selector height for text display */
 select[aria-label="Select theme"] {
-  height: 32px;
-}
-button[aria-label*="theme"] {
   height: 32px;
 }
 
