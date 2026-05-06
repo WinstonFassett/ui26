@@ -1,0 +1,41 @@
+---
+title: Radio Group
+description: Native radio inputs grouped in a styled container. Fully accessible via native browser behavior.
+---
+
+import RadioGroupAstro from "@registry/radio-group/radio-group.astro";
+import RadioGroupItemAstro from "@registry/radio-group/radio-group-item.astro";
+
+## Basic
+
+<div class="not-content my-6 space-y-2">
+  <RadioGroupAstro>
+    <label class="flex items-center gap-2 text-sm">
+      <RadioGroupItemAstro name="plan" value="free" checked />
+      Free
+    </label>
+    <label class="flex items-center gap-2 text-sm">
+      <RadioGroupItemAstro name="plan" value="pro" />
+      Pro
+    </label>
+    <label class="flex items-center gap-2 text-sm">
+      <RadioGroupItemAstro name="plan" value="enterprise" />
+      Enterprise
+    </label>
+  </RadioGroupAstro>
+</div>
+
+## Disabled
+
+<div class="not-content my-6 space-y-2">
+  <RadioGroupAstro>
+    <label class="flex items-center gap-2 text-sm opacity-50">
+      <RadioGroupItemAstro name="disabled-plan" value="free" disabled />
+      Free (disabled)
+    </label>
+    <label class="flex items-center gap-2 text-sm">
+      <RadioGroupItemAstro name="disabled-plan" value="pro" checked />
+      Pro
+    </label>
+  </RadioGroupAstro>
+</div>

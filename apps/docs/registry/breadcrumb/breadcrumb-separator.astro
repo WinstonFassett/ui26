@@ -1,0 +1,17 @@
+---
+import { cn } from "../lib/utils";
+import { breadcrumbSeparator } from "./breadcrumb.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"li">, "class"> & { class?: string };
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<li role="presentation" aria-hidden="true" class={cn(breadcrumbSeparator(), className)} {...rest}>
+  <slot>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  </slot>
+</li>
