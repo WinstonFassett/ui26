@@ -3,65 +3,187 @@ title: Themes
 description: How the multi-theme system works and how to add a new theme.
 ---
 
-## Model
+<div class="not-content mb-10">
+  <div class="flex items-center gap-2.5 mb-6 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+    <span class="text-accent">§01</span>
+    <span>Model</span>
+    <span class="flex-1 h-px bg-border" />
+  </div>
 
-A **theme** is a full visual identity: palette, typography, radius, shadow vocabulary, border treatment. Light/dark is an axis **within** a theme.
+  <div class="mb-6">
+    <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Theme architecture</div>
+    <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-[1.5]">
+      A <strong class="text-foreground font-semibold">theme</strong> is a full visual identity: palette, typography, radius, shadow vocabulary, border treatment. Light/dark is an axis <strong class="text-foreground font-semibold">within</strong> a theme.
+    </div>
+  </div>
 
-State lives on `<html data-theme>` as a compound key:
+  <div class="mb-6">
+    <p class="text-[13px] text-muted-foreground leading-[1.55] mb-4">
+      State lives on <code class="font-mono text-[12px] bg-code border border-border px-1">&lt;html data-theme&gt;</code> as a compound key:
+    </p>
+    
+    <div class="border border-border rounded bg-card overflow-hidden">
+      <div class="grid grid-cols-2 border-b border-border">
+        <div class="px-4 py-3 bg-muted font-mono text-[10px] tracking-[0.06em] uppercase text-text-mute">Shape</div>
+        <div class="px-4 py-3 bg-muted font-mono text-[10px] tracking-[0.06em] uppercase text-text-mute">Example</div>
+      </div>
+      <div class="grid grid-cols-2 border-b border-border">
+        <div class="px-4 py-2.5 font-mono text-[11px] text-foreground"><code class="font-mono text-[11px] bg-code border border-border px-1">&lt;name&gt;</code></div>
+        <div class="px-4 py-2.5 font-mono text-[11px] text-muted-foreground"><code class="font-mono text-[11px]">editorial</code>, <code class="font-mono text-[11px]">tix</code>, <code class="font-mono text-[11px]">shad</code></div>
+      </div>
+      <div class="grid grid-cols-2">
+        <div class="px-4 py-2.5 font-mono text-[11px] text-foreground"><code class="font-mono text-[11px] bg-code border border-border px-1">&lt;name&gt;-dark</code></div>
+        <div class="px-4 py-2.5 font-mono text-[11px] text-muted-foreground"><code class="font-mono text-[11px]">editorial-dark</code>, <code class="font-mono text-[11px]">neon-synthwave-dark</code></div>
+      </div>
+    </div>
+  </div>
 
-| Shape | Example |
-|---|---|
-| `<name>` | `editorial`, `tix`, `shad` |
-| `<name>-dark` | `editorial-dark`, `neon-synthwave-dark` |
+  <p class="text-[13px] text-muted-foreground leading-[1.55]">
+    One dropdown picks the theme; one toggle picks light/dark/auto. Both write to <code class="font-mono text-[12px] bg-code border border-border px-1">localStorage</code> (<code class="font-mono text-[12px] bg-code border border-border px-1">ui26-theme-name</code>, <code class="font-mono text-[12px] bg-code border border-border px-1">ui26-theme-mode</code>) and to the compound <code class="font-mono text-[12px] bg-code border border-border px-1">data-theme</code> attribute pre-paint.
+  </p>
+</div>
 
-One dropdown picks the theme; one toggle picks light/dark/auto. Both write to `localStorage` (`ui26-theme-name`, `ui26-theme-mode`) and to the compound `data-theme` attribute pre-paint.
+<div class="not-content mb-10">
+  <div class="flex items-center gap-2.5 mb-6 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+    <span class="text-accent">§02</span>
+    <span>Pieces</span>
+    <span class="flex-1 h-px bg-border" />
+  </div>
 
-## Pieces
+  <div class="mb-6">
+    <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">System components</div>
+    <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-[1.5]">
+      The multi-theme system spans several files that work together to provide seamless theme switching and persistence.
+    </div>
+  </div>
 
-| File | Role |
-|---|---|
-| [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/tokens.css) | All token blocks. One `[data-theme="<name>"]` + one `[data-theme="<name>-dark"]` per theme. |
-| [`src/components/starlight/ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro) | Pre-paint script. Owns the `THEMES` allowlist and the `window.Ui26Theme` API. |
-| [`src/components/starlight/ThemeSelect.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeSelect.astro) | Starlight header slot — mounts the React picker. |
-| [`src/components/starlight/theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) | Dropdown + light/dark/auto toggle. Owns `THEMES`, `MODES`, `LABELS`. |
-| [`astro.config.mjs`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/astro.config.mjs) | Registers the two Starlight component overrides; inlines critical `--sl-*` FOUC vars. |
+  <div class="space-y-4">
+    <div class="border border-border rounded bg-card overflow-hidden">
+      <div class="px-4 py-3 bg-muted">
+        <div class="font-mono text-[11px] text-foreground">registry/tokens.css</div>
+      </div>
+      <div class="px-4 py-3 text-[13px] text-muted-foreground">
+        All token blocks. One <code class="font-mono text-[11px] bg-code border border-border px-1">[data-theme="&lt;name&gt;"]</code> + one <code class="font-mono text-[11px] bg-code border border-border px-1">[data-theme="&lt;name&gt;-dark"]</code> per theme.
+      </div>
+    </div>
+    
+    <div class="border border-border rounded bg-card overflow-hidden">
+      <div class="px-4 py-3 bg-muted">
+        <div class="font-mono text-[11px] text-foreground">src/components/starlight/ThemeProvider.astro</div>
+      </div>
+      <div class="px-4 py-3 text-[13px] text-muted-foreground">
+        Pre-paint script. Owns the <code class="font-mono text-[11px] bg-code border border-border px-1">THEMES</code> allowlist and the <code class="font-mono text-[11px] bg-code border border-border px-1">window.Ui26Theme</code> API.
+      </div>
+    </div>
+    
+    <div class="border border-border rounded bg-card overflow-hidden">
+      <div class="px-4 py-3 bg-muted">
+        <div class="font-mono text-[11px] text-foreground">src/components/starlight/theme-picker.tsx</div>
+      </div>
+      <div class="px-4 py-3 text-[13px] text-muted-foreground">
+        Dropdown + light/dark/auto toggle. Owns <code class="font-mono text-[11px] bg-code border border-border px-1">THEMES</code>, <code class="font-mono text-[11px] bg-code border border-border px-1">MODES</code>, <code class="font-mono text-[11px] bg-code border border-border px-1">LABELS</code>.
+      </div>
+    </div>
+  </div>
 
-Tailwind's `dark:` variant fires on any selector ending in `dark` via the custom variant in [`global.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/global.css) — no per-theme wiring needed.
+  <p class="text-[13px] text-muted-foreground leading-[1.55] mt-6">
+    Tailwind's <code class="font-mono text-[12px] bg-code border border-border px-1">dark:</code> variant fires on any selector ending in <code class="font-mono text-[12px] bg-code border border-border px-1">dark</code> via the custom variant in <code class="font-mono text-[12px] bg-code border border-border px-1">global.css</code> — no per-theme wiring needed.
+  </p>
+</div>
 
-## Token contract
+<div class="not-content mb-10">
+  <div class="flex items-center gap-2.5 mb-6 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+    <span class="text-accent">§03</span>
+    <span>Token contract</span>
+    <span class="flex-1 h-px bg-border" />
+  </div>
 
-Every theme block must define (at minimum):
+  <div class="mb-6">
+    <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Required tokens</div>
+    <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-[1.5]">
+      Every theme block must define the full semantic surface. Missing tokens will cascade from previous themes, causing visual flashes.
+    </div>
+  </div>
 
-**Surfaces**
-`--background` `--foreground` `--card` `--card-foreground` `--popover` `--popover-foreground`
+  <div class="space-y-6">
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Surfaces</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--background --foreground --card --card-foreground --popover --popover-foreground</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Anchors</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--primary --primary-foreground --secondary --secondary-foreground</div>
+        <div>--muted --muted-foreground --accent --accent-foreground</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Feedback</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--destructive --destructive-foreground --success --warn --info --purple</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Structure</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--border --border-soft --input --ring --radius</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Accent companions</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--accent-ink --accent-soft --text-mute --code</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Shadows</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--shadow-color --shadow-xs --shadow-sm --shadow-md --shadow-lg --highlight-inset</div>
+        <div class="text-[11px] mt-1">Set to <code class="font-mono text-[11px] bg-code border border-border px-1">none</code> if the theme has none — don't omit</div>
+      </div>
+    </div>
+    
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">Fonts</div>
+      <div class="font-mono text-[13px] text-muted-foreground leading-[1.6] pl-4">
+        <div>--font-sans --font-serif --font-mono</div>
+        <div class="text-[11px] mt-1">Only if the theme diverges from the default stack</div>
+      </div>
+    </div>
+  </div>
 
-**Anchors**
-`--primary` `--primary-foreground` `--secondary` `--secondary-foreground` `--muted` `--muted-foreground` `--accent` `--accent-foreground`
+  <p class="text-[13px] text-muted-foreground leading-[1.55] mt-6">
+    The dark block can redefine only what changes. If a value is identical to the light block (typically <code class="font-mono text-[12px] bg-code border border-border px-1">--radius</code>, fonts, or shadow vocabulary), leave it out of <code class="font-mono text-[12px] bg-code border border-border px-1">-dark</code> — it cascades.
+  </p>
+</div>
 
-**Feedback**
-`--destructive` `--destructive-foreground` `--success` `--warn` `--info` `--purple`
+<div class="not-content mb-10">
+  <div class="flex items-center gap-2.5 mb-6 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
+    <span class="text-accent">§04</span>
+    <span>Adding a theme</span>
+    <span class="flex-1 h-px bg-border" />
+  </div>
 
-**Structure**
-`--border` `--border-soft` `--input` `--ring` `--radius`
+  <div class="mb-6">
+    <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Create a theme</div>
+    <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-normal">
+      Say we're adding <code class="font-mono text-[12px] bg-code border border-border px-1">sunset</code>. The process involves four steps: token blocks, registration, optional fonts, and verification.
+    </div>
+  </div>
 
-**Accent companions / text tiers / code**
-`--accent-ink` `--accent-soft` `--text-mute` `--code`
-
-**Shadows** (set to `none` if the theme has none — don't omit)
-`--shadow-color` `--shadow-xs` `--shadow-sm` `--shadow-md` `--shadow-lg` `--highlight-inset`
-
-**Fonts** (only if the theme diverges from the default stack)
-`--font-sans` `--font-serif` `--font-mono`
-
-The dark block can redefine only what changes. If a value is identical to the light block (typically `--radius`, fonts, or shadow vocabulary), leave it out of `-dark` — it cascades.
-
-## Adding a theme
-
-Say we're adding `sunset`.
-
-### 1. Add two token blocks
-
-In [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/tokens.css), append:
+  <div class="space-y-8">
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">1. Add two token blocks</div>
+      <p class="text-[13px] text-muted-foreground leading-[1.55] mb-4">
+        In <code class="font-mono text-[12px] bg-code border border-border px-1">registry/tokens.css</code>, append:
+      </p>
 
 ```css
 [data-theme="sunset"] {
@@ -89,48 +211,77 @@ In [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps
 }
 ```
 
-### 2. Register the theme in two places
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">2. Register the theme in two places</div>
+      <p class="text-[13px] text-muted-foreground leading-[1.55] mb-4">
+        In <code class="font-mono text-[12px] bg-code border border-border px-1">ThemeProvider.astro</code>, add the key to the <code class="font-mono text-[12px] bg-code border border-border px-1">THEMES</code> allowlist inside the inline script:
+      </p>
 
-In [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro), add the key to the `THEMES` allowlist inside the inline script:
+      <div class="border border-border rounded bg-card overflow-hidden mb-4">
+        <div class="px-4 py-3 bg-muted">
+          <div class="font-mono text-[10px] tracking-[0.06em] uppercase text-text-mute">ThemeProvider.astro</div>
+        </div>
+        <div class="px-4 py-3">
+          <code class="font-mono text-[11px] text-foreground">const THEMES = ['editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset'];</code>
+        </div>
+      </div>
 
-```js
-const THEMES = ['editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset'];
-```
+      <p class="text-[13px] text-muted-foreground leading-[1.55] mb-4">
+        In <code class="font-mono text-[12px] bg-code border border-border px-1">theme-picker.tsx</code>, add the key to the local <code class="font-mono text-[12px] bg-code border border-border px-1">THEMES</code> array, extend the <code class="font-mono text-[12px] bg-code border border-border px-1">Name</code> union, and add a <code class="font-mono text-[12px] bg-code border border-border px-1">LABELS</code> entry:
+      </p>
 
-In [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx), add the key to the local `THEMES` array, extend the `Name` union, and add a `LABELS` entry:
+      <div class="border border-border rounded bg-card overflow-hidden mb-4">
+        <div class="px-4 py-3 bg-muted">
+          <div class="font-mono text-[10px] tracking-[0.06em] uppercase text-text-mute">theme-picker.tsx</div>
+        </div>
+        <div class="px-4 py-3">
+          <code class="font-mono text-[11px] text-foreground">type Name = 'editorial' | 'tix' | 'shad' | 'neon-synthwave' | 'cyberpunk-neon' | 'sunset';</code>
+          <br class="my-2">
+          <code class="font-mono text-[11px] text-foreground">const THEMES: readonly Name[] = ['editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset'];</code>
+          <br class="my-2">
+          <code class="font-mono text-[11px] text-foreground">const LABELS: Record&lt;Name, string&gt; = { /* ...existing */ sunset: 'Sunset' };</code>
+        </div>
+      </div>
 
-```tsx
-type Name = 'editorial' | 'tix' | 'shad' | 'neon-synthwave' | 'cyberpunk-neon' | 'sunset';
+      <p class="text-[13px] text-muted-foreground leading-[1.55]">
+        Both lists must agree. The pre-paint script uses its copy to reject unknown <code class="font-mono text-[12px] bg-code border border-border px-1">localStorage</code> values; the picker uses its copy to render options.
+      </p>
+    </div>
 
-const THEMES: readonly Name[] = [
-  'editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset',
-];
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">3. (Optional) Load web fonts</div>
+      <p class="text-[13px] text-muted-foreground leading-[1.55]">
+        If the theme uses a font not already loaded, add a <code class="font-mono text-[12px] bg-code border border-border px-1">&lt;link&gt;</code> to the <code class="font-mono text-[12px] bg-code border border-border px-1">head</code> array in <code class="font-mono text-[12px] bg-code border border-border px-1">astro.config.mjs</code> alongside the Newsreader/Geist links.
+      </p>
+    </div>
 
-const LABELS: Record<Name, string> = {
-  /* ...existing */
-  sunset: 'Sunset',
-};
-```
+    <div>
+      <div class="font-semibold text-[14px] mb-3 text-foreground">4. Verify</div>
+      <p class="text-[13px] text-muted-foreground leading-[1.55] mb-4">From the docs app:</p>
+      
+      <div class="border border-border rounded bg-card overflow-hidden mb-4">
+        <div class="px-4 py-3 bg-muted">
+          <div class="font-mono text-[10px] tracking-[0.06em] uppercase text-text-mute">Terminal</div>
+        </div>
+        <div class="px-4 py-3">
+          <code class="font-mono text-[11px] text-foreground">pnpm dev</code>
+        </div>
+      </div>
 
-Both lists must agree. The pre-paint script uses its copy to reject unknown `localStorage` values; the picker uses its copy to render options.
+      <p class="text-[13px] text-muted-foreground leading-[1.55] mb-4">
+        Open a page, pick <code class="font-mono text-[12px] bg-code border border-border px-1">Sunset</code> in the header dropdown, toggle light/dark/auto. Check:
+      </p>
 
-### 3. (Optional) Load web fonts
+      <ul class="text-[13px] text-muted-foreground leading-[1.55] space-y-2 pl-6">
+        <li><code class="font-mono text-[11px] bg-code border border-border px-1">document.documentElement.dataset.theme</code> flips between <code class="font-mono text-[11px] bg-code border border-border px-1">sunset</code> and <code class="font-mono text-[11px] bg-code border border-border px-1">sunset-dark</code></li>
+        <li><code class="font-mono text-[11px] bg-code border border-border px-1">getComputedStyle(document.documentElement).getPropertyValue('--background')</code> returns your chosen color</li>
+        <li>Reloading the page preserves the choice</li>
+        <li>Components on <code class="font-mono text-[11px] bg-code border border-border px-1">/kitchen-sink</code> and <code class="font-mono text-[11px] bg-code border border-border px-1">/installs</code> look cohesive</li>
+      </ul>
 
-If the theme uses a font not already loaded, add a `<link>` to the `head` array in [`astro.config.mjs`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/astro.config.mjs) alongside the Newsreader/Geist links.
-
-### 4. Verify
-
-From the docs app:
-
-```bash
-pnpm dev
-```
-
-Open a page, pick `Sunset` in the header dropdown, toggle light/dark/auto. Check:
-
-- `document.documentElement.dataset.theme` flips between `sunset` and `sunset-dark`
-- `getComputedStyle(document.documentElement).getPropertyValue('--background')` returns your chosen color
-- Reloading the page preserves the choice
-- Components on `/kitchen-sink` and `/installs` look cohesive
-
-If a token is missing, you'll see a flash of an unrelated theme's value (the cascade falls through to the previous theme block). Any missing var = missing block entry.
+      <p class="text-[13px] text-muted-foreground leading-[1.55] mt-4">
+        If a token is missing, you'll see a flash of an unrelated theme's value (the cascade falls through to the previous theme block). Any missing var = missing block entry.
+      </p>
+    </div>
+  </div>
+</div>

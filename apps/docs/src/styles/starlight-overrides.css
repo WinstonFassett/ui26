@@ -144,6 +144,7 @@ site-search button[data-open-modal] {
   background: var(--sl-color-bg-inline-code);
   border-left-color: var(--accent);
   font-weight: 500;
+  border-radius: 0;
 }
 
 /* ---------- Main content ---------- */
@@ -258,6 +259,7 @@ a.action.secondary {
   border-left: 1.5px solid var(--accent);
   padding-left: 8px;
   margin-left: -10px;
+  border-radius: 0;
 }
 
 /* ---------- Code blocks ---------- */
