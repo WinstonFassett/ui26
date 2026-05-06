@@ -41,7 +41,8 @@ pnpm-debug.log*
 .spike-check.mjs
 
 # web-dev-mcp runtime logs
-.web-dev-mcp/
+.webdev-mcp/
+.webdev/
 
 .agents/
 .claude/

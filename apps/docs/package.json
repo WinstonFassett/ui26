@@ -29,6 +29,7 @@
     "@types/react-dom": "^19.2.3",
     "@uiw/codemirror-theme-github": "^4.25.9",
     "@uiw/react-codemirror": "^4.25.9",
+    "@winstonfassett/webdev-astro": "file:../../../web-dev-mcp/packages/adapter-astro",
     "astro": "^6.0.1",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",

@@ -8,7 +8,7 @@ import react from '@astrojs/react';
 
 import svelte from '@astrojs/svelte';
 
-import webDevMcp from '@winstonfassett/web-dev-mcp-astro';
+import webDevMcp from '@winstonfassett/webdev-astro';
 
 // https://astro.build/config
 export default defineConfig({
