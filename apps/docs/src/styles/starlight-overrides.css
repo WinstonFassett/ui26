@@ -118,7 +118,10 @@ site-search button[data-open-modal] kbd {
 
 /* Fix theme selector height to match theme toggle buttons */
 select[aria-label="Select theme"] {
-  height: 24px;
+  height: 32px;
+}
+button[aria-label*="theme"] {
+  height: 32px;
 }
 
 /* Version pill (wrap a <span class="version-pill"> next to site title) */
