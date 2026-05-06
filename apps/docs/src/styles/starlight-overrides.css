@@ -431,3 +431,8 @@ a.action.secondary {
   text-transform: uppercase;
   color: var(--sl-color-gray-3);
 }
+
+
+.pagination-links a .link-title {  
+  font-size: var(--sl-text-xl);
+}
