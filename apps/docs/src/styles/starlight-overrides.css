@@ -51,79 +51,70 @@ header.header {
   background: var(--sl-color-bg-nav);
   border-bottom: 1px solid var(--sl-color-hairline);
   padding: 0 16px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
-/* Unified typography system for header */
-header.header * {
-  font-family: var(--font-sans);
-  font-feature-settings: "cv11", "ss01";
+/* Mobile "On this page" crowding fix */
+@media (max-width: 768px) {
+  header.header {
+    height: auto;
+    min-height: var(--sl-nav-height);
+  }
+  
+  #starlight__on-this-page--mobile {
+    margin: 8px 0;
+    padding: 8px 0;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+  
+  main {
+    margin-top: 8px;
+  }
 }
 
 /* Social icons (GitHub) should use text color, not accent */
 header.header .social-links a,
 header.header a[href*="github"] {
   color: var(--sl-color-text);
-  transition: color 0.15s ease-out;
 }
 header.header .social-links a:hover,
 header.header a[href*="github"]:hover {
   color: var(--sl-color-text-accent);
 }
 
-/* Site title - unified with rest of header */
+/* Keep distinctive site title styling */
 header.header .site-title {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
-  line-height: 1.2;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
   gap: 10px;
   color: var(--sl-color-text);
-  transition: color 0.15s ease-out;
-}
-header.header .site-title:hover {
-  color: var(--sl-color-text-accent);
 }
 header.header .site-title img,
-header.header .site-title svg { 
-  width: 18px; 
-  height: 18px;
-  opacity: 0.8;
-  transition: opacity 0.15s ease-out;
-}
-header.header .site-title:hover img,
-header.header .site-title:hover svg {
-  opacity: 1;
-}
+header.header .site-title svg { width: 20px; height: 20px; }
 
-/* Search input - unified styling */
+/* Fix search styling - keep monospace but match header border style */
 site-search button[data-open-modal] {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.005em;
+  font-family: var(--font-mono);
+  font-size: 11px;
   border: 1px solid var(--sl-color-hairline);
-  background: var(--sl-color-bg);
-  border-radius: 6px;
-  padding: 6px 12px;
-  color: var(--sl-color-text);
-  min-width: 280px;
-  height: 32px;
-  transition: all 0.15s ease-out;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: transparent;
+  padding: 4px 10px;
+  color: var(--sl-color-gray-2);
+  min-width: 360px;
+  min-height: 0;
+  height: auto;
+  border-radius: 0;
+  transition: border-color 0.15s ease-out, color 0.15s ease-out;
 }
 site-search button[data-open-modal]:hover {
-  border-color: var(--sl-color-text-accent);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: var(--sl-color-text);
+  color: var(--sl-color-text);
 }
 site-search button[data-open-modal] kbd {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--sl-color-gray-2);
-  background: var(--sl-color-bg-hover);
-  padding: 2px 4px;
-  border-radius: 3px;
-  margin-left: 6px;
+  border-radius: 0;
 }
 
 /* Version pill (wrap a <span class="version-pill"> next to site title) */
