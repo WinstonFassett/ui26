@@ -14,15 +14,15 @@ export const button = tv({
   variants: {
     variant: {
       default:
-        "bg-primary text-primary-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-primary/90",
+        "bg-primary text-primary-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-primary/90 hover:shadow-[var(--highlight-inset),var(--shadow-sm)]",
       secondary:
-        "bg-secondary text-secondary-foreground border border-border hover:bg-accent",
+        "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 hover:border-border-foreground/20 hover:shadow-[var(--highlight-inset),var(--shadow-xs)]",
       outline:
-        "border border-border bg-transparent hover:bg-accent hover:text-accent-foreground",
+        "border border-border bg-transparent hover:bg-border/5 hover:border-border-foreground/30 hover:text-foreground",
       ghost:
-        "hover:bg-accent hover:text-accent-foreground",
+        "hover:bg-muted/50 hover:text-foreground",
       destructive:
-        "bg-destructive text-destructive-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-destructive/90 focus-visible:ring-destructive",
+        "bg-destructive text-destructive-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-destructive/90 hover:shadow-[var(--highlight-inset),var(--shadow-sm)] focus-visible:ring-destructive",
     },
     size: {
       default: "h-8 px-3",
