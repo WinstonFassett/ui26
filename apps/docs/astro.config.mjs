@@ -24,16 +24,16 @@ export default defineConfig({
         },
         head: [
             // Inline critical --sl-* vars so Starlight's chrome doesn't paint
-            // cold defaults before external CSS loads. Editorial light is the
+            // cold defaults before external CSS loads. Shad light is the
             // unconditional default; any *-dark suffix switches to dark chrome.
-            // Full per-theme palette loads with tokens.css.
+            // Full per-theme palette loads with all-themes.css.
             { tag: 'style', content: `
                 :root{
-                    --sl-color-bg:#f6f5f1;
-                    --sl-color-bg-nav:#f6f5f1;
-                    --sl-color-bg-sidebar:#f6f5f1;
-                    --sl-color-text:#15130f;
-                    --sl-color-hairline:#e3e0d8;
+                    --sl-color-bg:#ffffff;
+                    --sl-color-bg-nav:#ffffff;
+                    --sl-color-bg-sidebar:#ffffff;
+                    --sl-color-text:#252525;
+                    --sl-color-hairline:#ebebeb;
                     --sl-color-accent:var(--accent);
                     --sl-color-text-accent:var(--accent);
                 }

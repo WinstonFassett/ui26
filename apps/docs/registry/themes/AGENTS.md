@@ -1,6 +1,6 @@
 # Themes — agent notes
 
-Each file in this directory is a standalone theme: one `[data-theme="<name>"]` block + one `[data-theme="<name>-dark"]` block. The index [`../tokens.css`](../tokens.css) `@import`s them in order; the first import is the default theme.
+Each file in this directory is a standalone theme: one `[data-theme="<name>"]` block + one `[data-theme="<name>-dark"]` block. The default theme additionally prefixes its named selector with `:root,` so documents without a `data-theme` attribute render correctly — today that's [`shad.css`](./shad.css). The index [`../all-themes.css`](../all-themes.css) `@import`s every theme file for the multi-theme switcher.
 
 User-facing docs: [`apps/docs/src/content/docs/reference/themes.mdx`](../../src/content/docs/reference/themes.mdx). Broader registry rules: [`../AGENTS.md`](../AGENTS.md).
 

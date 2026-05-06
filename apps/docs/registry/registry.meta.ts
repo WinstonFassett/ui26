@@ -24,7 +24,7 @@ const EXT: Record<Framework, string> = {
 const CARD_SUBS = ["header", "title", "description", "content", "footer"] as const;
 
 const BASE_DEPS = ["tailwind-variants"];
-const BASE_REGISTRY_DEPS = ["utils", "base"];
+const BASE_REGISTRY_DEPS = ["utils"];
 
 export const COMPONENTS: ComponentMeta[] = [
   {
@@ -121,10 +121,3 @@ export const UTILS_ITEM = {
   files: [{ path: "lib/utils.ts", type: "registry:lib" as const }],
 };
 
-export const BASE_ITEM = {
-  name: "base",
-  type: "registry:base" as const,
-  title: "ui26 base",
-  description: "ui26 tokens and Tailwind v4 @theme inline mapping. Install once per project.",
-  tokensPath: "tokens.css",
-};

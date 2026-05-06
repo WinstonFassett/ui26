@@ -1,6 +1,6 @@
 /* Geist + Newsreader fonts are loaded via <link> in apps/docs/astro.config.mjs head.
- * Default theme: editorial (serif display, warm off-white, gold accent).
- * Alternate themes opt-in via `data-theme` attribute — see registry/tokens.css.
+ * Default theme: shad (shadcn-default zinc neutrals). Alternate themes
+ * opt-in via `data-theme` attribute — see registry/all-themes.css.
  */
 
 @layer base, starlight, theme, components, utilities;
@@ -16,13 +16,13 @@
  * ships runtime-JSX Tailwind classes. */
 @source "../../node_modules/streamdown/dist";
 
-/* Single tokens source — shared with the shadcn-style registry at /r/base.json */
-@import '../../registry/tokens.css';
+/* All themes — same source the /r/themes.json registry endpoint serves. */
+@import '../../registry/all-themes.css';
 @import './starlight-overrides.css';
 
 /* Tailwind's `dark:` variant fires for any theme ending in `dark`
  * (`[data-theme="editorial-dark"]`, `[data-theme="tix-dark"]`, etc.).
- * Themes are compound keys — see registry/tokens.css.
+ * Themes are compound keys — see registry/all-themes.css.
  */
 @custom-variant dark (&:is([data-theme$="dark"] *));
 
@@ -62,7 +62,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Fonts are indirected through `--font-*` in registry/tokens.css so themes
+  /* Fonts are indirected through `--font-*` in registry/all-themes.css so themes
    * can swap typography (editorial uses Newsreader serif; tix/shad use system). */
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
