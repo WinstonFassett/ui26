@@ -95,7 +95,7 @@ header.header .site-title {
 header.header .site-title img,
 header.header .site-title svg { width: 20px; height: 20px; }
 
-/* Fix search styling - keep monospace but match header border style */
+/* Fix search styling - keep monospace but match header border and height */
 site-search button[data-open-modal] {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -104,8 +104,7 @@ site-search button[data-open-modal] {
   padding: 4px 10px;
   color: var(--sl-color-gray-2);
   min-width: 360px;
-  min-height: 0;
-  height: auto;
+  height: 24px;
   border-radius: 0;
   transition: border-color 0.15s ease-out, color 0.15s ease-out;
 }
@@ -115,6 +114,11 @@ site-search button[data-open-modal]:hover {
 }
 site-search button[data-open-modal] kbd {
   border-radius: 0;
+}
+
+/* Fix theme selector height to match theme toggle buttons */
+select[aria-label="Select theme"] {
+  height: 24px;
 }
 
 /* Version pill (wrap a <span class="version-pill"> next to site title) */
