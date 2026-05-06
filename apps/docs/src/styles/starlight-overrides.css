@@ -81,6 +81,14 @@ header.header a[href*="github"]:hover {
   color: var(--sl-color-text-accent);
 }
 
+/* Fix anchor link colors to use theme accent instead of Starlight default gold */
+.sl-anchor-link {
+  color: var(--accent) !important;
+}
+.sl-anchor-link:hover {
+  color: var(--accent) !important;
+}
+
 /* Keep distinctive site title styling */
 header.header .site-title {
   font-family: var(--font-serif);
