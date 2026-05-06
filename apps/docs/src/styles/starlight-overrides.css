@@ -53,23 +53,6 @@ header.header {
   padding: 0 16px;
 }
 
-/* Mobile "On this page" crowding fix */
-@media (max-width: 768px) {
-  header.header {
-    height: auto;
-    min-height: var(--sl-nav-height);
-  }
-  
-  #starlight__on-this-page--mobile {
-    margin: 8px 0;
-    padding: 8px 0;
-    border-top: 1px solid var(--sl-color-hairline);
-  }
-  
-  main {
-    margin-top: 8px;
-  }
-}
 
 /* Social icons (GitHub) should use text color, not accent */
 header.header .social-links a,
@@ -208,6 +191,15 @@ select[aria-label="Select theme"] {
   margin: 28px 0 0 0;
   padding-top: 20px;
 }
+/* When mobile TOC is fixed above content, give h1 enough clearance */
+@media (max-width: 72rem) {
+  .main-frame h1,
+  .sl-markdown-content h1:first-of-type,
+  .hero h1 {
+    padding-top: calc(var(--sl-mobile-toc-height, 48px) + 20px);
+  }
+}
+
 .main-frame h1 em,
 .sl-markdown-content h1 em,
 .hero h1 em { font-weight: 400; font-style: italic; }
