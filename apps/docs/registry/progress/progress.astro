@@ -1,0 +1,29 @@
+---
+import { cn } from "../lib/utils";
+import { progressRoot, progressIndicator, type ProgressVariants } from "./progress.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"div">, "class"> &
+  ProgressVariants & {
+    class?: string;
+    value?: number;
+    max?: number;
+  };
+
+const { value = 0, max = 100, variant, class: className, ...rest } = Astro.props;
+const pct = (value / max) * 100;
+---
+
+<div
+  role="progressbar"
+  aria-valuenow={value}
+  aria-valuemin={0}
+  aria-valuemax={max}
+  class={cn(progressRoot(), className)}
+  {...rest}
+>
+  <div
+    class={cn(progressIndicator({ variant }))}
+    style={`transform: translateX(-${100 - pct}%)`}
+  />
+</div>

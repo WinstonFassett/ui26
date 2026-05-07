@@ -23,6 +23,13 @@ const EXT: Record<Framework, string> = {
 
 const CARD_SUBS = ["header", "title", "description", "content", "footer"] as const;
 
+const ALERT_SUBS = ["title", "description"] as const;
+const AVATAR_SUBS = ["image", "fallback"] as const;
+const ACCORDION_SUBS = ["item", "trigger", "content"] as const;
+const BREADCRUMB_SUBS = ["list", "item", "link", "page", "separator"] as const;
+const PAGINATION_SUBS = ["content", "item", "link"] as const;
+const RADIO_GROUP_SUBS = ["item"] as const;
+
 const BASE_DEPS = ["tailwind-variants"];
 const BASE_REGISTRY_DEPS = ["utils", "base"];
 
@@ -90,22 +97,102 @@ export const COMPONENTS: ComponentMeta[] = [
     dependencies: BASE_DEPS,
     registryDependencies: BASE_REGISTRY_DEPS,
   },
+  {
+    name: "alert",
+    title: "Alert",
+    description: "Contextual feedback banner with AlertTitle and AlertDescription subcomponents.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "avatar",
+    title: "Avatar",
+    description: "User identity avatar with AvatarImage and AvatarFallback subcomponents.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "skeleton",
+    title: "Skeleton",
+    description: "Pulsing loading placeholder. Compose with width/height utilities.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "progress",
+    title: "Progress",
+    description: "Progress bar with value/max props and variant axis.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "accordion",
+    title: "Accordion",
+    description: "Collapsible sections via native details/summary. Zero JS.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "slider",
+    title: "Slider",
+    description: "Native range input styled with accent-primary.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "toggle",
+    title: "Toggle",
+    description: "Button with aria-pressed state and pressed/unpressed variant styles.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "breadcrumb",
+    title: "Breadcrumb",
+    description: "Navigation trail: BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "pagination",
+    title: "Pagination",
+    description: "Page navigation: PaginationContent, PaginationItem, PaginationLink.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "radio-group",
+    title: "Radio Group",
+    description: "Native radio group with RadioGroupItem. Fully accessible via browser behavior.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
 ];
 
 export function filesFor(name: string, fw: Framework): RegistryFile[] {
   const ext = EXT[fw];
-  if (name === "card") {
+
+  function withSubs(subs: readonly string[]): RegistryFile[] {
     const files: RegistryFile[] = [
-      { path: `card/card.${ext}`, type: "registry:ui" },
-      { path: `card/card.tv.ts`, type: "registry:ui" },
+      { path: `${name}/${name}.${ext}`, type: "registry:ui" },
+      { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
     ];
     if (fw !== "react") {
-      for (const sub of CARD_SUBS) {
-        files.push({ path: `card/card-${sub}.${ext}`, type: "registry:ui" });
+      for (const sub of subs) {
+        files.push({ path: `${name}/${name}-${sub}.${ext}`, type: "registry:ui" });
       }
     }
     return files;
   }
+
+  if (name === "card") return withSubs(CARD_SUBS);
+  if (name === "alert") return withSubs(ALERT_SUBS);
+  if (name === "avatar") return withSubs(AVATAR_SUBS);
+  if (name === "accordion") return withSubs(ACCORDION_SUBS);
+  if (name === "breadcrumb") return withSubs(BREADCRUMB_SUBS);
+  if (name === "pagination") return withSubs(PAGINATION_SUBS);
+  if (name === "radio-group") return withSubs(RADIO_GROUP_SUBS);
+
   return [
     { path: `${name}/${name}.${ext}`, type: "registry:ui" },
     { path: `${name}/${name}.tv.ts`, type: "registry:ui" },

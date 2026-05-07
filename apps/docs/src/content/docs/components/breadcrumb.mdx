@@ -1,0 +1,31 @@
+---
+title: Breadcrumb
+description: Navigation trail showing the current page location. Composable BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator.
+---
+
+import BreadcrumbAstro from "@registry/breadcrumb/breadcrumb.astro";
+import BreadcrumbListAstro from "@registry/breadcrumb/breadcrumb-list.astro";
+import BreadcrumbItemAstro from "@registry/breadcrumb/breadcrumb-item.astro";
+import BreadcrumbLinkAstro from "@registry/breadcrumb/breadcrumb-link.astro";
+import BreadcrumbPageAstro from "@registry/breadcrumb/breadcrumb-page.astro";
+import BreadcrumbSeparatorAstro from "@registry/breadcrumb/breadcrumb-separator.astro";
+
+## Basic
+
+<div class="not-content my-6">
+  <BreadcrumbAstro>
+    <BreadcrumbListAstro>
+      <BreadcrumbItemAstro>
+        <BreadcrumbLinkAstro href="/">Home</BreadcrumbLinkAstro>
+      </BreadcrumbItemAstro>
+      <BreadcrumbSeparatorAstro />
+      <BreadcrumbItemAstro>
+        <BreadcrumbLinkAstro href="/components">Components</BreadcrumbLinkAstro>
+      </BreadcrumbItemAstro>
+      <BreadcrumbSeparatorAstro />
+      <BreadcrumbItemAstro>
+        <BreadcrumbPageAstro>Breadcrumb</BreadcrumbPageAstro>
+      </BreadcrumbItemAstro>
+    </BreadcrumbListAstro>
+  </BreadcrumbAstro>
+</div>

@@ -1,0 +1,11 @@
+---
+import { cn } from "../lib/utils";
+import { breadcrumbLink } from "./breadcrumb.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"a">, "class"> & { class?: string; href?: string };
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<a class={cn(breadcrumbLink(), className)} {...rest}><slot /></a>
