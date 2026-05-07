@@ -184,6 +184,18 @@ const typeScale = [
         <div class="px-3 py-1.5 text-[12px] text-muted-foreground border-r border-border">Assigned</div>
         <div class="px-3 py-1.5 text-[12px] text-muted-foreground">Watching</div>
       </div>
+
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Toggle</div>
+      <div class="flex gap-2 items-center flex-wrap">
+        <Toggle>Bold</Toggle>
+        <Toggle pressed>Italic</Toggle>
+        <Toggle variant="outline">Underline</Toggle>
+        <Toggle variant="ghost">Code</Toggle>
+        <Toggle size="icon">B</Toggle>
+        <Toggle size="icon" pressed>I</Toggle>
+        <Toggle size="sm" pressed>sm</Toggle>
+        <Toggle disabled>Disabled</Toggle>
+      </div>
     </div>
   </section>
 
@@ -255,6 +267,15 @@ const typeScale = [
           <Label for="ks-search">Search</Label>
           <Input id="ks-search" placeholder="Search tickets, docs, people…" />
         </div>
+        <div class="flex flex-col gap-1.5">
+          <Label for="ks-volume">
+            <span class="flex justify-between w-full">
+              <span>Confidence threshold</span>
+              <span class="font-mono text-[10px] text-muted-foreground">65%</span>
+            </span>
+          </Label>
+          <Slider id="ks-volume" min={0} max={100} value={65} />
+        </div>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -275,7 +296,7 @@ const typeScale = [
       <span class="flex-1 h-px bg-border" />
     </div>
 
-    <div class="grid grid-cols-3 gap-7 pb-5 border-b border-border">
+    <div class="grid grid-cols-4 gap-7 pb-5 border-b border-border">
       <div>
         <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Checkbox</div>
         <div class="flex flex-col gap-2.5">
@@ -330,6 +351,33 @@ const typeScale = [
           <div class="text-[13px] text-foreground">Above</div>
           <Separator />
           <div class="text-[13px] text-foreground">Below</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Radio group</div>
+        <div class="flex flex-col gap-2.5">
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <RadioGroupItem name="ks-plan" value="free" checked class="mt-0.5" />
+            <span>
+              <span class="block text-[13px] text-foreground leading-[1.35]">Free</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Up to 3 machines.</span>
+            </span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <RadioGroupItem name="ks-plan" value="pro" class="mt-0.5" />
+            <span>
+              <span class="block text-[13px] text-foreground leading-[1.35]">Pro · $19/mo</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Unlimited machines + effects.</span>
+            </span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer opacity-50">
+            <RadioGroupItem name="ks-plan" value="enterprise" disabled class="mt-0.5" />
+            <span>
+              <span class="block text-[13px] text-foreground">Enterprise</span>
+              <span class="block text-[11px] text-muted-foreground mt-0.5">Managed by your admin.</span>
+            </span>
+          </label>
         </div>
       </div>
     </div>
@@ -404,8 +452,25 @@ const typeScale = [
       </div>
     </div>
 
+    {/* Breadcrumb nav */}
+    <Breadcrumb class="mb-3">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href="#">Matchina</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbPage>All issues</BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
+
     {/* Ticket table */}
-    <div class="border border-border rounded bg-card overflow-hidden mb-6">
+    <div class="border border-border rounded bg-card overflow-hidden mb-4">
       <div class="flex items-center gap-3 px-4 py-3 border-b border-border">
         <span class="text-[13px] font-semibold text-foreground">All issues</span>
         <Badge variant="secondary">128</Badge>
@@ -455,6 +520,22 @@ const typeScale = [
           <span class="font-mono text-[11px] text-text-mute">{r.u}</span>
         </div>
       ))}
+    </div>
+
+    {/* Ticket table pagination */}
+    <div class="flex items-center justify-between mb-6">
+      <span class="font-mono text-[11px] text-text-mute">Showing 1–7 of 128 issues</span>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem><PaginationLink href="#">«</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationLink href="#">…</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationLink href="#">19</PaginationLink></PaginationItem>
+          <PaginationItem><PaginationLink href="#">»</PaginationLink></PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
 
     {/* Ticket detail + Document */}
@@ -562,6 +643,26 @@ const typeScale = [
       <span class="text-accent">§09</span>
       <span>Feedback &amp; overlays</span>
       <span class="flex-1 h-px bg-border" />
+    </div>
+
+    {/* Alerts */}
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <Alert>
+        <AlertTitle>Heads up</AlertTitle>
+        <AlertDescription>You can now publish machines to the edge network — see the deploy docs.</AlertDescription>
+      </Alert>
+      <Alert variant="success">
+        <AlertTitle>Deployed</AlertTitle>
+        <AlertDescription>checkout@2.1.0 is live — 1.2 kb gzipped.</AlertDescription>
+      </Alert>
+      <Alert variant="warning">
+        <AlertTitle>Breaking change in 2.0</AlertTitle>
+        <AlertDescription>The <code class="font-mono text-[11px]">send()</code> API now returns a promise — update your callers.</AlertDescription>
+      </Alert>
+      <Alert variant="destructive">
+        <AlertTitle>Type error</AlertTitle>
+        <AlertDescription>paying.fail → "falied" — did you mean "failed"?</AlertDescription>
+      </Alert>
     </div>
 
     <div class="grid grid-cols-2 gap-5 mb-6">
@@ -697,9 +798,7 @@ const typeScale = [
                 <span>Step 2 of 4</span>
                 <span>50%</span>
               </div>
-              <div class="h-1 bg-secondary border border-border rounded-full relative overflow-hidden">
-                <div class="absolute inset-0 right-1/2 bg-accent" />
-              </div>
+              <Progress value={50} class="h-1" />
             </div>
             {[
               { n: 1, l: "Install matchina", d: "$ npm i matchina", s: "done" },
@@ -724,6 +823,96 @@ const typeScale = [
           </div>
         </CardContent>
       </Card>
+    </div>
+
+    {/* Skeleton loading states */}
+    <div class="grid grid-cols-3 gap-5 mb-5">
+      <Card>
+        <CardHeader>
+          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Loading state</CardDescription>
+          <CardTitle>Skeleton</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <Skeleton class="size-9 rounded-full shrink-0" />
+              <div class="space-y-1.5 flex-1">
+                <Skeleton class="h-3 w-3/4" />
+                <Skeleton class="h-3 w-1/2" />
+              </div>
+            </div>
+            <Skeleton class="h-3 w-full" />
+            <Skeleton class="h-3 w-5/6" />
+            <Skeleton class="h-20 w-full rounded-md" />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Progress</CardDescription>
+          <CardTitle>Upload queue</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1.5"><span>checkout.ts</span><span>100%</span></div>
+              <Progress value={100} variant="success" />
+            </div>
+            <div>
+              <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1.5"><span>fetcher.ts</span><span>72%</span></div>
+              <Progress value={72} />
+            </div>
+            <div>
+              <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1.5"><span>auth.ts</span><span>38%</span></div>
+              <Progress value={38} variant="destructive" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Accordion</CardDescription>
+          <CardTitle>FAQ</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Accordion>
+            <AccordionItem open>
+              <AccordionTrigger>What is matchina?</AccordionTrigger>
+              <AccordionContent>A typed state-machine library — composable, framework-agnostic, zero config.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionTrigger>How does persistence work?</AccordionTrigger>
+              <AccordionContent>Pass <code class="font-mono text-[11px]">persist: 'key'</code> to useMachine — survives remounts and page reloads.</AccordionContent>
+            </AccordionItem>
+            <AccordionItem>
+              <AccordionTrigger>Is it accessible?</AccordionTrigger>
+              <AccordionContent>Yes — built on native details/summary, zero JS overhead.</AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </CardContent>
+      </Card>
+    </div>
+
+    {/* Avatars */}
+    <div class="flex items-center gap-4 mb-5 px-0.5">
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute shrink-0">Team</div>
+      <div class="flex items-center gap-2">
+        <Avatar size="sm"><AvatarFallback>JR</AvatarFallback></Avatar>
+        <Avatar size="sm"><AvatarFallback>KM</AvatarFallback></Avatar>
+        <Avatar size="sm"><AvatarFallback>AP</AvatarFallback></Avatar>
+        <Avatar size="sm"><AvatarFallback>LS</AvatarFallback></Avatar>
+        <span class="font-mono text-[11px] text-muted-foreground ml-1">+12 members</span>
+      </div>
+      <div class="flex-1 h-px bg-border" />
+      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute shrink-0">Sizes</div>
+      <div class="flex items-end gap-2">
+        <Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
+        <Avatar><AvatarFallback>MD</AvatarFallback></Avatar>
+        <Avatar size="lg"><AvatarFallback>LG</AvatarFallback></Avatar>
+        <Avatar size="xl"><AvatarFallback>XL</AvatarFallback></Avatar>
+      </div>
     </div>
 
     {/* Menu + Tooltip + Empty state */}
@@ -797,195 +986,10 @@ const typeScale = [
     </div>
   </section>
 
-  {/* ──────────────────────────────────────────────── 10 · New components */}
+  {/* ──────────────────────────────────────────────── 10 · Command palette */}
   <section class="not-content my-14">
     <div class="flex items-center gap-2.5 mb-5 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
       <span class="text-accent">§10</span>
-      <span>New components</span>
-      <span class="flex-1 h-px bg-border" />
-    </div>
-
-    {/* Row 1: Alert variants */}
-    <div class="mb-8">
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3">Alert</div>
-      <div class="grid grid-cols-2 gap-3 max-w-2xl">
-        <Alert>
-          <AlertTitle>Heads up</AlertTitle>
-          <AlertDescription>You can add components and dependencies using the CLI.</AlertDescription>
-        </Alert>
-        <Alert variant="destructive">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
-        </Alert>
-        <Alert variant="warning">
-          <AlertTitle>Warning</AlertTitle>
-          <AlertDescription>This action cannot be undone once confirmed.</AlertDescription>
-        </Alert>
-        <Alert variant="success">
-          <AlertTitle>Deployed</AlertTitle>
-          <AlertDescription>checkout@2.1.0 is live — 1.2 kb gzipped.</AlertDescription>
-        </Alert>
-      </div>
-    </div>
-
-    {/* Row 2: Avatar + Skeleton + Progress */}
-    <div class="grid grid-cols-3 gap-6 mb-8 pb-8 border-b border-border">
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3">Avatar</div>
-        <div class="flex gap-3 items-end mb-4">
-          <Avatar size="sm"><AvatarFallback>JR</AvatarFallback></Avatar>
-          <Avatar><AvatarFallback>KM</AvatarFallback></Avatar>
-          <Avatar size="lg"><AvatarFallback>AP</AvatarFallback></Avatar>
-          <Avatar size="xl"><AvatarFallback>LS</AvatarFallback></Avatar>
-        </div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3 mt-6">Skeleton</div>
-        <div class="space-y-2">
-          <div class="flex items-center gap-3">
-            <Skeleton class="size-10 rounded-full shrink-0" />
-            <div class="space-y-1.5 flex-1">
-              <Skeleton class="h-3 w-3/4" />
-              <Skeleton class="h-3 w-1/2" />
-            </div>
-          </div>
-          <Skeleton class="h-3 w-full" />
-          <Skeleton class="h-3 w-5/6" />
-          <Skeleton class="h-16 w-full rounded-md" />
-        </div>
-      </div>
-
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3">Progress</div>
-        <div class="space-y-3">
-          <div>
-            <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1">
-              <span>Uploading</span><span>72%</span>
-            </div>
-            <Progress value={72} />
-          </div>
-          <div>
-            <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1">
-              <span>Build</span><span>100%</span>
-            </div>
-            <Progress value={100} variant="success" />
-          </div>
-          <div>
-            <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1">
-              <span>Error rate</span><span>38%</span>
-            </div>
-            <Progress value={38} variant="destructive" />
-          </div>
-        </div>
-
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3 mt-6">Slider</div>
-        <div class="space-y-4">
-          <Slider min={0} max={100} value={40} />
-          <Slider min={0} max={100} step={25} value={50} />
-          <Slider min={0} max={100} value={70} disabled />
-        </div>
-      </div>
-
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3">Toggle</div>
-        <div class="flex flex-wrap gap-2 mb-6">
-          <Toggle>Bold</Toggle>
-          <Toggle pressed>Italic</Toggle>
-          <Toggle variant="ghost">Underline</Toggle>
-          <Toggle variant="ghost" pressed>Strike</Toggle>
-          <Toggle size="icon">B</Toggle>
-          <Toggle size="icon" pressed>I</Toggle>
-        </div>
-
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3 mt-6">Radio Group</div>
-        <RadioGroup class="space-y-2">
-          <label class="flex items-center gap-2.5 cursor-pointer text-[13px]">
-            <RadioGroupItem name="ks-plan" value="free" checked />
-            <span>Free</span>
-          </label>
-          <label class="flex items-center gap-2.5 cursor-pointer text-[13px]">
-            <RadioGroupItem name="ks-plan" value="pro" />
-            <span>Pro · $19/mo</span>
-          </label>
-          <label class="flex items-center gap-2.5 cursor-pointer text-[13px] opacity-50">
-            <RadioGroupItem name="ks-plan" value="enterprise" disabled />
-            <span>Enterprise (contact us)</span>
-          </label>
-        </RadioGroup>
-      </div>
-    </div>
-
-    {/* Row 3: Accordion + Breadcrumb + Pagination */}
-    <div class="grid grid-cols-3 gap-6">
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3">Accordion</div>
-        <Accordion>
-          <AccordionItem open>
-            <AccordionTrigger>What is matchina?</AccordionTrigger>
-            <AccordionContent>A state-machine library for TypeScript — composable, typed, framework-agnostic.</AccordionContent>
-          </AccordionItem>
-          <AccordionItem>
-            <AccordionTrigger>How does persistence work?</AccordionTrigger>
-            <AccordionContent>Pass <code class="font-mono text-[11px] bg-muted px-1 rounded">persist: 'key'</code> to <code class="font-mono text-[11px] bg-muted px-1 rounded">useMachine</code> — state survives remounts and page reloads.</AccordionContent>
-          </AccordionItem>
-          <AccordionItem>
-            <AccordionTrigger>Is it accessible?</AccordionTrigger>
-            <AccordionContent>Yes — built on native <code class="font-mono text-[11px] bg-muted px-1 rounded">&lt;details&gt;</code>/<code class="font-mono text-[11px] bg-muted px-1 rounded">&lt;summary&gt;</code>, zero JS required.</AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
-
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3">Breadcrumb</div>
-        <Breadcrumb class="mb-6">
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-3 mt-6">Pagination</div>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationLink href="#">«</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>2</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">4</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">»</PaginationLink>
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-
-      <div class="opacity-40 text-[12px] text-muted-foreground italic flex items-center">
-        {/* placeholder for future additions */}
-      </div>
-    </div>
-  </section>
-
-  {/* ──────────────────────────────────────────────── 11 · Command palette */}
-  <section class="not-content my-14">
-    <div class="flex items-center gap-2.5 mb-5 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
-      <span class="text-accent">§11</span>
       <span>Command palette</span>
       <span class="flex-1 h-px bg-border" />
     </div>
