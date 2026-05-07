@@ -3,23 +3,8 @@ title: Button
 description: Stateless Button primitive. Tailwind-variants config with variant and size props.
 ---
 
-import ButtonAstro from "@registry/button/button.astro";
+import { ButtonDocSample } from "@/components/demos/button-doc-sample";
 
-## Variants
+Click any variant or size to see its code sample in React, Svelte, or Astro.
 
-<div class="not-content flex flex-wrap gap-3 my-6">
-  <ButtonAstro>default</ButtonAstro>
-  <ButtonAstro variant="secondary">secondary</ButtonAstro>
-  <ButtonAstro variant="outline">outline</ButtonAstro>
-  <ButtonAstro variant="ghost">ghost</ButtonAstro>
-  <ButtonAstro variant="destructive">destructive</ButtonAstro>
-</div>
-
-## Sizes
-
-<div class="not-content flex flex-wrap gap-3 items-center my-6">
-  <ButtonAstro size="sm">sm</ButtonAstro>
-  <ButtonAstro size="default">default</ButtonAstro>
-  <ButtonAstro size="lg">lg</ButtonAstro>
-  <ButtonAstro size="icon">⚡</ButtonAstro>
-</div>
+<ButtonDocSample client:only="react" />
