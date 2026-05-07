@@ -3,23 +3,23 @@ title: Button
 description: Stateless Button primitive. Tailwind-variants config with variant and size props.
 ---
 
-import ButtonAstro from "@registry/button/button.astro";
+import ExampleHost from '@/components/ExampleHost.astro'
+import ButtonStyles from '@registry/examples/button-styles.svelte'
+import ButtonSizes from '@registry/examples/button-sizes.astro'
+
+export const sources = import.meta.glob(
+  '../../../../registry/examples/button-*.{svelte,astro}',
+  { query: '?raw', import: 'default', eager: true }
+)
 
 ## Variants
 
-<div class="not-content flex flex-wrap gap-3 my-6">
-  <ButtonAstro>default</ButtonAstro>
-  <ButtonAstro variant="secondary">secondary</ButtonAstro>
-  <ButtonAstro variant="outline">outline</ButtonAstro>
-  <ButtonAstro variant="ghost">ghost</ButtonAstro>
-  <ButtonAstro variant="destructive">destructive</ButtonAstro>
-</div>
+<ExampleHost files={[{ name: 'button-styles.svelte', code: sources['../../../../registry/examples/button-styles.svelte'] }]}>
+  <ButtonStyles client:load />
+</ExampleHost>
 
 ## Sizes
 
-<div class="not-content flex flex-wrap gap-3 items-center my-6">
-  <ButtonAstro size="sm">sm</ButtonAstro>
-  <ButtonAstro size="default">default</ButtonAstro>
-  <ButtonAstro size="lg">lg</ButtonAstro>
-  <ButtonAstro size="icon">⚡</ButtonAstro>
-</div>
+<ExampleHost files={[{ name: 'button-sizes.astro', code: sources['../../../../registry/examples/button-sizes.astro'] }]}>
+  <ButtonSizes />
+</ExampleHost>

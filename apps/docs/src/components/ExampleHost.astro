@@ -1,0 +1,26 @@
+---
+import CodeTabs from './CodeTabs.astro'
+
+interface FileEntry {
+  name: string
+  code: string
+  lang?: string
+}
+
+interface Props {
+  files: FileEntry[]
+  class?: string
+}
+
+const { files, class: className } = Astro.props
+---
+<div class:list={['not-content my-6 rounded-lg border border-border overflow-hidden', className]}>
+  <div class="preview flex items-center justify-center p-6 bg-background min-h-[120px]">
+    <slot />
+  </div>
+  {files.length > 0 && (
+    <div class="border-t border-border bg-muted/30">
+      <CodeTabs {files} />
+    </div>
+  )}
+</div>

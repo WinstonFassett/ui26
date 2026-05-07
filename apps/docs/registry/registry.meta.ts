@@ -2,7 +2,7 @@ export type Framework = "react" | "svelte" | "astro";
 
 export interface RegistryFile {
   path: string;
-  type: "registry:ui" | "registry:lib" | "registry:file";
+  type: "registry:ui" | "registry:lib" | "registry:file" | "registry:example" | "registry:block";
 }
 
 export interface ComponentMeta {

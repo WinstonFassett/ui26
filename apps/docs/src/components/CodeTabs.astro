@@ -1,0 +1,55 @@
+---
+import CodeBlock from './CodeBlock.astro'
+
+interface FileEntry {
+  name: string
+  code: string
+  lang?: string
+}
+
+interface Props {
+  files: FileEntry[]
+}
+
+const { files } = Astro.props
+const id = Math.random().toString(36).slice(2, 8)
+---
+<div class="code-tabs not-content" data-tabs-id={id}>
+  {files.length > 1 && (
+    <div class="tab-list flex border-b text-xs" role="tablist">
+      {files.map((file, i) => (
+        <button
+          role="tab"
+          class="tab-btn px-4 py-2 text-muted-foreground hover:text-foreground border-b-2 border-transparent data-[active]:border-foreground data-[active]:text-foreground transition-colors"
+          data-tab={i}
+          data-active={i === 0 ? '' : undefined}
+          aria-selected={i === 0}
+        >
+          {file.name}
+        </button>
+      ))}
+    </div>
+  )}
+  {files.map((file, i) => (
+    <div class="tab-panel" data-panel={i} hidden={i !== 0}>
+      <CodeBlock code={file.code} filename={file.name} lang={file.lang} />
+    </div>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs-id]').forEach((root) => {
+    const buttons = root.querySelectorAll<HTMLButtonElement>('[role="tab"]')
+    const panels = root.querySelectorAll<HTMLElement>('[data-panel]')
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = btn.dataset.tab
+        buttons.forEach((b) => { delete b.dataset.active; b.setAttribute('aria-selected', 'false') })
+        panels.forEach((p) => { p.hidden = true })
+        btn.dataset.active = ''
+        btn.setAttribute('aria-selected', 'true')
+        root.querySelector<HTMLElement>(`[data-panel="${idx}"]`)!.hidden = false
+      })
+    })
+  })
+</script>

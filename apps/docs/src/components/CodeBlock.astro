@@ -1,0 +1,28 @@
+---
+import { codeToHtml } from 'shiki'
+
+interface Props {
+  code: string
+  lang?: string
+  filename?: string
+}
+
+const { code, lang, filename } = Astro.props
+const ext = filename?.split('.').pop() ?? ''
+const inferredLang = lang ?? (ext === 'svelte' ? 'svelte' : ext === 'astro' ? 'astro' : ext === 'tsx' ? 'tsx' : ext === 'ts' ? 'typescript' : ext || 'text')
+
+const html = await codeToHtml(code, {
+  lang: inferredLang,
+  themes: {
+    light: 'github-light',
+    dark: 'github-dark-default',
+  },
+})
+---
+<div class="code-block not-content text-sm [&_pre]:overflow-x-auto [&_pre]:p-4 [&_.shiki]:!bg-transparent" set:html={html} />
+
+<style is:global>
+  :root[data-theme$="dark"] .shiki span {
+    color: var(--shiki-dark) !important;
+  }
+</style>
