@@ -2,7 +2,7 @@
 
 Winston's cross-framework UI for 2026. Source-distributed component wrappers (React / Svelte / Astro) backed by a shared `tailwind-variants` theme config, shipped via a shadcn-compatible registry.
 
-Working notes: [`UBIQUITOUS_LANGUAGE.md`](UBIQUITOUS_LANGUAGE.md).
+Working notes: [`UBIQUITOUS_LANGUAGE.md`](.agents/UBIQUITOUS_LANGUAGE.md).
 Tickets: `tix ls --all`.
 
 ## Layout
