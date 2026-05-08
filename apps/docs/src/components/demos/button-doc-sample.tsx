@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@registry/button/button";
 import { DemoSection } from "./doc-sample";
 import { BUTTON_VARIANT_DEMOS, BUTTON_SIZE_DEMOS } from "./button-demos";
 

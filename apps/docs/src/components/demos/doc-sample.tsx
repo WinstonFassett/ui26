@@ -14,9 +14,9 @@ import {
   FRAMEWORKS,
   FRAMEWORK_LABELS,
   specToFiles,
-  type Framework,
   type Spec,
 } from "@/lib/spec-to-code";
+import { useFw } from "@/components/livecode/fw-store";
 
 export interface Demo {
   id: string
@@ -55,7 +55,7 @@ export function DemoTile({
 }
 
 export function DemoCodeBlock({ spec, demoName }: { spec: Spec; demoName: string }) {
-  const [fw, setFw] = useState<Framework>("react")
+  const [fw, setFw] = useFw()
   const fileMap = useMemo(() => specToFiles(spec, demoName), [spec, demoName])
   const data = useMemo(() => FRAMEWORKS.map((f) => fileMap[f]), [fileMap])
   const activeFile = fileMap[fw]

@@ -1,0 +1,95 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import RegionWrap from "@/components/livecode/RegionWrap.astro";
+import { ClickDockShell } from "@/components/livecode/ClickDockShell";
+import { BlockPreview } from "@/components/livecode/BlockPreview";
+import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
+import { BLOCKS } from "@/lib/blocks";
+
+const RAIL_REGIONS = BLOCKS.map((b) => ({
+  id: b.id,
+  label: b.title,
+  section: "Blocks",
+  spec: b.spec,
+  componentName: b.componentName,
+}));
+---
+
+<StarlightPage
+  frontmatter={{
+    title: "Blocks",
+    description: "Composable, installable UI patterns. Click any block to see its source.",
+    template: "splash",
+  }}
+>
+  <style is:global>
+    body:has(.blocks-page) .main-frame .content-panel .sl-container { max-width: 1440px; }
+  </style>
+
+  <div class="blocks-page blocks-with-rail">
+    <main class="blocks-main">
+      <section class="not-content mb-12">
+        <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-muted-foreground mb-3">
+          ui26 · blocks
+        </div>
+        <div class="font-serif font-medium text-[48px] leading-[1.04] tracking-[-0.022em] text-foreground">
+          Composable patterns, <span class="italic text-muted-foreground">installable</span>.
+        </div>
+        <p class="max-w-[560px] mt-4 text-[15px] leading-[1.55] text-muted-foreground">
+          Each block is a small, named composition of primitives. Click a block to see the source. Install with the CLI.
+        </p>
+        <div class="mt-6">
+          <FrameworkPicker client:load />
+        </div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {BLOCKS.map((b) => (
+          <RegionWrap id={b.id}>
+            <div class="not-content">
+              <div class="mb-3 flex items-baseline gap-3">
+                <span class="font-mono text-[10px] tracking-[0.12em] uppercase text-accent">{b.id}</span>
+                <span class="font-mono text-[10px] tracking-wider text-muted-foreground">npx ui26 add {b.id}</span>
+              </div>
+              <BlockPreview spec={b.spec} client:load />
+              <p class="text-[12px] text-muted-foreground mt-3 leading-snug">{b.description}</p>
+            </div>
+          </RegionWrap>
+        ))}
+      </div>
+    </main>
+
+    <aside class="blocks-rail not-content">
+      <div class="blocks-rail-inner">
+        <ClickDockShell client:load regions={RAIL_REGIONS} />
+      </div>
+    </aside>
+  </div>
+
+  <style>
+    .blocks-with-rail {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 1100px) {
+      .blocks-with-rail {
+        grid-template-columns: minmax(0, 1fr) 380px;
+      }
+    }
+    .blocks-rail-inner {
+      height: 70vh;
+      min-height: 480px;
+      max-height: 720px;
+    }
+    @media (min-width: 1100px) {
+      .blocks-rail-inner {
+        position: sticky;
+        top: 5rem;
+        height: calc(100vh - 6rem);
+        min-height: 0;
+        max-height: none;
+      }
+    }
+  </style>
+</StarlightPage>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@registry/badge/badge";
 import { DemoSection } from "./doc-sample";
 import { BADGE_VARIANT_DEMOS } from "./badge-demos";
 

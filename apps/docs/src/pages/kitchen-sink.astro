@@ -40,6 +40,19 @@ import PaginationItem from "@registry/pagination/pagination-item.astro";
 import PaginationLink from "@registry/pagination/pagination-link.astro";
 import RadioGroup from "@registry/radio-group/radio-group.astro";
 import RadioGroupItem from "@registry/radio-group/radio-group-item.astro";
+import RegionWrap from "@/components/livecode/RegionWrap.astro";
+import { ClickDockShell } from "@/components/livecode/ClickDockShell";
+import { BlockPreview } from "@/components/livecode/BlockPreview";
+import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
+import { BLOCKS, TICKET_CARD, STATS_CARD, UPGRADE_CARD } from "@/lib/blocks";
+
+const RAIL_REGIONS = BLOCKS.map((b) => ({
+  id: b.id,
+  label: b.title,
+  section: "§07 Cards · blocks",
+  spec: b.spec,
+  componentName: b.componentName,
+}));
 
 const paletteTokens = [
   { name: "background", var: "--background" },
@@ -78,10 +91,11 @@ const typeScale = [
 >
   <style is:global>
     /* Kitchen sink is a wide showcase — widen container when this page is mounted. */
-    body:has(.ks-page) .main-frame .content-panel .sl-container { max-width: 1280px; }
+    body:has(.ks-page) .main-frame .content-panel .sl-container { max-width: 1440px; }
   </style>
 
-  <div class="ks-page">
+  <div class="ks-page ks-with-rail">
+  <main class="ks-main">
 
   {/* ──────────────────────────────────────────────── Hero */}
   <section class="not-content mb-12">
@@ -101,6 +115,9 @@ const typeScale = [
       <span><span class="text-foreground">9</span> sections</span>
       <span><span class="text-foreground">2</span> themes</span>
       <span><span class="text-accent">●</span> blue accent</span>
+    </div>
+    <div class="mt-5">
+      <FrameworkPicker client:load />
     </div>
   </section>
 
@@ -383,57 +400,24 @@ const typeScale = [
     </div>
   </section>
 
-  {/* ──────────────────────────────────────────────── 07 · Cards */}
+  {/* ──────────────────────────────────────────────── 07 · Cards · blocks */}
   <section class="not-content my-10">
     <div class="flex items-center gap-2.5 mb-4 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
       <span class="text-accent">§07</span>
-      <span>Cards</span>
+      <span>Cards · blocks</span>
       <span class="flex-1 h-px bg-border" />
     </div>
 
-    <div class="grid grid-cols-3 gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Ticket: Payment retry loop</CardTitle>
-          <CardDescription>Flashing back to idle between paying and loading.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div class="flex gap-1.5 flex-wrap">
-            <Badge variant="destructive">P0</Badge>
-            <Badge variant="secondary">#billing</Badge>
-            <Badge variant="secondary">#fetcher</Badge>
-          </div>
-        </CardContent>
-        <CardFooter class="pt-5 border-t border-border mt-4">
-          <Button size="sm" variant="outline">Open</Button>
-        </CardFooter>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Inline suggestion</CardTitle>
-          <CardDescription>Typing: const fet…</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <pre class="font-mono text-[12px] leading-[1.7] bg-code border border-border rounded p-3 overflow-x-auto"><code>{`const fetcher = createMachine({
-  idle: { fetch: 'loading' },
-  loading: effect(fetchUser),
-});`}</code></pre>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Upgrade your plan</CardTitle>
-          <CardDescription>Unlock more projects and seats.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p class="text-[13px] text-muted-foreground">$19/month, cancel anytime.</p>
-        </CardContent>
-        <CardFooter class="pt-5 border-t border-border mt-4">
-          <Button>Upgrade</Button>
-        </CardFooter>
-      </Card>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <RegionWrap id={TICKET_CARD.id}>
+        <BlockPreview spec={TICKET_CARD.spec} client:load />
+      </RegionWrap>
+      <RegionWrap id={STATS_CARD.id}>
+        <BlockPreview spec={STATS_CARD.spec} client:load />
+      </RegionWrap>
+      <RegionWrap id={UPGRADE_CARD.id}>
+        <BlockPreview spec={UPGRADE_CARD.spec} client:load />
+      </RegionWrap>
     </div>
   </section>
 
@@ -1028,5 +1012,40 @@ const typeScale = [
     <span>Matchina Design System · v0.4.0</span>
     <span>end of kitchen sink</span>
   </div>
+  </main>
+
+  <aside class="ks-rail not-content">
+    <div class="ks-rail-inner">
+      <ClickDockShell client:load regions={RAIL_REGIONS} />
+    </div>
+  </aside>
   </div>
+
+  <style>
+    .ks-with-rail {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 1100px) {
+      .ks-with-rail {
+        grid-template-columns: minmax(0, 1fr) 380px;
+      }
+    }
+    /* Narrow: rail stacks below content. ≥1100px: rail sticks alongside. */
+    .ks-rail-inner {
+      height: 70vh;
+      min-height: 480px;
+      max-height: 720px;
+    }
+    @media (min-width: 1100px) {
+      .ks-rail-inner {
+        position: sticky;
+        top: 5rem;
+        height: calc(100vh - 6rem);
+        min-height: 0;
+        max-height: none;
+      }
+    }
+  </style>
 </StarlightPage>

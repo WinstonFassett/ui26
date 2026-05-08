@@ -44,8 +44,15 @@ const headingProps = z.object({
 });
 
 const cardProps = z.object({
-  title: z.string().nullable(),
-  description: z.string().nullable(),
+  className: z.string().nullable(),
+});
+
+const cardSlotProps = z.object({
+  className: z.string().nullable(),
+});
+
+const cardTextSlotProps = z.object({
+  text: z.string(),
   className: z.string().nullable(),
 });
 
@@ -136,8 +143,27 @@ export const catalog = defineCatalog(schema, {
     Card: {
       props: cardProps,
       slots: ["default"],
-      description: "Card container. Title/description render in the header.",
-      example: { title: "My card" },
+      description: "Card container. Pass-through; compose with CardHeader/CardContent/CardFooter.",
+    },
+    CardHeader: {
+      props: cardSlotProps,
+      slots: ["default"],
+      description: "Card header row. Wraps CardTitle and CardDescription.",
+    },
+    CardTitle: {
+      props: cardTextSlotProps,
+      slots: [],
+      description: "Card heading.",
+    },
+    CardDescription: {
+      props: cardTextSlotProps,
+      slots: [],
+      description: "Card subheading.",
+    },
+    CardContent: {
+      props: cardSlotProps,
+      slots: ["default"],
+      description: "Card body region.",
     },
     CardFooter: {
       props: cardFooterProps,
@@ -188,6 +214,8 @@ export type GridProps         = z.output<typeof gridProps>;
 export type TextProps         = z.output<typeof textProps>;
 export type HeadingProps      = z.output<typeof headingProps>;
 export type CardProps         = z.output<typeof cardProps>;
+export type CardSlotProps     = z.output<typeof cardSlotProps>;
+export type CardTextSlotProps = z.output<typeof cardTextSlotProps>;
 export type CardFooterProps   = z.output<typeof cardFooterProps>;
 export type SeparatorProps    = z.output<typeof separatorProps>;
 export type InputFieldProps   = z.output<typeof inputFieldProps>;

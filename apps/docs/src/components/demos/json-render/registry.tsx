@@ -6,10 +6,10 @@ import { Button as Btn } from "@registry/button/button.tsx";
 import { Badge as Bdg } from "@registry/badge/badge.tsx";
 import {
   Card as CardRoot,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
+  CardHeader as CardHeaderRoot,
+  CardTitle as CardTitleRoot,
+  CardDescription as CardDescriptionRoot,
+  CardContent as CardContentRoot,
   CardFooter as CardFooterRoot,
 } from "@registry/card/card.tsx";
 import { Input } from "@registry/input/input.tsx";
@@ -27,6 +27,8 @@ import {
   type TextProps,
   type HeadingProps,
   type CardProps,
+  type CardSlotProps,
+  type CardTextSlotProps,
   type CardFooterProps,
   type SeparatorProps,
   type InputFieldProps,
@@ -121,15 +123,23 @@ export const { registry } = defineRegistry(catalog, {
 
     // ── Card ──────────────────────────────────────────────────────────────
     Card: ({ props, children }: BaseComponentProps<CardProps>) => (
-      <CardRoot className={props.className ?? undefined}>
-        {(props.title || props.description) && (
-          <CardHeader>
-            {props.title && <CardTitle>{props.title}</CardTitle>}
-            {props.description && <CardDescription>{props.description}</CardDescription>}
-          </CardHeader>
-        )}
-        <CardContent>{children}</CardContent>
-      </CardRoot>
+      <CardRoot className={props.className ?? undefined}>{children}</CardRoot>
+    ),
+
+    CardHeader: ({ props, children }: BaseComponentProps<CardSlotProps>) => (
+      <CardHeaderRoot className={props.className ?? undefined}>{children}</CardHeaderRoot>
+    ),
+
+    CardTitle: ({ props }: BaseComponentProps<CardTextSlotProps>) => (
+      <CardTitleRoot className={props.className ?? undefined}>{props.text}</CardTitleRoot>
+    ),
+
+    CardDescription: ({ props }: BaseComponentProps<CardTextSlotProps>) => (
+      <CardDescriptionRoot className={props.className ?? undefined}>{props.text}</CardDescriptionRoot>
+    ),
+
+    CardContent: ({ props, children }: BaseComponentProps<CardSlotProps>) => (
+      <CardContentRoot className={props.className ?? undefined}>{children}</CardContentRoot>
     ),
 
     CardFooter: ({ props, children }: BaseComponentProps<CardFooterProps>) => (
