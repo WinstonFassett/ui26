@@ -3,41 +3,6 @@ title: Card
 description: Composable Card primitive (Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter).
 ---
 
-import CardAstro from "@registry/card/card.astro";
-import CardHeaderAstro from "@registry/card/card-header.astro";
-import CardTitleAstro from "@registry/card/card-title.astro";
-import CardDescriptionAstro from "@registry/card/card-description.astro";
-import CardContentAstro from "@registry/card/card-content.astro";
-import CardFooterAstro from "@registry/card/card-footer.astro";
-import ButtonAstro from "@registry/button/button.astro";
+import { CardDocSample } from '@/components/demos/card-doc-sample'
 
-## Basic card
-
-<div class="not-content my-6 max-w-sm">
-  <CardAstro>
-    <CardHeaderAstro>
-      <CardTitleAstro>Card title</CardTitleAstro>
-      <CardDescriptionAstro>A short description that sits under the title.</CardDescriptionAstro>
-    </CardHeaderAstro>
-    <CardContentAstro>
-      <p>Body content sits here.</p>
-    </CardContentAstro>
-  </CardAstro>
-</div>
-
-## With footer
-
-<div class="not-content my-6 max-w-sm">
-  <CardAstro>
-    <CardHeaderAstro>
-      <CardTitleAstro>Upgrade your plan</CardTitleAstro>
-      <CardDescriptionAstro>Unlock more projects and seats.</CardDescriptionAstro>
-    </CardHeaderAstro>
-    <CardContentAstro>
-      <p>$19/month, cancel anytime.</p>
-    </CardContentAstro>
-    <CardFooterAstro>
-      <ButtonAstro>Upgrade</ButtonAstro>
-    </CardFooterAstro>
-  </CardAstro>
-</div>
+<CardDocSample client:only="react" />

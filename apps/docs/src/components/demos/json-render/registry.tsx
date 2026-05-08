@@ -19,6 +19,8 @@ import { Input as InputRoot } from "@registry/input/input.tsx";
 import { Textarea as TextareaRoot } from "@registry/textarea/textarea.tsx";
 import { Checkbox as CheckboxRoot } from "@registry/checkbox/checkbox.tsx";
 import { Switch as SwitchRoot } from "@registry/switch/switch.tsx";
+import { Label as LabelRoot } from "@registry/label/label.tsx";
+import { Alert as AlertRoot, AlertTitle as AlertTitleRoot, AlertDescription as AlertDescriptionRoot } from "@registry/alert/alert.tsx";
 import { Separator as Sep } from "@registry/separator/separator.tsx";
 import {
   Field as FieldRoot,
@@ -49,6 +51,9 @@ import {
   type TextareaProps,
   type CheckboxProps,
   type SwitchControlProps,
+  type LabelProps,
+  type AlertProps,
+  type AlertTextSlotProps,
   type FieldProps,
   type FieldContentProps,
   type FieldLabelProps,
@@ -170,6 +175,21 @@ export const { registry } = defineRegistry(catalog, {
     Switch: ({ props }: BaseComponentProps<SwitchControlProps>) => {
       const { checked, ...rest } = u(props);
       return <SwitchRoot {...rest} defaultChecked={checked ?? false} />;
+    },
+    Label: ({ props }: BaseComponentProps<LabelProps>) => {
+      const { text, htmlFor, ...rest } = u(props);
+      return <LabelRoot {...rest} htmlFor={htmlFor}>{text}</LabelRoot>;
+    },
+    Alert: ({ props, children }: BaseComponentProps<AlertProps>) => (
+      <AlertRoot {...u(props)}>{children}</AlertRoot>
+    ),
+    AlertTitle: ({ props }: BaseComponentProps<AlertTextSlotProps>) => {
+      const { text, ...rest } = u(props);
+      return <AlertTitleRoot {...rest}>{text}</AlertTitleRoot>;
+    },
+    AlertDescription: ({ props }: BaseComponentProps<AlertTextSlotProps>) => {
+      const { text, ...rest } = u(props);
+      return <AlertDescriptionRoot {...rest}>{text}</AlertDescriptionRoot>;
     },
 
     // ── Field composition ────────────────────────────────────────────────

@@ -3,28 +3,6 @@ title: Input
 description: Stateless Input primitive. Error state driven by aria-invalid.
 ---
 
-import InputAstro from "@registry/input/input.astro";
+import { InputDocSample } from '@/components/demos/input-doc-sample'
 
-## Default
-
-<div class="not-content my-6 max-w-sm">
-  <InputAstro placeholder="Type here" />
-</div>
-
-## Invalid
-
-<div class="not-content my-6 max-w-sm">
-  <InputAstro aria-invalid="true" value="not-an-email" />
-</div>
-
-## Disabled
-
-<div class="not-content my-6 max-w-sm">
-  <InputAstro disabled placeholder="Disabled" />
-</div>
-
-## File
-
-<div class="not-content my-6 max-w-sm">
-  <InputAstro type="file" />
-</div>
+<InputDocSample client:only="react" />

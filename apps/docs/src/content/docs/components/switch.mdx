@@ -3,23 +3,6 @@ title: Switch
 description: Stateless Switch primitive. Hidden checkbox + styled track/thumb, no JS.
 ---
 
-import SwitchAstro from "@registry/switch/switch.astro";
-import LabelAstro from "@registry/label/label.astro";
+import { SwitchDocSample } from '@/components/demos/switch-doc-sample'
 
-## States
-
-<div class="not-content flex flex-wrap gap-6 items-center my-6">
-  <SwitchAstro />
-  <SwitchAstro checked />
-  <SwitchAstro disabled />
-  <SwitchAstro disabled checked />
-</div>
-
-## With label
-
-<div class="not-content my-6">
-  <LabelAstro>
-    <SwitchAstro id="notify" />
-    Notifications
-  </LabelAstro>
-</div>
+<SwitchDocSample client:only="react" />

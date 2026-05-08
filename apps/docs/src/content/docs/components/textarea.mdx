@@ -3,22 +3,6 @@ title: Textarea
 description: Stateless Textarea primitive. Error state driven by aria-invalid. Auto-grows with content via field-sizing-content.
 ---
 
-import TextareaAstro from "@registry/textarea/textarea.astro";
+import { TextareaDocSample } from '@/components/demos/textarea-doc-sample'
 
-## Default
-
-<div class="not-content my-6 max-w-sm">
-  <TextareaAstro placeholder="Type here" />
-</div>
-
-## Invalid
-
-<div class="not-content my-6 max-w-sm">
-  <TextareaAstro aria-invalid="true">too short</TextareaAstro>
-</div>
-
-## Disabled
-
-<div class="not-content my-6 max-w-sm">
-  <TextareaAstro disabled placeholder="Disabled" />
-</div>
+<TextareaDocSample client:only="react" />

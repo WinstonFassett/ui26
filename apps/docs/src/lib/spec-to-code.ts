@@ -17,6 +17,7 @@ const SLOT_PROP: Record<string, string> = {
   FieldLabel: 'text',
   FieldDescription: 'text',
   FieldError: 'text',
+  Label: 'text',
   FieldLegend: 'text',
   FieldTitle: 'text',
   FieldSeparator: 'text',

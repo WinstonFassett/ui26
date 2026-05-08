@@ -73,10 +73,11 @@ const separatorProps = z.object({
 
 const inputProps = z.object({
   id: z.string().nullable(),
-  type: z.enum(["text", "email", "password", "number", "search"]).nullable(),
+  type: z.enum(["text", "email", "password", "number", "search", "file"]).nullable(),
   placeholder: z.string().nullable(),
   value: z.string().nullable(),
   invalid: z.boolean().nullable(),
+  disabled: z.boolean().nullable(),
   className: z.string().nullable(),
 });
 
@@ -86,6 +87,23 @@ const textareaProps = z.object({
   value: z.string().nullable(),
   rows: z.number().nullable(),
   invalid: z.boolean().nullable(),
+  disabled: z.boolean().nullable(),
+  className: z.string().nullable(),
+});
+
+const labelProps = z.object({
+  text: z.string(),
+  htmlFor: z.string().nullable(),
+  className: z.string().nullable(),
+});
+
+const alertProps = z.object({
+  variant: z.enum(["default", "destructive", "warning", "success"]).nullable(),
+  className: z.string().nullable(),
+});
+
+const alertTextSlotProps = z.object({
+  text: z.string(),
   className: z.string().nullable(),
 });
 
@@ -253,6 +271,29 @@ export const catalog = defineCatalog(schema, {
       description: "Bare toggle switch. Wrap in Field for label/description.",
       example: { checked: false },
     },
+    Label: {
+      props: labelProps,
+      slots: [],
+      description: "Form label. Use htmlFor to bind to a control id.",
+      example: { text: "Email" },
+    },
+    // alert family
+    Alert: {
+      props: alertProps,
+      slots: ["default"],
+      description: "Contextual feedback banner. Compose with AlertTitle and AlertDescription.",
+      example: { variant: "default" },
+    },
+    AlertTitle: {
+      props: alertTextSlotProps,
+      slots: [],
+      description: "Heading for an Alert.",
+    },
+    AlertDescription: {
+      props: alertTextSlotProps,
+      slots: [],
+      description: "Body copy for an Alert.",
+    },
     // field composition family — wraps any control with label/description/error
     Field: {
       props: fieldProps,
@@ -332,6 +373,9 @@ export type InputProps              = z.output<typeof inputProps>;
 export type TextareaProps           = z.output<typeof textareaProps>;
 export type CheckboxProps           = z.output<typeof checkboxProps>;
 export type SwitchControlProps      = z.output<typeof switchControlProps>;
+export type LabelProps              = z.output<typeof labelProps>;
+export type AlertProps              = z.output<typeof alertProps>;
+export type AlertTextSlotProps      = z.output<typeof alertTextSlotProps>;
 export type FieldProps              = z.output<typeof fieldProps>;
 export type FieldContentProps       = z.output<typeof fieldContentProps>;
 export type FieldLabelProps         = z.output<typeof fieldLabelProps>;

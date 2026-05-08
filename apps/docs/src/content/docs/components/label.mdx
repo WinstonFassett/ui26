@@ -3,25 +3,6 @@ title: Label
 description: Stateless Label primitive. Disabled styling driven by peer of an adjacent disabled input.
 ---
 
-import LabelAstro from "@registry/label/label.astro";
-import InputAstro from "@registry/input/input.astro";
+import { LabelDocSample } from '@/components/demos/label-doc-sample'
 
-## Default
-
-<div class="not-content my-6">
-  <LabelAstro>Email</LabelAstro>
-</div>
-
-## Paired with input
-
-<div class="not-content flex flex-col gap-2 my-6 max-w-sm">
-  <LabelAstro for="email">Email</LabelAstro>
-  <InputAstro id="email" type="email" placeholder="you@example.com" />
-</div>
-
-## Disabled peer
-
-<div class="not-content flex flex-col-reverse gap-2 my-6 max-w-sm">
-  <InputAstro id="disabled" class="peer" disabled placeholder="disabled" />
-  <LabelAstro for="disabled">Disabled</LabelAstro>
-</div>
+<LabelDocSample client:only="react" />

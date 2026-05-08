@@ -3,22 +3,6 @@ title: Checkbox
 description: Stateless Checkbox primitive. Native input[type=checkbox] themed via accent-color.
 ---
 
-import CheckboxAstro from "@registry/checkbox/checkbox.astro";
-import LabelAstro from "@registry/label/label.astro";
+import { CheckboxDocSample } from '@/components/demos/checkbox-doc-sample'
 
-## States
-
-<div class="not-content flex flex-wrap gap-6 items-center my-6">
-  <CheckboxAstro />
-  <CheckboxAstro checked />
-  <CheckboxAstro disabled />
-</div>
-
-## With label
-
-<div class="not-content my-6">
-  <LabelAstro>
-    <CheckboxAstro id="tos" />
-    Accept terms
-  </LabelAstro>
-</div>
+<CheckboxDocSample client:only="react" />
