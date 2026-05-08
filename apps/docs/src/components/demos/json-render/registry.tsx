@@ -26,6 +26,11 @@ import {
   FieldLabel as FieldLabelRoot,
   FieldDescription as FieldDescriptionRoot,
   FieldError as FieldErrorRoot,
+  FieldGroup as FieldGroupRoot,
+  FieldSet as FieldSetRoot,
+  FieldLegend as FieldLegendRoot,
+  FieldTitle as FieldTitleRoot,
+  FieldSeparator as FieldSeparatorRoot,
 } from "@registry/field/field.tsx";
 import {
   catalog,
@@ -49,6 +54,11 @@ import {
   type FieldLabelProps,
   type FieldDescriptionProps,
   type FieldErrorProps,
+  type FieldGroupProps,
+  type FieldSetProps,
+  type FieldLegendProps,
+  type FieldTitleProps,
+  type FieldSeparatorProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -180,6 +190,24 @@ export const { registry } = defineRegistry(catalog, {
     FieldError: ({ props }: BaseComponentProps<FieldErrorProps>) => {
       const { text, ...rest } = u(props);
       return <FieldErrorRoot {...rest}>{text}</FieldErrorRoot>;
+    },
+    FieldGroup: ({ props, children }: BaseComponentProps<FieldGroupProps>) => (
+      <FieldGroupRoot {...u(props)}>{children}</FieldGroupRoot>
+    ),
+    FieldSet: ({ props, children }: BaseComponentProps<FieldSetProps>) => (
+      <FieldSetRoot {...u(props)}>{children}</FieldSetRoot>
+    ),
+    FieldLegend: ({ props }: BaseComponentProps<FieldLegendProps>) => {
+      const { text, ...rest } = u(props);
+      return <FieldLegendRoot {...rest}>{text}</FieldLegendRoot>;
+    },
+    FieldTitle: ({ props }: BaseComponentProps<FieldTitleProps>) => {
+      const { text, ...rest } = u(props);
+      return <FieldTitleRoot {...rest}>{text}</FieldTitleRoot>;
+    },
+    FieldSeparator: ({ props }: BaseComponentProps<FieldSeparatorProps>) => {
+      const { text, ...rest } = u(props);
+      return <FieldSeparatorRoot {...rest}>{text || undefined}</FieldSeparatorRoot>;
     },
   },
 });

@@ -1,12 +1,25 @@
-import { forwardRef, type HTMLAttributes, type LabelHTMLAttributes } from "react";
+import {
+  forwardRef,
+  type FieldsetHTMLAttributes,
+  type HTMLAttributes,
+  type LabelHTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cn } from "../lib/utils";
 import { Label } from "../label/label";
+import { Separator } from "../separator/separator";
 import {
   field,
   fieldContent,
   fieldDescription,
   fieldError,
+  fieldGroup,
   fieldLabel,
+  fieldLegend,
+  fieldSeparator,
+  fieldSet,
+  fieldTitle,
+  type FieldLegendVariants,
   type FieldVariants,
 } from "./field.tv";
 
@@ -66,3 +79,66 @@ export const FieldError = forwardRef<HTMLDivElement, FieldErrorProps>(
   },
 );
 FieldError.displayName = "FieldError";
+
+export const FieldGroup = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} data-slot="field-group" className={cn(fieldGroup(), className)} {...props} />
+  ),
+);
+FieldGroup.displayName = "FieldGroup";
+
+export const FieldSet = forwardRef<HTMLFieldSetElement, FieldsetHTMLAttributes<HTMLFieldSetElement>>(
+  ({ className, ...props }, ref) => (
+    <fieldset ref={ref} data-slot="field-set" className={cn(fieldSet(), className)} {...props} />
+  ),
+);
+FieldSet.displayName = "FieldSet";
+
+export type FieldLegendProps = HTMLAttributes<HTMLLegendElement> & FieldLegendVariants;
+
+export const FieldLegend = forwardRef<HTMLLegendElement, FieldLegendProps>(
+  ({ className, variant, ...props }, ref) => (
+    <legend
+      ref={ref}
+      data-slot="field-legend"
+      data-variant={variant ?? "legend"}
+      className={cn(fieldLegend({ variant }), className)}
+      {...props}
+    />
+  ),
+);
+FieldLegend.displayName = "FieldLegend";
+
+export const FieldTitle = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} data-slot="field-title" className={cn(fieldTitle(), className)} {...props} />
+  ),
+);
+FieldTitle.displayName = "FieldTitle";
+
+export type FieldSeparatorProps = HTMLAttributes<HTMLDivElement> & {
+  children?: ReactNode;
+};
+
+export const FieldSeparator = forwardRef<HTMLDivElement, FieldSeparatorProps>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      data-slot="field-separator"
+      data-content={!!children}
+      className={cn(fieldSeparator(), className)}
+      {...props}
+    >
+      <Separator className="absolute inset-0 top-1/2" />
+      {children && (
+        <span
+          data-slot="field-separator-content"
+          className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground"
+        >
+          {children}
+        </span>
+      )}
+    </div>
+  ),
+);
+FieldSeparator.displayName = "FieldSeparator";

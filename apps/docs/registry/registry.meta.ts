@@ -29,7 +29,17 @@ const ACCORDION_SUBS = ["item", "trigger", "content"] as const;
 const BREADCRUMB_SUBS = ["list", "item", "link", "page", "separator"] as const;
 const PAGINATION_SUBS = ["content", "item", "link"] as const;
 const RADIO_GROUP_SUBS = ["item"] as const;
-const FIELD_SUBS = ["content", "label", "description", "error"] as const;
+const FIELD_SUBS = [
+  "content",
+  "label",
+  "description",
+  "error",
+  "group",
+  "set",
+  "legend",
+  "title",
+  "separator",
+] as const;
 
 const BASE_DEPS = ["tailwind-variants"];
 const BASE_REGISTRY_DEPS = ["utils", "base"];
@@ -192,9 +202,9 @@ export const COMPONENTS: ComponentMeta[] = [
   {
     name: "field",
     title: "Field",
-    description: "Composition primitive: Field + FieldLabel/FieldContent/FieldDescription/FieldError. Wraps any control.",
+    description: "Composition primitive: Field + FieldLabel/FieldContent/FieldDescription/FieldError/FieldGroup/FieldSet/FieldLegend/FieldTitle/FieldSeparator. Wraps any control.",
     dependencies: BASE_DEPS,
-    registryDependencies: [...BASE_REGISTRY_DEPS, "label"],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "label", "separator"],
   },
 ];
 

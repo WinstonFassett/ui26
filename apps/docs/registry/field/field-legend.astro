@@ -1,0 +1,21 @@
+---
+import { cn } from "../lib/utils";
+import { fieldLegend, type FieldLegendVariants } from "./field.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"legend">, "class"> &
+  FieldLegendVariants & {
+    class?: string;
+  };
+
+const { variant = "legend", class: className, ...rest } = Astro.props;
+---
+
+<legend
+  data-slot="field-legend"
+  data-variant={variant}
+  class={cn(fieldLegend({ variant }), className)}
+  {...rest}
+>
+  <slot />
+</legend>

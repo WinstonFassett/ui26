@@ -17,6 +17,9 @@ const SLOT_PROP: Record<string, string> = {
   FieldLabel: 'text',
   FieldDescription: 'text',
   FieldError: 'text',
+  FieldLegend: 'text',
+  FieldTitle: 'text',
+  FieldSeparator: 'text',
 }
 
 interface Lowered {
@@ -56,6 +59,7 @@ const COMPOUND_PARENT: Record<string, string> = {
   PaginationContent: 'pagination', PaginationItem: 'pagination', PaginationLink: 'pagination',
   RadioGroupItem: 'radio-group',
   FieldContent: 'field', FieldLabel: 'field', FieldDescription: 'field', FieldError: 'field',
+  FieldGroup: 'field', FieldSet: 'field', FieldLegend: 'field', FieldTitle: 'field', FieldSeparator: 'field',
 }
 
 function kebab(s: string) {

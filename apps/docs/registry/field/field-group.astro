@@ -1,0 +1,15 @@
+---
+import { cn } from "../lib/utils";
+import { fieldGroup } from "./field.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"div">, "class"> & {
+  class?: string;
+};
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div data-slot="field-group" class={cn(fieldGroup(), className)} {...rest}>
+  <slot />
+</div>

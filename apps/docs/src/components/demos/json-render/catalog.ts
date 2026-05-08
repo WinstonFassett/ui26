@@ -130,6 +130,30 @@ const fieldErrorProps = z.object({
   className: z.string().nullable(),
 });
 
+const fieldGroupProps = z.object({
+  className: z.string().nullable(),
+});
+
+const fieldSetProps = z.object({
+  className: z.string().nullable(),
+});
+
+const fieldLegendProps = z.object({
+  text: z.string(),
+  variant: z.enum(["legend", "label"]).nullable(),
+  className: z.string().nullable(),
+});
+
+const fieldTitleProps = z.object({
+  text: z.string(),
+  className: z.string().nullable(),
+});
+
+const fieldSeparatorProps = z.object({
+  text: z.string().nullable(),
+  className: z.string().nullable(),
+});
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -256,6 +280,31 @@ export const catalog = defineCatalog(schema, {
       slots: [],
       description: "Error message inside a Field. Renders only when text is provided.",
     },
+    FieldGroup: {
+      props: fieldGroupProps,
+      slots: ["default"],
+      description: "Container that groups multiple Fields with consistent vertical rhythm.",
+    },
+    FieldSet: {
+      props: fieldSetProps,
+      slots: ["default"],
+      description: "Semantic <fieldset> for grouping related controls. Pair with FieldLegend.",
+    },
+    FieldLegend: {
+      props: fieldLegendProps,
+      slots: [],
+      description: "Legend heading for a FieldSet. Variant 'legend' (base) or 'label' (sm).",
+    },
+    FieldTitle: {
+      props: fieldTitleProps,
+      slots: [],
+      description: "Bold inline title for a Field — use when no <Label> is appropriate.",
+    },
+    FieldSeparator: {
+      props: fieldSeparatorProps,
+      slots: [],
+      description: "Horizontal divider between fields, optionally labeled with text.",
+    },
     Separator: {
       props: separatorProps,
       slots: [],
@@ -288,3 +337,8 @@ export type FieldContentProps       = z.output<typeof fieldContentProps>;
 export type FieldLabelProps         = z.output<typeof fieldLabelProps>;
 export type FieldDescriptionProps   = z.output<typeof fieldDescriptionProps>;
 export type FieldErrorProps         = z.output<typeof fieldErrorProps>;
+export type FieldGroupProps         = z.output<typeof fieldGroupProps>;
+export type FieldSetProps           = z.output<typeof fieldSetProps>;
+export type FieldLegendProps        = z.output<typeof fieldLegendProps>;
+export type FieldTitleProps         = z.output<typeof fieldTitleProps>;
+export type FieldSeparatorProps     = z.output<typeof fieldSeparatorProps>;

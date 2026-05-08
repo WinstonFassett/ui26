@@ -1,0 +1,15 @@
+---
+import { cn } from "../lib/utils";
+import { fieldSet } from "./field.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"fieldset">, "class"> & {
+  class?: string;
+};
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<fieldset data-slot="field-set" class={cn(fieldSet(), className)} {...rest}>
+  <slot />
+</fieldset>
