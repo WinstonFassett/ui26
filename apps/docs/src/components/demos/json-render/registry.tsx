@@ -77,22 +77,19 @@ export const { registry } = defineRegistry(catalog, {
     ),
 
     // Text is Spec-only — lowers to <p className="..."> in generated source.
-    Text: ({ props }: BaseComponentProps<TextProps>) => {
-      const cn_ = props.className ?? "";
-      const cnHasTextSize = /(^|\s)text-(\[|2xs|xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)(\s|$)/.test(cn_);
-      return (
-        <p
-          className={cn(
-            props.size ? `text-${props.size}` : !cnHasTextSize && "text-sm",
-            props.muted && "text-muted-foreground",
-            props.mono && "font-mono",
-            cn_,
-          )}
-        >
-          {props.content}
-        </p>
-      );
-    },
+    // cn() / twMerge resolves any conflicts between defaults and props.className.
+    Text: ({ props }: BaseComponentProps<TextProps>) => (
+      <p
+        className={cn(
+          props.size ? `text-${props.size}` : "text-sm",
+          props.muted && "text-muted-foreground",
+          props.mono && "font-mono",
+          props.className,
+        )}
+      >
+        {props.content}
+      </p>
+    ),
 
     // ── Actions ───────────────────────────────────────────────────────────
     Button: ({ props, emit }: BaseComponentProps<ButtonProps>) => (

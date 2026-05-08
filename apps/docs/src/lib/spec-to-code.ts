@@ -1,4 +1,5 @@
 import type { Spec } from '@json-render/core'
+import { twMerge } from 'tailwind-merge'
 
 export type { Spec }
 export type Framework = 'react' | 'svelte' | 'astro'
@@ -23,19 +24,20 @@ interface Lowered {
 }
 
 // Spec-only abstractions get lowered to HTML primitives in generated source.
-// Text is currently the only one; size/muted/mono/className collapse onto a <p>.
+// Text is currently the only one; twMerge resolves any size/className conflicts.
 function lowerElement(type: string, props: Record<string, unknown>): Lowered | null {
   if (type === 'Text') {
-    const cn = typeof props.className === 'string' ? props.className : ''
-    // Skip default size if className already specifies one (avoids text-sm + text-xs duplicates).
-    const cnHasTextSize = /(^|\s)text-(\[|2xs|xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)(\s|$)/.test(cn)
-    const cls: string[] = []
-    if (typeof props.size === 'string') cls.push(`text-${props.size}`)
-    else if (!cnHasTextSize) cls.push('text-sm')
-    if (props.muted) cls.push('text-muted-foreground')
-    if (props.mono) cls.push('font-mono')
-    if (cn) cls.push(cn)
-    return { type: 'p', classes: cls, consumedProps: new Set(['size','muted','mono','content','className']) }
+    const parts: string[] = [
+      typeof props.size === 'string' ? `text-${props.size}` : 'text-sm',
+    ]
+    if (props.muted) parts.push('text-muted-foreground')
+    if (props.mono) parts.push('font-mono')
+    if (typeof props.className === 'string') parts.push(props.className)
+    return {
+      type: 'p',
+      classes: [twMerge(parts.join(' '))],
+      consumedProps: new Set(['size','muted','mono','content','className']),
+    }
   }
   return null
 }

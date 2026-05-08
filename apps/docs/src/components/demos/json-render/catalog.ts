@@ -6,15 +6,15 @@ import { z } from "zod";
 
 const buttonProps = z.object({
   label: z.string(),
-  variant: z.enum(["default", "destructive", "outline", "secondary", "ghost", "link"]).nullable(),
-  size: z.enum(["default", "sm", "lg", "xs", "icon"]).nullable(),
+  variant: z.enum(["default", "destructive", "outline", "secondary", "ghost"]).nullable(),
+  size: z.enum(["default", "sm", "lg", "icon"]).nullable(),
   disabled: z.boolean().nullable(),
   className: z.string().nullable(),
 });
 
 const badgeProps = z.object({
   text: z.string(),
-  variant: z.enum(["default", "secondary", "destructive", "outline", "ghost", "link"]).nullable(),
+  variant: z.enum(["default", "secondary", "destructive", "outline", "ghost"]).nullable(),
   className: z.string().nullable(),
 });
 
