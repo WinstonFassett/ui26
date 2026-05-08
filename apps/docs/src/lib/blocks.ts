@@ -1,5 +1,7 @@
 import type { Spec } from "@/lib/spec-to-code";
 
+export type BlockCategory = "Editorial" | "Cards" | "Forms" | "Marketing";
+
 export interface BlockDef {
   /** kebab-case name used in URLs, registry, filenames */
   id: string;
@@ -7,6 +9,7 @@ export interface BlockDef {
   componentName: string;
   title: string;
   description: string;
+  category: BlockCategory;
   registryDependencies: string[];
   spec: Spec;
 }
@@ -55,6 +58,7 @@ export const TYPE_SCALE: BlockDef = {
   title: "Type scale",
   description:
     "Eight-step type scale — display, headings, body, caption, mono, eyebrow. Tailwind named sizes throughout.",
+  category: "Editorial",
   registryDependencies: ["heading", "stack"],
   spec: {
     root: "grid",
@@ -75,6 +79,7 @@ export const TICKET_CARD: BlockDef = {
   title: "Ticket card",
   description:
     "Card with priority badge, tag chips, and a primary action — for surfacing a single issue.",
+  category: "Cards",
   registryDependencies: ["card", "badge", "button"],
   spec: {
     root: "card",
@@ -108,6 +113,7 @@ export const STATS_CARD: BlockDef = {
   title: "Stats card",
   description:
     "Card with a stack of label · value rows — for dashboards and recap surfaces.",
+  category: "Cards",
   registryDependencies: ["card"],
   spec: {
     root: "card",
@@ -147,6 +153,7 @@ export const UPGRADE_CARD: BlockDef = {
   title: "Upgrade card",
   description:
     "Card with body copy and a footer CTA — for plan upgrades and conversion prompts.",
+  category: "Marketing",
   registryDependencies: ["card", "button"],
   spec: {
     root: "card",
@@ -171,4 +178,98 @@ export const UPGRADE_CARD: BlockDef = {
   },
 };
 
-export const BLOCKS: BlockDef[] = [TYPE_SCALE, TICKET_CARD, STATS_CARD, UPGRADE_CARD];
+export const SIGN_IN_FORM: BlockDef = {
+  id: "sign-in-form",
+  componentName: "SignInForm",
+  title: "Sign-in form",
+  description:
+    "Email + password form composed from Field primitives, with helper text and a submit row.",
+  category: "Forms",
+  registryDependencies: ["card", "field", "input", "button"],
+  spec: {
+    root: "card",
+    elements: {
+      card: { type: "Card", props: { className: "max-w-sm" }, children: ["hdr", "content", "footer"] },
+      hdr: { type: "CardHeader", props: {}, children: ["title", "desc"] },
+      title: { type: "CardTitle", props: { text: "Sign in" }, children: [] },
+      desc: {
+        type: "CardDescription",
+        props: { text: "Use your work email to continue." },
+        children: [],
+      },
+      content: { type: "CardContent", props: {}, children: ["group"] },
+      group: { type: "FieldGroup", props: {}, children: ["f-email", "f-pw"] },
+      "f-email": { type: "Field", props: {}, children: ["lbl-email", "in-email", "desc-email"] },
+      "lbl-email": { type: "FieldLabel", props: { text: "Email", htmlFor: "email" }, children: [] },
+      "in-email": { type: "Input", props: { type: "email", placeholder: "you@company.com" }, children: [] },
+      "desc-email": { type: "FieldDescription", props: { text: "We'll never share your email." }, children: [] },
+      "f-pw": { type: "Field", props: {}, children: ["lbl-pw", "in-pw"] },
+      "lbl-pw": { type: "FieldLabel", props: { text: "Password", htmlFor: "password" }, children: [] },
+      "in-pw": { type: "Input", props: { type: "password", placeholder: "••••••••" }, children: [] },
+      footer: { type: "CardFooter", props: {}, children: ["btn"] },
+      btn: { type: "Button", props: { label: "Continue", className: "w-full" }, children: [] },
+    },
+  },
+};
+
+export const KPI_STRIP: BlockDef = {
+  id: "kpi-strip",
+  componentName: "KpiStrip",
+  title: "KPI strip",
+  description:
+    "Three-column metric strip — label, value, delta — for dashboard headers and overview banners.",
+  category: "Cards",
+  registryDependencies: ["card", "grid"],
+  spec: {
+    root: "card",
+    elements: {
+      card: { type: "Card", props: {}, children: ["content"] },
+      content: { type: "CardContent", props: { className: "py-6" }, children: ["grid"] },
+      grid: { type: "Grid", props: { className: "grid-cols-3 gap-6" }, children: ["k1", "k2", "k3"] },
+      k1: { type: "Stack", props: { direction: "col", gap: "1" }, children: ["k1-lbl", "k1-val", "k1-delta"] },
+      "k1-lbl": { type: "Text", props: { content: "MRR", size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" }, children: [] },
+      "k1-val": { type: "Heading", props: { text: "$24.6k", level: "h3", className: "tabular-nums" }, children: [] },
+      "k1-delta": { type: "Text", props: { content: "+12.4% vs last month", size: "xs", muted: true }, children: [] },
+      k2: { type: "Stack", props: { direction: "col", gap: "1" }, children: ["k2-lbl", "k2-val", "k2-delta"] },
+      "k2-lbl": { type: "Text", props: { content: "Active users", size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" }, children: [] },
+      "k2-val": { type: "Heading", props: { text: "1,284", level: "h3", className: "tabular-nums" }, children: [] },
+      "k2-delta": { type: "Text", props: { content: "+8.1% vs last month", size: "xs", muted: true }, children: [] },
+      k3: { type: "Stack", props: { direction: "col", gap: "1" }, children: ["k3-lbl", "k3-val", "k3-delta"] },
+      "k3-lbl": { type: "Text", props: { content: "Churn", size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" }, children: [] },
+      "k3-val": { type: "Heading", props: { text: "0.6%", level: "h3", className: "tabular-nums" }, children: [] },
+      "k3-delta": { type: "Text", props: { content: "−0.2pp vs last month", size: "xs", muted: true }, children: [] },
+    },
+  },
+};
+
+export const EMPTY_STATE: BlockDef = {
+  id: "empty-state",
+  componentName: "EmptyState",
+  title: "Empty state",
+  description:
+    "Centered empty state — eyebrow, headline, helper copy, primary CTA. For zero-data screens.",
+  category: "Marketing",
+  registryDependencies: ["card", "stack", "heading", "button"],
+  spec: {
+    root: "card",
+    elements: {
+      card: { type: "Card", props: { className: "text-center" }, children: ["content"] },
+      content: { type: "CardContent", props: { className: "py-14" }, children: ["stack"] },
+      stack: { type: "Stack", props: { direction: "col", gap: "3", align: "center" }, children: ["eb", "hd", "body", "btn"] },
+      eb: { type: "Text", props: { content: "no projects yet", size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" }, children: [] },
+      hd: { type: "Heading", props: { text: "Start your first project", level: "h2" }, children: [] },
+      body: { type: "Text", props: { content: "Projects organize machines, tickets, and team activity. You can rename them anytime.", size: "sm", muted: true, className: "max-w-sm" }, children: [] },
+      btn: { type: "Button", props: { label: "New project" }, children: [] },
+    },
+  },
+};
+
+export const BLOCKS: BlockDef[] = [
+  TYPE_SCALE,
+  TICKET_CARD,
+  STATS_CARD,
+  KPI_STRIP,
+  UPGRADE_CARD,
+  EMPTY_STATE,
+  SIGN_IN_FORM,
+];
