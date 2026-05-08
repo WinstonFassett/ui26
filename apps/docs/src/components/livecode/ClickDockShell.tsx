@@ -81,6 +81,13 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
 
   return (
     <div className="h-full relative">
+      {/* Drag handle — narrow viewports only. Tapping closes the drawer. */}
+      <button
+        type="button"
+        aria-label="Close source drawer"
+        onClick={onClose}
+        className="ks-rail-grabber hidden absolute left-1/2 -translate-x-1/2 top-1.5 z-10 h-1 w-10 rounded-full bg-muted-foreground/40 hover:bg-muted-foreground/70 transition-colors"
+      />
       <button
         type="button"
         aria-label="Close source panel"
