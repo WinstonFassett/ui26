@@ -134,7 +134,7 @@ export function DemoSection({
         ))}
       </div>
       <div className="mt-4">
-        <DemoCodeBlock spec={selected.spec} demoName={selected.label} />
+        <DemoCodeBlock spec={selected.spec} demoName={selected.id} />
       </div>
     </div>
   )

@@ -159,12 +159,17 @@ function buildImports(spec: Spec, fw: Framework): string {
   return types.map((n) => `import ${n} from "@/components/ui/${kebab(n)}.astro"`).join('\n')
 }
 
+function toPascalCase(name: string): string {
+  return name.split(/[-\s]+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')
+}
+
 export function specToCode(spec: Spec, fw: Framework, componentName = 'Demo'): string {
+  const safeName = toPascalCase(componentName) || 'Demo'
   const imports = buildImports(spec, fw)
   const markup = renderElement(spec, spec.root, fw === 'react' ? 2 : 0, fw)
 
   if (fw === 'react') {
-    return `${imports}\n\nexport function ${componentName}() {\n  return (\n${markup}\n  )\n}\n`
+    return `${imports}\n\nexport function ${safeName}() {\n  return (\n${markup}\n  )\n}\n`
   }
   if (fw === 'svelte') {
     const indented = imports.split('\n').map(l => `  ${l}`).join('\n')
