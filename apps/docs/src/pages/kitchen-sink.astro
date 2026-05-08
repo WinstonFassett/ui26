@@ -44,12 +44,19 @@ import RegionWrap from "@/components/livecode/RegionWrap.astro";
 import { ClickDockShell } from "@/components/livecode/ClickDockShell";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
-import { BLOCKS, TICKET_CARD, STATS_CARD, UPGRADE_CARD } from "@/lib/blocks";
+import { BLOCKS, TYPE_SCALE, TICKET_CARD, STATS_CARD, UPGRADE_CARD } from "@/lib/blocks";
+
+const SECTION_LABEL: Record<string, string> = {
+  "type-scale": "§01 Typography",
+  "ticket-card": "§07 Cards · blocks",
+  "stats-card": "§07 Cards · blocks",
+  "upgrade-card": "§07 Cards · blocks",
+};
 
 const RAIL_REGIONS = BLOCKS.map((b) => ({
   id: b.id,
   label: b.title,
-  section: "§07 Cards · blocks",
+  section: SECTION_LABEL[b.id] ?? "Blocks",
   spec: b.spec,
   componentName: b.componentName,
 }));
@@ -94,10 +101,9 @@ const typeScale = [
     body:has(.ks-page) .main-frame .content-panel .sl-container { max-width: 1440px; }
   </style>
 
-  <div class="ks-page ks-with-rail">
-  <main class="ks-main">
+  <div class="ks-page">
 
-  {/* ──────────────────────────────────────────────── Hero */}
+  {/* ──────────────────────────────────────────────── Hero (full-width, above rail) */}
   <section class="not-content mb-12">
     <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute mb-3">
       Design system · Components reference · v0.4.0
@@ -121,13 +127,17 @@ const typeScale = [
     </div>
   </section>
 
-  {/* ──────────────────────────────────────────────── 01 · Type */}
+  <div class="ks-with-rail">
+  <main class="ks-main">
+
+  {/* ──────────────────────────────────────────────── 01 · Type (first block — type scale) */}
   <section class="not-content mb-10">
     <div class="flex items-center gap-2.5 mb-6 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
       <span class="text-accent">§01</span>
-      <span>Typography</span>
+      <span>Typography · type scale</span>
       <span class="flex-1 h-px bg-border" />
     </div>
+    <RegionWrap id={TYPE_SCALE.id}>
 
     <div class="mb-6">
       <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Type scale</div>
@@ -145,6 +155,7 @@ const typeScale = [
         </>
       ))}
     </div>
+    </RegionWrap>
   </section>
 
   {/* ──────────────────────────────────────────────── 02 · Palette */}
@@ -1021,31 +1032,29 @@ const typeScale = [
   </aside>
   </div>
 
-  <style>
-    .ks-with-rail {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 1.5rem;
-    }
-    @media (min-width: 1100px) {
-      .ks-with-rail {
-        grid-template-columns: minmax(0, 1fr) 380px;
+  <style is:global>
+    /* Narrow (<1100px): rail is a slide-up drawer pinned to the viewport bottom. */
+    @media (max-width: 1099px) {
+      .ks-rail {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        max-height: 70vh;
+        height: 70vh;
+        transform: translateY(100%);
+        transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+        background: hsl(var(--background));
+        border-top: 1px solid hsl(var(--border));
+        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.18);
       }
+      body[data-rail-open="true"] .ks-rail { transform: translateY(0); }
     }
-    /* Narrow: rail stacks below content. ≥1100px: rail sticks alongside. */
-    .ks-rail-inner {
-      height: 70vh;
-      min-height: 480px;
-      max-height: 720px;
-    }
+    /* Wide (≥1100px): rail is the sticky right column. */
     @media (min-width: 1100px) {
-      .ks-rail-inner {
-        position: sticky;
-        top: 5rem;
-        height: calc(100vh - 6rem);
-        min-height: 0;
-        max-height: none;
-      }
+      .ks-with-rail { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 1.5rem; }
+      .ks-rail-inner { position: sticky; top: 5rem; height: calc(100vh - 6rem); }
     }
   </style>
 </StarlightPage>

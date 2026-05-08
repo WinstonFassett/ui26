@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SourcePane, type SourcePaneRegion } from "./SourcePane";
 import { useFw } from "./fw-store";
 
@@ -8,10 +8,14 @@ export interface DockRegion extends SourcePaneRegion {}
 
 const NARROW_QUERY = "(max-width: 1099px)";
 
+function setBodyDrawer(open: boolean) {
+  if (typeof document === "undefined") return;
+  document.body.dataset.railOpen = open ? "true" : "false";
+}
+
 export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
   const [openId, setOpenId] = useState(regions[0]?.id);
   const [fw, setFw] = useFw();
-  const railRef = useRef<HTMLDivElement>(null);
 
   // Listen for region clicks anywhere in the document.
   useEffect(() => {
@@ -23,13 +27,23 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
       if (!regions.some((r) => r.id === id)) return;
       setOpenId(id);
 
-      // On narrow screens, scroll the rail into view so the user sees the source.
-      if (window.matchMedia(NARROW_QUERY).matches && railRef.current) {
-        railRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      // On narrow screens, open the drawer.
+      if (window.matchMedia(NARROW_QUERY).matches) {
+        setBodyDrawer(true);
       }
     };
     document.addEventListener("click", handler);
-    return () => document.removeEventListener("click", handler);
+
+    // Close drawer on Escape.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setBodyDrawer(false);
+    };
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.removeEventListener("click", handler);
+      document.removeEventListener("keydown", onKey);
+    };
   }, [regions]);
 
   // Mark active region in the DOM via data-region-active.
@@ -45,7 +59,16 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
   if (!active) return null;
 
   return (
-    <div ref={railRef} className="h-full">
+    <div className="h-full relative">
+      {/* Mobile-only close button — visible only when drawer is open and viewport is narrow. */}
+      <button
+        type="button"
+        aria-label="Close source panel"
+        onClick={() => setBodyDrawer(false)}
+        className="ks-rail-close absolute right-2 top-2 z-10 inline-flex items-center justify-center w-7 h-7 border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted/40 min-[1100px]:hidden"
+      >
+        ✕
+      </button>
       <SourcePane region={active} fw={fw} setFw={setFw} className="min-h-0" />
     </div>
   );

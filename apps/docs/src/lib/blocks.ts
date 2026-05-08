@@ -11,6 +11,32 @@ export interface BlockDef {
   spec: Spec;
 }
 
+export const TYPE_SCALE: BlockDef = {
+  id: "type-scale",
+  componentName: "TypeScale",
+  title: "Type scale",
+  description:
+    "Display headings, body, and caption — the canonical typography pyramid for ui26.",
+  registryDependencies: [],
+  spec: {
+    root: "stack",
+    elements: {
+      stack: { type: "Stack", props: { direction: "col", gap: "4" }, children: ["h1", "h2", "h3", "body", "caption"] },
+      h1: { type: "Heading", props: { text: "Composable state.", level: "h1" }, children: [] },
+      h2: { type: "Heading", props: { text: "Transitions, guarded", level: "h2" }, children: [] },
+      h3: { type: "Heading", props: { text: "Section heading", level: "h3" }, children: [] },
+      body: {
+        type: "Text",
+        props: {
+          content: "Matchina handles state transitions, effects, and pattern matching — end-to-end typed.",
+        },
+        children: [],
+      },
+      caption: { type: "Text", props: { content: "Last edited 3 hours ago", size: "xs", muted: true }, children: [] },
+    },
+  },
+};
+
 export const TICKET_CARD: BlockDef = {
   id: "ticket-card",
   componentName: "TicketCard",
@@ -113,4 +139,4 @@ export const UPGRADE_CARD: BlockDef = {
   },
 };
 
-export const BLOCKS: BlockDef[] = [TICKET_CARD, STATS_CARD, UPGRADE_CARD];
+export const BLOCKS: BlockDef[] = [TYPE_SCALE, TICKET_CARD, STATS_CARD, UPGRADE_CARD];
