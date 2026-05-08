@@ -1,4 +1,4 @@
-/* Geist + Newsreader fonts are loaded via <link> in apps/docs/astro.config.mjs head.
+/* Geist + Source Serif 4 fonts are loaded via <link> in apps/docs/astro.config.mjs head.
  * Default theme: editorial (serif display, warm off-white, gold accent).
  * Alternate themes opt-in via `data-theme` attribute — see registry/tokens.css.
  */
@@ -63,7 +63,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* Fonts are indirected through `--font-*` in registry/tokens.css so themes
-   * can swap typography (editorial uses Newsreader serif; tix/shad use system). */
+   * can swap typography (editorial uses Source Serif 4; tix/shad use system). */
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);

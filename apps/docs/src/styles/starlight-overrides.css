@@ -74,9 +74,6 @@ header.header .site-title {
   line-height: 1.1;
   gap: 10px;
   color: var(--sl-color-text);
-  /* Newsreader's high ascender metrics cause it to sit ~1px high next to icons.
-     This corrects the optical offset in the fixed-height flex header. */
-  translate: 0 1px;
 }
 header.header .site-title img,
 header.header .site-title svg { width: 20px; height: 20px; }
@@ -181,7 +178,7 @@ select[aria-label="Select theme"] {
   color: var(--sl-color-gray-3);
 }
 
-/* H1 — Newsreader display */
+/* H1 — serif display */
 .main-frame h1,
 .sl-markdown-content h1:first-of-type,
 .hero h1 {
