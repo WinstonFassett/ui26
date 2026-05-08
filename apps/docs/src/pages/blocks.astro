@@ -7,7 +7,7 @@ import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
 import { CopyBtn } from "@/components/livecode/CopyBtn";
 import { BLOCKS, type BlockCategory } from "@/lib/blocks";
 
-const CATEGORY_ORDER: BlockCategory[] = ["Editorial", "Cards", "Forms", "Marketing"];
+const CATEGORY_ORDER: BlockCategory[] = ["Editorial", "Cards", "Forms", "Marketing", "Productivity", "AI"];
 
 const GROUPED = CATEGORY_ORDER
   .map((cat) => ({ category: cat, blocks: BLOCKS.filter((b) => b.category === cat) }))

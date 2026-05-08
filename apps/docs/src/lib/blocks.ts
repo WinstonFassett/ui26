@@ -1,6 +1,6 @@
 import type { Spec } from "@/lib/spec-to-code";
 
-export type BlockCategory = "Editorial" | "Cards" | "Forms" | "Marketing";
+export type BlockCategory = "Editorial" | "Cards" | "Forms" | "Marketing" | "Productivity" | "AI";
 
 export interface BlockDef {
   /** kebab-case name used in URLs, registry, filenames */
@@ -264,6 +264,152 @@ export const EMPTY_STATE: BlockDef = {
   },
 };
 
+export const ACTIVITY_FEED: BlockDef = {
+  id: "activity-feed",
+  componentName: "ActivityFeed",
+  title: "Activity feed",
+  description:
+    "Card with a stack of timeline entries — actor, action, timestamp. For project changelogs and audit panes.",
+  category: "Productivity",
+  registryDependencies: ["card", "stack", "badge"],
+  spec: {
+    root: "card",
+    elements: {
+      card: { type: "Card", props: {}, children: ["hdr", "content"] },
+      hdr: { type: "CardHeader", props: {}, children: ["title", "desc"] },
+      title: { type: "CardTitle", props: { text: "Recent activity" }, children: [] },
+      desc: {
+        type: "CardDescription",
+        props: { text: "Last 7 days across all machines." },
+        children: [],
+      },
+      content: { type: "CardContent", props: {}, children: ["stack"] },
+      stack: { type: "Stack", props: { direction: "col", gap: "3" }, children: ["r1", "r2", "r3"] },
+      r1: {
+        type: "Stack",
+        props: { direction: "row", gap: "3", align: "center" },
+        children: ["b1", "t1", "ts1"],
+      },
+      b1: { type: "Badge", props: { text: "ship", variant: "default" }, children: [] },
+      t1: {
+        type: "Text",
+        props: { content: "kai shipped Payment retry loop", size: "sm", className: "flex-1" },
+        children: [],
+      },
+      ts1: { type: "Text", props: { content: "3h", size: "xs", muted: true, mono: true }, children: [] },
+      r2: {
+        type: "Stack",
+        props: { direction: "row", gap: "3", align: "center" },
+        children: ["b2", "t2", "ts2"],
+      },
+      b2: { type: "Badge", props: { text: "merge", variant: "secondary" }, children: [] },
+      t2: {
+        type: "Text",
+        props: { content: "winston merged Field family port", size: "sm", className: "flex-1" },
+        children: [],
+      },
+      ts2: { type: "Text", props: { content: "5h", size: "xs", muted: true, mono: true }, children: [] },
+      r3: {
+        type: "Stack",
+        props: { direction: "row", gap: "3", align: "center" },
+        children: ["b3", "t3", "ts3"],
+      },
+      b3: { type: "Badge", props: { text: "open", variant: "outline" }, children: [] },
+      t3: {
+        type: "Text",
+        props: { content: "ai opened Investigate flaky checkout test", size: "sm", className: "flex-1" },
+        children: [],
+      },
+      ts3: { type: "Text", props: { content: "1d", size: "xs", muted: true, mono: true }, children: [] },
+    },
+  },
+};
+
+export const COMMAND_PALETTE: BlockDef = {
+  id: "command-palette",
+  componentName: "CommandPalette",
+  title: "Command palette",
+  description:
+    "Search-first action launcher — Input header, suggestion rows with keyboard hint chips. Static markup; wire your own keyboard handler.",
+  category: "Productivity",
+  registryDependencies: ["card", "stack", "badge", "input"],
+  spec: {
+    root: "card",
+    elements: {
+      card: { type: "Card", props: { className: "max-w-md" }, children: ["content"] },
+      content: { type: "CardContent", props: { className: "py-3" }, children: ["stack"] },
+      stack: { type: "Stack", props: { direction: "col", gap: "3" }, children: ["search", "list"] },
+      search: { type: "Input", props: { type: "search", placeholder: "Type a command or search…" }, children: [] },
+      list: { type: "Stack", props: { direction: "col", gap: "1" }, children: ["a1", "a2", "a3", "a4"] },
+      a1: { type: "Stack", props: { direction: "row", gap: "3", align: "center", className: "py-1.5" }, children: ["a1l", "a1k"] },
+      a1l: { type: "Text", props: { content: "New ticket", size: "sm", className: "flex-1" }, children: [] },
+      a1k: { type: "Badge", props: { text: "⌘ N", variant: "secondary", className: "font-mono" }, children: [] },
+      a2: { type: "Stack", props: { direction: "row", gap: "3", align: "center", className: "py-1.5" }, children: ["a2l", "a2k"] },
+      a2l: { type: "Text", props: { content: "Switch project…", size: "sm", className: "flex-1" }, children: [] },
+      a2k: { type: "Badge", props: { text: "⌘ P", variant: "secondary", className: "font-mono" }, children: [] },
+      a3: { type: "Stack", props: { direction: "row", gap: "3", align: "center", className: "py-1.5" }, children: ["a3l", "a3k"] },
+      a3l: { type: "Text", props: { content: "Open settings", size: "sm", className: "flex-1" }, children: [] },
+      a3k: { type: "Badge", props: { text: "⌘ ,", variant: "secondary", className: "font-mono" }, children: [] },
+      a4: { type: "Stack", props: { direction: "row", gap: "3", align: "center", className: "py-1.5" }, children: ["a4l", "a4k"] },
+      a4l: { type: "Text", props: { content: "Sign out", size: "sm", muted: true, className: "flex-1" }, children: [] },
+      a4k: { type: "Badge", props: { text: "⌘ ⇧ Q", variant: "outline", className: "font-mono" }, children: [] },
+    },
+  },
+};
+
+export const AI_MESSAGE: BlockDef = {
+  id: "ai-message",
+  componentName: "AiMessage",
+  title: "AI message thread",
+  description:
+    "Card showing one user/assistant exchange — role eyebrow, message body, and a quiet provenance footer. For chat surfaces and inline copilots.",
+  category: "AI",
+  registryDependencies: ["card", "stack", "badge"],
+  spec: {
+    root: "card",
+    elements: {
+      card: { type: "Card", props: { className: "max-w-lg" }, children: ["content", "footer"] },
+      content: { type: "CardContent", props: { className: "py-5" }, children: ["stack"] },
+      stack: { type: "Stack", props: { direction: "col", gap: "5" }, children: ["u-stack", "a-stack"] },
+      "u-stack": { type: "Stack", props: { direction: "col", gap: "1.5" }, children: ["u-eb", "u-body"] },
+      "u-eb": {
+        type: "Text",
+        props: { content: "you · 2:14pm", size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" },
+        children: [],
+      },
+      "u-body": {
+        type: "Text",
+        props: { content: "Why is the checkout test flaky on Mondays only?", size: "sm" },
+        children: [],
+      },
+      "a-stack": { type: "Stack", props: { direction: "col", gap: "1.5" }, children: ["a-eb", "a-body"] },
+      "a-eb": {
+        type: "Text",
+        props: { content: "claude · synthesised", size: "xs", mono: true, className: "uppercase tracking-wider text-accent" },
+        children: [],
+      },
+      "a-body": {
+        type: "Text",
+        props: {
+          content:
+            "Likely a weekend cron that recycles staging Stripe keys. The first Monday run sees stale keys until the seed job catches up. Run `pnpm seed:stripe` before the test or move the cron to Sundays.",
+          size: "sm",
+          className: "leading-relaxed",
+        },
+        children: [],
+      },
+      footer: { type: "CardFooter", props: { className: "border-t border-border" }, children: ["foot"] },
+      foot: {
+        type: "Stack",
+        props: { direction: "row", gap: "2", align: "center" },
+        children: ["fb1", "fb2"],
+      },
+      fb1: { type: "Badge", props: { text: "3 sources", variant: "secondary" }, children: [] },
+      fb2: { type: "Badge", props: { text: "model: opus-4.7", variant: "outline", className: "font-mono" }, children: [] },
+    },
+  },
+};
+
 export const BLOCKS: BlockDef[] = [
   TYPE_SCALE,
   TICKET_CARD,
@@ -272,4 +418,7 @@ export const BLOCKS: BlockDef[] = [
   UPGRADE_CARD,
   EMPTY_STATE,
   SIGN_IN_FORM,
+  ACTIVITY_FEED,
+  COMMAND_PALETTE,
+  AI_MESSAGE,
 ];
