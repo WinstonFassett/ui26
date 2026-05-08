@@ -1,15 +1,21 @@
 import { cn } from "@/lib/utils";
+import { encode } from "@/playroom/url-state";
 
 export function PlayroomLink({
-  href,
+  code,
   className,
 }: {
-  href?: string;
+  /** Source to load into the playroom. If omitted the link goes to an empty playroom. */
+  code?: string;
   className?: string;
 }) {
+  const href = code ? `/playroom#${encode(code)}` : "/playroom";
+
   return (
     <a
-      href={href ?? "#"}
+      href={href}
+      target="_blank"
+      rel="noopener"
       className={cn(
         "inline-flex items-center gap-1.5 py-1 font-mono text-[10px] uppercase tracking-wider",
         "text-muted-foreground hover:text-foreground",

@@ -1,7 +1,9 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+// lz-string ships as CommonJS; default-import + property access works in both
+// Vite client builds and Astro's SSR module runner (named imports break SSR).
+import lzString from "lz-string";
 
 export function encode(code: string): string {
-  return compressToEncodedURIComponent(code);
+  return lzString.compressToEncodedURIComponent(code);
 }
 
 export function decode(hash: string): string | null {
@@ -9,7 +11,7 @@ export function decode(hash: string): string | null {
   const trimmed = hash.startsWith("#") ? hash.slice(1) : hash;
   if (!trimmed) return null;
   try {
-    return decompressFromEncodedURIComponent(trimmed) || null;
+    return lzString.decompressFromEncodedURIComponent(trimmed) || null;
   } catch {
     return null;
   }

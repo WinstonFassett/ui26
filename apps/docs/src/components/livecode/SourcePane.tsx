@@ -81,7 +81,8 @@ export function SourcePane({
         <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
           ui26/{fw}
         </span>
-        <PlayroomLink />
+        {/* Playroom is React-only — always link to the React source for the active region. */}
+        <PlayroomLink code={files.react.code} />
       </div>
     </div>
   );
