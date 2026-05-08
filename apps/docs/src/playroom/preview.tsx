@@ -26,10 +26,10 @@ export function Preview() {
       }
       try {
         const exported = result.factory(moduleScope);
-        const Component =
+        const Component: React.ComponentType =
           typeof exported === "function"
-            ? (exported as () => unknown)
-            : () => exported;
+            ? (exported as React.ComponentType)
+            : () => exported as React.ReactNode;
         setError(null);
         root.render(<Component />);
       } catch (err) {
