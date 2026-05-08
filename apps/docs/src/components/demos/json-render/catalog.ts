@@ -69,39 +69,64 @@ const separatorProps = z.object({
   className: z.string().nullable(),
 });
 
-const inputFieldProps = z.object({
-  label: z.string(),
+// ── Bare controls (compose inside Field) ──────────────────────────────────
+
+const inputProps = z.object({
   id: z.string().nullable(),
   type: z.enum(["text", "email", "password", "number", "search"]).nullable(),
   placeholder: z.string().nullable(),
   value: z.string().nullable(),
-  helper: z.string().nullable(),
-  error: z.string().nullable(),
+  invalid: z.boolean().nullable(),
   className: z.string().nullable(),
 });
 
-const textareaFieldProps = z.object({
-  label: z.string(),
+const textareaProps = z.object({
   id: z.string().nullable(),
   placeholder: z.string().nullable(),
   value: z.string().nullable(),
   rows: z.number().nullable(),
-  helper: z.string().nullable(),
+  invalid: z.boolean().nullable(),
   className: z.string().nullable(),
 });
 
-const checkboxFieldProps = z.object({
-  label: z.string(),
-  description: z.string().nullable(),
+const checkboxProps = z.object({
+  id: z.string().nullable(),
   checked: z.boolean().nullable(),
   disabled: z.boolean().nullable(),
   className: z.string().nullable(),
 });
 
-const switchFieldProps = z.object({
-  label: z.string(),
-  description: z.string().nullable(),
+const switchControlProps = z.object({
+  id: z.string().nullable(),
   checked: z.boolean().nullable(),
+  disabled: z.boolean().nullable(),
+  className: z.string().nullable(),
+});
+
+// ── Field family (composition primitive — wraps any control) ─────────────
+
+const fieldProps = z.object({
+  orientation: z.enum(["vertical", "horizontal", "responsive"]).nullable(),
+  className: z.string().nullable(),
+});
+
+const fieldContentProps = z.object({
+  className: z.string().nullable(),
+});
+
+const fieldLabelProps = z.object({
+  text: z.string(),
+  htmlFor: z.string().nullable(),
+  className: z.string().nullable(),
+});
+
+const fieldDescriptionProps = z.object({
+  text: z.string(),
+  className: z.string().nullable(),
+});
+
+const fieldErrorProps = z.object({
+  text: z.string(),
   className: z.string().nullable(),
 });
 
@@ -179,30 +204,57 @@ export const catalog = defineCatalog(schema, {
       slots: ["default"],
       description: "Card footer row with top border.",
     },
-    // form fields
-    InputField: {
-      props: inputFieldProps,
+    // bare form controls — compose inside Field
+    Input: {
+      props: inputProps,
       slots: [],
-      description: "Label + input with optional helper/error.",
-      example: { label: "Email", type: "email", placeholder: "you@example.com" },
+      description: "Bare text input. Wrap in Field for label/description/error.",
+      example: { type: "email", placeholder: "you@company.com" },
     },
-    TextareaField: {
-      props: textareaFieldProps,
+    Textarea: {
+      props: textareaProps,
       slots: [],
-      description: "Label + textarea with optional helper.",
-      example: { label: "Description", rows: 4 },
+      description: "Bare multi-line input. Wrap in Field for label/helper.",
+      example: { rows: 4 },
     },
-    CheckboxField: {
-      props: checkboxFieldProps,
+    Checkbox: {
+      props: checkboxProps,
       slots: [],
-      description: "Checkbox with label and optional description.",
-      example: { label: "Enable streaming", checked: true },
+      description: "Bare checkbox. Wrap in Field for label/description.",
+      example: { checked: true },
     },
-    SwitchField: {
-      props: switchFieldProps,
+    Switch: {
+      props: switchControlProps,
       slots: [],
-      description: "Toggle switch with label and optional description.",
-      example: { label: "Dark mode", checked: false },
+      description: "Bare toggle switch. Wrap in Field for label/description.",
+      example: { checked: false },
+    },
+    // field composition family — wraps any control with label/description/error
+    Field: {
+      props: fieldProps,
+      slots: ["default"],
+      description: "Composition wrapper for a labeled form control.",
+      example: { orientation: "vertical" },
+    },
+    FieldContent: {
+      props: fieldContentProps,
+      slots: ["default"],
+      description: "Inner content column inside a Field — groups label + helper alongside a control.",
+    },
+    FieldLabel: {
+      props: fieldLabelProps,
+      slots: [],
+      description: "Label slot inside a Field. Use htmlFor to bind to a control id.",
+    },
+    FieldDescription: {
+      props: fieldDescriptionProps,
+      slots: [],
+      description: "Helper text below a control inside a Field.",
+    },
+    FieldError: {
+      props: fieldErrorProps,
+      slots: [],
+      description: "Error message inside a Field. Renders only when text is provided.",
     },
     Separator: {
       props: separatorProps,
@@ -226,8 +278,13 @@ export type CardProps         = z.output<typeof cardProps>;
 export type CardSlotProps     = z.output<typeof cardSlotProps>;
 export type CardTextSlotProps = z.output<typeof cardTextSlotProps>;
 export type CardFooterProps   = z.output<typeof cardFooterProps>;
-export type SeparatorProps    = z.output<typeof separatorProps>;
-export type InputFieldProps   = z.output<typeof inputFieldProps>;
-export type TextareaFieldProps = z.output<typeof textareaFieldProps>;
-export type CheckboxFieldProps = z.output<typeof checkboxFieldProps>;
-export type SwitchFieldProps  = z.output<typeof switchFieldProps>;
+export type SeparatorProps          = z.output<typeof separatorProps>;
+export type InputProps              = z.output<typeof inputProps>;
+export type TextareaProps           = z.output<typeof textareaProps>;
+export type CheckboxProps           = z.output<typeof checkboxProps>;
+export type SwitchControlProps      = z.output<typeof switchControlProps>;
+export type FieldProps              = z.output<typeof fieldProps>;
+export type FieldContentProps       = z.output<typeof fieldContentProps>;
+export type FieldLabelProps         = z.output<typeof fieldLabelProps>;
+export type FieldDescriptionProps   = z.output<typeof fieldDescriptionProps>;
+export type FieldErrorProps         = z.output<typeof fieldErrorProps>;

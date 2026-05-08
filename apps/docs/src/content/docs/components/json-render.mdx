@@ -70,13 +70,31 @@ export const fieldsSpec = {
   root: "root",
   elements: {
     root: { type: "Grid", props: { cols: "2", gap: "6", className: null }, children: ["col-left", "col-right"] },
-    "col-left": { type: "Stack", props: { direction: "col", gap: "4", align: null, justify: null, wrap: null, className: null }, children: ["f-workspace", "f-slug", "f-email", "f-search"] },
-    "f-workspace": { type: "InputField", props: { label: "Workspace name", id: "workspace", type: "text",   placeholder: null, value: "Acme Retrospective", helper: null, error: null }, children: [] },
-    "f-slug":      { type: "InputField", props: { label: "Slug",           id: "slug",      type: "text",   placeholder: null, value: "acme-retro", helper: "lowercase · dashes", error: null }, children: [] },
-    "f-email":     { type: "InputField", props: { label: "Email",          id: "email",     type: "email",  placeholder: "you@company.com", value: null, helper: null, error: "Already in use — try signing in instead" }, children: [] },
-    "f-search":    { type: "InputField", props: { label: "Search",         id: "search",    type: "search", placeholder: "Search tickets, docs, people…", value: null, helper: null, error: null }, children: [] },
-    "col-right": { type: "Stack", props: { direction: "col", gap: "4", align: null, justify: null, wrap: null, className: null }, children: ["f-bug"] },
-    "f-bug": { type: "TextareaField", props: { label: "Bug description", id: "bug", placeholder: null, value: "After clicking 'Retry' in the paying state, the fetcher briefly flashes back to 'idle' before transitioning to 'loading'. Expected: direct paying → loading.", rows: 5, helper: "198/2000" }, children: [] },
+    "col-left": { type: "Stack", props: { direction: "col", gap: "4", align: null, justify: null, wrap: null, className: null }, children: ["fld-workspace", "fld-slug", "fld-email", "fld-search"] },
+
+    "fld-workspace": { type: "Field", props: { orientation: null, className: null }, children: ["lbl-workspace", "in-workspace"] },
+    "lbl-workspace": { type: "FieldLabel", props: { text: "Workspace name", htmlFor: "workspace", className: null }, children: [] },
+    "in-workspace": { type: "Input", props: { id: "workspace", type: "text", placeholder: null, value: "Acme Retrospective", invalid: null, className: null }, children: [] },
+
+    "fld-slug": { type: "Field", props: { orientation: null, className: null }, children: ["lbl-slug", "in-slug", "desc-slug"] },
+    "lbl-slug": { type: "FieldLabel", props: { text: "Slug", htmlFor: "slug", className: null }, children: [] },
+    "in-slug": { type: "Input", props: { id: "slug", type: "text", placeholder: null, value: "acme-retro", invalid: null, className: null }, children: [] },
+    "desc-slug": { type: "FieldDescription", props: { text: "lowercase · dashes", className: null }, children: [] },
+
+    "fld-email": { type: "Field", props: { orientation: null, className: null }, children: ["lbl-email", "in-email", "err-email"] },
+    "lbl-email": { type: "FieldLabel", props: { text: "Email", htmlFor: "email", className: null }, children: [] },
+    "in-email": { type: "Input", props: { id: "email", type: "email", placeholder: "you@company.com", value: null, invalid: true, className: null }, children: [] },
+    "err-email": { type: "FieldError", props: { text: "Already in use — try signing in instead", className: null }, children: [] },
+
+    "fld-search": { type: "Field", props: { orientation: null, className: null }, children: ["lbl-search", "in-search"] },
+    "lbl-search": { type: "FieldLabel", props: { text: "Search", htmlFor: "search", className: null }, children: [] },
+    "in-search": { type: "Input", props: { id: "search", type: "search", placeholder: "Search tickets, docs, people…", value: null, invalid: null, className: null }, children: [] },
+
+    "col-right": { type: "Stack", props: { direction: "col", gap: "4", align: null, justify: null, wrap: null, className: null }, children: ["fld-bug"] },
+    "fld-bug": { type: "Field", props: { orientation: null, className: null }, children: ["lbl-bug", "ta-bug", "desc-bug"] },
+    "lbl-bug": { type: "FieldLabel", props: { text: "Bug description", htmlFor: "bug", className: null }, children: [] },
+    "ta-bug": { type: "Textarea", props: { id: "bug", placeholder: null, value: "After clicking 'Retry' in the paying state, the fetcher briefly flashes back to 'idle' before transitioning to 'loading'. Expected: direct paying → loading.", rows: 5, invalid: null, className: null }, children: [] },
+    "desc-bug": { type: "FieldDescription", props: { text: "198/2000", className: "self-end" }, children: [] },
   },
 };
 
@@ -90,14 +108,41 @@ export const selectionSpec = {
   root: "root",
   elements: {
     root: { type: "Grid", props: { cols: "2", gap: "6", className: null }, children: ["checkboxes", "switches"] },
-    checkboxes: { type: "Stack", props: { direction: "col", gap: "3", align: null, justify: null, wrap: null, className: null }, children: ["cb1","cb2","cb3"] },
-    "cb1": { type: "CheckboxField", props: { label: "Enable streaming responses", description: "Token-by-token updates to the UI.", checked: true,  disabled: null  }, children: [] },
-    "cb2": { type: "CheckboxField", props: { label: "Allow guest edits",           description: null,                              checked: false, disabled: null  }, children: [] },
-    "cb3": { type: "CheckboxField", props: { label: "Legacy sync (enterprise)",    description: "Managed by your admin",           checked: true,  disabled: true  }, children: [] },
-    switches: { type: "Stack", props: { direction: "col", gap: "3", align: null, justify: null, wrap: null, className: null }, children: ["sw1","sw2","sw3"] },
-    "sw1": { type: "SwitchField", props: { label: "Claude suggestions",      description: "Inline completions while you type.", checked: true  }, children: [] },
-    "sw2": { type: "SwitchField", props: { label: "Auto-run effects in dev", description: null,                                checked: false }, children: [] },
-    "sw3": { type: "SwitchField", props: { label: "Telemetry",               description: "Anonymous · opt-out any time",       checked: true  }, children: [] },
+    checkboxes: { type: "Stack", props: { direction: "col", gap: "3", align: null, justify: null, wrap: null, className: null }, children: ["fld-cb1","fld-cb2","fld-cb3"] },
+
+    "fld-cb1": { type: "Field", props: { orientation: "horizontal", className: null }, children: ["cb1", "fc-cb1"] },
+    "cb1": { type: "Checkbox", props: { id: "cb1", checked: true, disabled: null, className: null }, children: [] },
+    "fc-cb1": { type: "FieldContent", props: { className: null }, children: ["lbl-cb1", "desc-cb1"] },
+    "lbl-cb1": { type: "FieldLabel", props: { text: "Enable streaming responses", htmlFor: "cb1", className: null }, children: [] },
+    "desc-cb1": { type: "FieldDescription", props: { text: "Token-by-token updates to the UI.", className: null }, children: [] },
+
+    "fld-cb2": { type: "Field", props: { orientation: "horizontal", className: null }, children: ["cb2", "lbl-cb2"] },
+    "cb2": { type: "Checkbox", props: { id: "cb2", checked: false, disabled: null, className: null }, children: [] },
+    "lbl-cb2": { type: "FieldLabel", props: { text: "Allow guest edits", htmlFor: "cb2", className: null }, children: [] },
+
+    "fld-cb3": { type: "Field", props: { orientation: "horizontal", className: null }, children: ["cb3", "fc-cb3"] },
+    "cb3": { type: "Checkbox", props: { id: "cb3", checked: true, disabled: true, className: null }, children: [] },
+    "fc-cb3": { type: "FieldContent", props: { className: null }, children: ["lbl-cb3", "desc-cb3"] },
+    "lbl-cb3": { type: "FieldLabel", props: { text: "Legacy sync (enterprise)", htmlFor: "cb3", className: null }, children: [] },
+    "desc-cb3": { type: "FieldDescription", props: { text: "Managed by your admin", className: null }, children: [] },
+
+    switches: { type: "Stack", props: { direction: "col", gap: "3", align: null, justify: null, wrap: null, className: null }, children: ["fld-sw1","fld-sw2","fld-sw3"] },
+
+    "fld-sw1": { type: "Field", props: { orientation: "horizontal", className: null }, children: ["sw1", "fc-sw1"] },
+    "sw1": { type: "Switch", props: { id: "sw1", checked: true, disabled: null, className: null }, children: [] },
+    "fc-sw1": { type: "FieldContent", props: { className: null }, children: ["lbl-sw1", "desc-sw1"] },
+    "lbl-sw1": { type: "FieldLabel", props: { text: "Claude suggestions", htmlFor: "sw1", className: null }, children: [] },
+    "desc-sw1": { type: "FieldDescription", props: { text: "Inline completions while you type.", className: null }, children: [] },
+
+    "fld-sw2": { type: "Field", props: { orientation: "horizontal", className: null }, children: ["sw2", "lbl-sw2"] },
+    "sw2": { type: "Switch", props: { id: "sw2", checked: false, disabled: null, className: null }, children: [] },
+    "lbl-sw2": { type: "FieldLabel", props: { text: "Auto-run effects in dev", htmlFor: "sw2", className: null }, children: [] },
+
+    "fld-sw3": { type: "Field", props: { orientation: "horizontal", className: null }, children: ["sw3", "fc-sw3"] },
+    "sw3": { type: "Switch", props: { id: "sw3", checked: true, disabled: null, className: null }, children: [] },
+    "fc-sw3": { type: "FieldContent", props: { className: null }, children: ["lbl-sw3", "desc-sw3"] },
+    "lbl-sw3": { type: "FieldLabel", props: { text: "Telemetry", htmlFor: "sw3", className: null }, children: [] },
+    "desc-sw3": { type: "FieldDescription", props: { text: "Anonymous · opt-out any time", className: null }, children: [] },
   },
 };
 

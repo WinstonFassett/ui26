@@ -1,0 +1,16 @@
+---
+import { cn } from "../lib/utils";
+import { fieldError } from "./field.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"div">, "class"> & { class?: string };
+const { class: className, ...rest } = Astro.props;
+
+const hasContent = await Astro.slots.render("default");
+---
+
+{hasContent && (
+  <div role="alert" data-slot="field-error" class={cn(fieldError(), className)} {...rest}>
+    <Fragment set:html={hasContent} />
+  </div>
+)}

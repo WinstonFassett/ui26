@@ -29,6 +29,7 @@ const ACCORDION_SUBS = ["item", "trigger", "content"] as const;
 const BREADCRUMB_SUBS = ["list", "item", "link", "page", "separator"] as const;
 const PAGINATION_SUBS = ["content", "item", "link"] as const;
 const RADIO_GROUP_SUBS = ["item"] as const;
+const FIELD_SUBS = ["content", "label", "description", "error"] as const;
 
 const BASE_DEPS = ["tailwind-variants"];
 const BASE_REGISTRY_DEPS = ["utils", "base"];
@@ -188,6 +189,13 @@ export const COMPONENTS: ComponentMeta[] = [
     dependencies: BASE_DEPS,
     registryDependencies: BASE_REGISTRY_DEPS,
   },
+  {
+    name: "field",
+    title: "Field",
+    description: "Composition primitive: Field + FieldLabel/FieldContent/FieldDescription/FieldError. Wraps any control.",
+    dependencies: BASE_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "label"],
+  },
 ];
 
 export function filesFor(name: string, fw: Framework): RegistryFile[] {
@@ -213,6 +221,7 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
   if (name === "breadcrumb") return withSubs(BREADCRUMB_SUBS);
   if (name === "pagination") return withSubs(PAGINATION_SUBS);
   if (name === "radio-group") return withSubs(RADIO_GROUP_SUBS);
+  if (name === "field") return withSubs(FIELD_SUBS);
 
   return [
     { path: `${name}/${name}.${ext}`, type: "registry:ui" },

@@ -15,12 +15,18 @@ import {
 import { Stack as StackRoot } from "@registry/stack/stack.tsx";
 import { Grid as GridRoot } from "@registry/grid/grid.tsx";
 import { Heading as HeadingRoot } from "@registry/heading/heading.tsx";
-import { Input } from "@registry/input/input.tsx";
-import { Textarea } from "@registry/textarea/textarea.tsx";
-import { Label } from "@registry/label/label.tsx";
-import { Checkbox } from "@registry/checkbox/checkbox.tsx";
-import { Switch } from "@registry/switch/switch.tsx";
+import { Input as InputRoot } from "@registry/input/input.tsx";
+import { Textarea as TextareaRoot } from "@registry/textarea/textarea.tsx";
+import { Checkbox as CheckboxRoot } from "@registry/checkbox/checkbox.tsx";
+import { Switch as SwitchRoot } from "@registry/switch/switch.tsx";
 import { Separator as Sep } from "@registry/separator/separator.tsx";
+import {
+  Field as FieldRoot,
+  FieldContent as FieldContentRoot,
+  FieldLabel as FieldLabelRoot,
+  FieldDescription as FieldDescriptionRoot,
+  FieldError as FieldErrorRoot,
+} from "@registry/field/field.tsx";
 import {
   catalog,
   type ButtonProps,
@@ -34,10 +40,15 @@ import {
   type CardTextSlotProps,
   type CardFooterProps,
   type SeparatorProps,
-  type InputFieldProps,
-  type TextareaFieldProps,
-  type CheckboxFieldProps,
-  type SwitchFieldProps,
+  type InputProps,
+  type TextareaProps,
+  type CheckboxProps,
+  type SwitchControlProps,
+  type FieldProps,
+  type FieldContentProps,
+  type FieldLabelProps,
+  type FieldDescriptionProps,
+  type FieldErrorProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -119,57 +130,56 @@ export const { registry } = defineRegistry(catalog, {
       </p>
     ),
 
-    // ── Form fields — composite (label + control + helper/error). ──
-    InputField: ({ props }: BaseComponentProps<InputFieldProps>) => (
-      <div className={cn("flex flex-col gap-1.5", props.className)}>
-        <Label htmlFor={props.id ?? undefined}>{props.label}</Label>
-        <Input
-          id={props.id ?? undefined}
+    // ── Bare form controls (compose inside Field) ───────────────────────
+    Input: ({ props }: BaseComponentProps<InputProps>) => {
+      const { value, invalid, ...rest } = u(props);
+      return (
+        <InputRoot
+          {...rest}
           type={props.type ?? "text"}
-          placeholder={props.placeholder ?? undefined}
-          defaultValue={props.value ?? undefined}
-          aria-invalid={props.error ? true : undefined}
+          defaultValue={value}
+          aria-invalid={invalid || undefined}
         />
-        {props.helper && <p className="font-mono text-[10px] text-muted-foreground">{props.helper}</p>}
-        {props.error && <p className="text-[11px] text-destructive">{props.error}</p>}
-      </div>
-    ),
-
-    TextareaField: ({ props }: BaseComponentProps<TextareaFieldProps>) => (
-      <div className={cn("flex flex-col gap-1.5", props.className)}>
-        <Label htmlFor={props.id ?? undefined}>{props.label}</Label>
-        <Textarea
-          id={props.id ?? undefined}
-          placeholder={props.placeholder ?? undefined}
-          rows={props.rows ?? 4}
-          defaultValue={props.value ?? undefined}
+      );
+    },
+    Textarea: ({ props }: BaseComponentProps<TextareaProps>) => {
+      const { value, invalid, rows, ...rest } = u(props);
+      return (
+        <TextareaRoot
+          {...rest}
+          rows={rows ?? 4}
+          defaultValue={value}
+          aria-invalid={invalid || undefined}
         />
-        {props.helper && <p className="font-mono text-[10px] text-muted-foreground self-end">{props.helper}</p>}
-      </div>
-    ),
+      );
+    },
+    Checkbox: ({ props }: BaseComponentProps<CheckboxProps>) => {
+      const { checked, ...rest } = u(props);
+      return <CheckboxRoot {...rest} defaultChecked={checked ?? false} />;
+    },
+    Switch: ({ props }: BaseComponentProps<SwitchControlProps>) => {
+      const { checked, ...rest } = u(props);
+      return <SwitchRoot {...rest} defaultChecked={checked ?? false} />;
+    },
 
-    CheckboxField: ({ props }: BaseComponentProps<CheckboxFieldProps>) => (
-      <label className={cn("flex items-start gap-2.5 cursor-pointer", props.disabled && "opacity-50", props.className)}>
-        <Checkbox className="mt-0.5" defaultChecked={props.checked ?? false} disabled={props.disabled ?? false} />
-        <span>
-          <span className="block text-[13px] text-foreground leading-snug">{props.label}</span>
-          {props.description && (
-            <span className="block text-[11px] text-muted-foreground mt-0.5">{props.description}</span>
-          )}
-        </span>
-      </label>
+    // ── Field composition ────────────────────────────────────────────────
+    Field: ({ props, children }: BaseComponentProps<FieldProps>) => (
+      <FieldRoot {...u(props)}>{children}</FieldRoot>
     ),
-
-    SwitchField: ({ props }: BaseComponentProps<SwitchFieldProps>) => (
-      <label className={cn("flex items-start gap-3 cursor-pointer", props.className)}>
-        <Switch defaultChecked={props.checked ?? false} />
-        <span>
-          <span className="block text-[13px] text-foreground leading-snug">{props.label}</span>
-          {props.description && (
-            <span className="block text-[11px] text-muted-foreground mt-0.5">{props.description}</span>
-          )}
-        </span>
-      </label>
+    FieldContent: ({ props, children }: BaseComponentProps<FieldContentProps>) => (
+      <FieldContentRoot {...u(props)}>{children}</FieldContentRoot>
     ),
+    FieldLabel: ({ props }: BaseComponentProps<FieldLabelProps>) => {
+      const { text, ...rest } = u(props);
+      return <FieldLabelRoot {...rest}>{text}</FieldLabelRoot>;
+    },
+    FieldDescription: ({ props }: BaseComponentProps<FieldDescriptionProps>) => {
+      const { text, ...rest } = u(props);
+      return <FieldDescriptionRoot {...rest}>{text}</FieldDescriptionRoot>;
+    },
+    FieldError: ({ props }: BaseComponentProps<FieldErrorProps>) => {
+      const { text, ...rest } = u(props);
+      return <FieldErrorRoot {...rest}>{text}</FieldErrorRoot>;
+    },
   },
 });
