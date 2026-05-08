@@ -28,7 +28,7 @@ function lowerElement(type: string, props: Record<string, unknown>): Lowered | n
   if (type === 'Text') {
     const cn = typeof props.className === 'string' ? props.className : ''
     // Skip default size if className already specifies one (avoids text-sm + text-xs duplicates).
-    const cnHasTextSize = /(^|\s)text-(\[|xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/.test(cn)
+    const cnHasTextSize = /(^|\s)text-(\[|2xs|xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)(\s|$)/.test(cn)
     const cls: string[] = []
     if (typeof props.size === 'string') cls.push(`text-${props.size}`)
     else if (!cnHasTextSize) cls.push('text-sm')

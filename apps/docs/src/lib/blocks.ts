@@ -25,7 +25,7 @@ const TS_ROWS: Array<{ tag: string; sample: string; metric: string; spec: Sample
   { tag: "body",       sample: "Matchina handles state transitions, effects, and pattern matching — end-to-end typed.",                                  metric: "14/400", spec: { kind: "text", size: "sm", className: "leading-relaxed" } },
   { tag: "caption",    sample: "Last edited 3 hours ago by kai.",                                                                                        metric: "12/400", spec: { kind: "text", size: "xs", muted: true } },
   { tag: "mono/sm",    sample: "v0.4.0 · 2kb gzipped · 0 dependencies",                                                                                  metric: "12/400", spec: { kind: "text", size: "xs", mono: true } },
-  { tag: "eyebrow",    sample: "now · shipping · api reference",                                                                                         metric: "10/500", spec: { kind: "text", mono: true, className: "text-[10px] uppercase tracking-wider text-muted-foreground" } },
+  { tag: "eyebrow",    sample: "now · shipping · api reference",                                                                                         metric: "10/500", spec: { kind: "text", mono: true, className: "text-2xs uppercase tracking-wider text-muted-foreground" } },
 ];
 
 const TS_GRID_CHILDREN: string[] = [];
@@ -36,7 +36,7 @@ for (let i = 0; i < TS_ROWS.length; i++) {
   TS_GRID_CHILDREN.push(tagId, sampleId, metricId);
   TS_ELEMENTS[tagId] = {
     type: "Text",
-    props: { content: row.tag, size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" },
+    props: { content: row.tag, mono: true, className: "text-2xs uppercase tracking-wider text-muted-foreground" },
     children: [],
   };
   TS_ELEMENTS[sampleId] = row.spec.kind === "heading"
@@ -44,7 +44,7 @@ for (let i = 0; i < TS_ROWS.length; i++) {
     : { type: "Text", props: { content: row.sample, size: row.spec.size, muted: row.spec.muted, mono: row.spec.mono, className: row.spec.className }, children: [] };
   TS_ELEMENTS[metricId] = {
     type: "Text",
-    props: { content: row.metric, size: "xs", mono: true, className: "text-muted-foreground" },
+    props: { content: row.metric, mono: true, className: "text-2xs text-muted-foreground" },
     children: [],
   };
 }

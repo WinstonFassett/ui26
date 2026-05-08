@@ -32,6 +32,16 @@
   --sl-content-width: 56rem;
   --sl-nav-height: 44px;
   --sl-sidebar-width: 240px;
+
+  /* Type scale — set Starlight's prose vars instead of overriding rules.
+   * Starlight's own prose rules already include `:not(:where(.not-content *))`,
+   * so blocks/showcases inside `.not-content` keep their Tailwind utilities. */
+  --sl-text-h1: clamp(40px, 6vw, 60px);
+  --sl-text-h2: 24px;
+  --sl-text-h3: 16px;
+  --sl-text-body: 15px;
+  --sl-line-height: 1.55;
+  --sl-line-height-headings: 1.02;
 }
 
 /* ---------- Global ---------- */
@@ -178,56 +188,43 @@ select[aria-label="Select theme"] {
   color: var(--sl-color-gray-3);
 }
 
-/* H1 — Newsreader display */
-.main-frame h1,
-.sl-markdown-content h1:first-of-type,
-.hero h1 {
+/* Prose font-family + decorative em styling. Starlight's own rules drive sizes
+ * (via `--sl-text-*` vars in the bridge above) and already exclude `.not-content`,
+ * so we only override what Starlight doesn't expose: serif h1 + em italics. */
+
+.main-frame h1:not(:where(.not-content *)),
+.hero h1:not(:where(.not-content *)) {
   font-family: var(--font-serif);
   font-weight: 500;
-  font-size: clamp(40px, 6vw, 60px);
-  line-height: 1.02;
   letter-spacing: -0.022em;
-  color: var(--sl-color-text);
   margin: 28px 0 0 0;
   padding-top: 20px;
 }
-/* When mobile TOC is fixed above content, give h1 enough clearance */
 @media (max-width: 72rem) {
-  .main-frame h1,
-  .sl-markdown-content h1:first-of-type,
-  .hero h1 {
+  .main-frame h1:not(:where(.not-content *)),
+  .hero h1:not(:where(.not-content *)) {
     padding-top: calc(var(--sl-mobile-toc-height, 48px) + 20px);
   }
 }
 
-.main-frame h1 em,
-.sl-markdown-content h1 em,
-.hero h1 em { font-weight: 400; font-style: italic; }
-.main-frame h1 em.dim,
-.sl-markdown-content h1 em.dim,
-.hero h1 em.dim { color: var(--sl-color-gray-2); }
+.main-frame h1 em:not(:where(.not-content *)),
+.hero h1 em:not(:where(.not-content *)) { font-weight: 400; font-style: italic; }
+.main-frame h1 em.dim:not(:where(.not-content *)),
+.hero h1 em.dim:not(:where(.not-content *)) { color: var(--sl-color-gray-2); }
 
-/* H2 / H3 — Geist */
-.sl-markdown-content h2 {
-  font-family: var(--font-sans);
+/* H2 / H3 — keep Geist semibold + tightened tracking. Sizes come from --sl-text-h2/h3. */
+.sl-markdown-content h2:not(:where(.not-content *)) {
   font-weight: 600;
-  font-size: 24px;
   letter-spacing: -0.015em;
   margin-top: 2.5rem;
 }
-.sl-markdown-content h3 {
-  font-family: var(--font-sans);
+.sl-markdown-content h3:not(:where(.not-content *)) {
   font-weight: 600;
-  font-size: 16px;
 }
 
-/* Body */
-.sl-markdown-content p {
-  font-size: 15px;
-  line-height: 1.55;
-}
+/* Tagline color — only the document's first paragraph (Starlight convention). */
 .hero .tagline,
-.sl-markdown-content > p:first-of-type {
+.sl-markdown-content > p:first-of-type:not(:where(.not-content *)) {
   color: var(--sl-color-gray-2);
   max-width: 520px;
 }
