@@ -8,6 +8,7 @@ export function BadgeDocSample() {
   return (
     <DemoSection
       title="Variants"
+      namePrefix="Badge"
       demos={BADGE_VARIANT_DEMOS}
       renderTile={(demo) => (
         <Badge variant={demo.id as "default" | "secondary" | "outline" | "ghost" | "destructive"}>

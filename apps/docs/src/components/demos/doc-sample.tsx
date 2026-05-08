@@ -54,9 +54,10 @@ export function DemoTile({
   )
 }
 
-export function DemoCodeBlock({ spec, demoName }: { spec: Spec; demoName: string }) {
+export function DemoCodeBlock({ spec, demoName, namePrefix = '' }: { spec: Spec; demoName: string; namePrefix?: string }) {
   const [fw, setFw] = useFw()
-  const fileMap = useMemo(() => specToFiles(spec, demoName), [spec, demoName])
+  const fullName = namePrefix ? `${namePrefix}-${demoName}` : demoName
+  const fileMap = useMemo(() => specToFiles(spec, fullName), [spec, fullName])
   const data = useMemo(() => FRAMEWORKS.map((f) => fileMap[f]), [fileMap])
   const activeFile = fileMap[fw]
 
@@ -109,10 +110,12 @@ export function DemoSection({
   title,
   demos,
   renderTile,
+  namePrefix,
 }: {
   title: string
   demos: Demo[]
   renderTile: (demo: Demo) => React.ReactNode
+  namePrefix?: string
 }) {
   const [selected, setSelected] = useState(demos[0])
 
@@ -134,7 +137,7 @@ export function DemoSection({
         ))}
       </div>
       <div className="mt-4">
-        <DemoCodeBlock spec={selected.spec} demoName={selected.id} />
+        <DemoCodeBlock spec={selected.spec} demoName={selected.id} namePrefix={namePrefix} />
       </div>
     </div>
   )

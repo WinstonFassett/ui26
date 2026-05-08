@@ -16,11 +16,13 @@ export function InputDocSample() {
     <>
       <DemoSection
         title="States"
+        namePrefix="Input"
         demos={INPUT_STATE_DEMOS}
         renderTile={(demo) => STATE_TILES[demo.id]}
       />
       <DemoSection
         title="Types"
+        namePrefix="Input"
         demos={INPUT_TYPE_DEMOS}
         renderTile={(demo) => (
           <Input

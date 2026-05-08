@@ -14,6 +14,7 @@ export function TextareaDocSample() {
   return (
     <DemoSection
       title="States"
+      namePrefix="Textarea"
       demos={TEXTAREA_STATE_DEMOS}
       renderTile={(demo) => TILES[demo.id]}
     />

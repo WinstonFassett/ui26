@@ -9,6 +9,7 @@ export function ButtonDocSample() {
     <>
       <DemoSection
         title="Variants"
+        namePrefix="Button"
         demos={BUTTON_VARIANT_DEMOS}
         renderTile={(demo) => (
           <Button
@@ -23,6 +24,7 @@ export function ButtonDocSample() {
       />
       <DemoSection
         title="Sizes"
+        namePrefix="Button"
         demos={BUTTON_SIZE_DEMOS}
         renderTile={(demo) => (
           <Button

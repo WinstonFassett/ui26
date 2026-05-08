@@ -10,6 +10,7 @@ export function LabelDocSample() {
   return (
     <DemoSection
       title="Compositions"
+      namePrefix="Label"
       demos={LABEL_DEMOS}
       renderTile={(demo) => {
         if (demo.id === "default") {

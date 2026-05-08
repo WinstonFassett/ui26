@@ -17,11 +17,13 @@ export function CheckboxDocSample() {
     <>
       <DemoSection
         title="States"
+        namePrefix="Checkbox"
         demos={CHECKBOX_STATE_DEMOS}
         renderTile={(demo) => STATE_TILES[demo.id]}
       />
       <DemoSection
         title="Composition"
+        namePrefix="Checkbox"
         demos={CHECKBOX_LABEL_DEMOS}
         renderTile={() => (
           <Field orientation="horizontal" className="pointer-events-none">

@@ -15,6 +15,7 @@ export function AlertDocSample() {
   return (
     <DemoSection
       title="Variants"
+      namePrefix="Alert"
       demos={ALERT_VARIANT_DEMOS}
       renderTile={(demo) => {
         const { title, body } = COPY[demo.id];
