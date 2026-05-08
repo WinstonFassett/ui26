@@ -15,14 +15,13 @@ export const TYPE_SCALE: BlockDef = {
   id: "type-scale",
   componentName: "TypeScale",
   title: "Type scale",
-  description:
-    "Display headings, body, and caption — the canonical typography pyramid for ui26.",
+  description: "Canonical typography pyramid — h1 through caption.",
   registryDependencies: [],
   spec: {
     root: "stack",
     elements: {
       stack: { type: "Stack", props: { direction: "col", gap: "4" }, children: ["h1", "h2", "h3", "body", "caption"] },
-      h1: { type: "Heading", props: { text: "Composable state.", level: "h1" }, children: [] },
+      h1: { type: "Heading", props: { text: "Ticket: Payment retry loop", level: "h1" }, children: [] },
       h2: { type: "Heading", props: { text: "Transitions, guarded", level: "h2" }, children: [] },
       h3: { type: "Heading", props: { text: "Section heading", level: "h3" }, children: [] },
       body: {

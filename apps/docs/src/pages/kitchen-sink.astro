@@ -137,8 +137,7 @@ const typeScale = [
       <span>Typography · type scale</span>
       <span class="flex-1 h-px bg-border" />
     </div>
-    <RegionWrap id={TYPE_SCALE.id}>
-
+    {/* Intro copy — outside the block region so it's not part of the source. */}
     <div class="mb-6">
       <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Type scale</div>
       <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-[1.5]">
@@ -146,15 +145,8 @@ const typeScale = [
       </div>
     </div>
 
-    <div class="grid grid-cols-[180px_1fr_120px] gap-x-6 gap-y-4.5 items-baseline pb-3 border-b border-border">
-      {typeScale.map((r) => (
-        <>
-          <div class="font-mono text-[10px] uppercase tracking-[0.08em] text-text-mute">{r.tag}</div>
-          <div class={`${r.cls} text-foreground`}>{r.sample}</div>
-          <div class="font-mono text-[10px] text-text-mute">{r.size}</div>
-        </>
-      ))}
-    </div>
+    <RegionWrap id={TYPE_SCALE.id}>
+      <BlockPreview spec={TYPE_SCALE.spec} client:load />
     </RegionWrap>
   </section>
 
@@ -1050,6 +1042,10 @@ const typeScale = [
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.18);
       }
       body[data-rail-open="true"] .ks-rail { transform: translateY(0); }
+    }
+    /* Narrow: rail-inner fills the drawer's 70vh. */
+    @media (max-width: 1099px) {
+      .ks-rail-inner { height: 100%; }
     }
     /* Wide (≥1100px): rail is the sticky right column. */
     @media (min-width: 1100px) {

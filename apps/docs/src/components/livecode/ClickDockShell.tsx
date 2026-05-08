@@ -14,7 +14,7 @@ function setBodyDrawer(open: boolean) {
 }
 
 export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
-  const [openId, setOpenId] = useState(regions[0]?.id);
+  const [openId, setOpenId] = useState<string | null>(null);
   const [fw, setFw] = useFw();
 
   // Listen for region clicks anywhere in the document.
@@ -34,9 +34,12 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
     };
     document.addEventListener("click", handler);
 
-    // Close drawer on Escape.
+    // Deselect on Escape.
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setBodyDrawer(false);
+      if (e.key === "Escape") {
+        setOpenId(null);
+        setBodyDrawer(false);
+      }
     };
     document.addEventListener("keydown", onKey);
 
@@ -55,17 +58,34 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
     });
   }, [openId]);
 
-  const active = regions.find((r) => r.id === openId) ?? regions[0];
-  if (!active) return null;
+  const active = regions.find((r) => r.id === openId) ?? null;
+
+  const onClose = () => {
+    setOpenId(null);
+    setBodyDrawer(false);
+  };
+
+  if (!active) {
+    // Empty state — rail visible at desktop, drawer hidden at narrow (no openId means no drawer trigger fired).
+    return (
+      <div className="h-full bg-card border border-border flex flex-col items-center justify-center text-center p-6">
+        <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
+          source rail
+        </div>
+        <p className="text-[13px] text-muted-foreground max-w-[260px] leading-snug">
+          Click any block to see its source. Switch frameworks above.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full relative">
-      {/* Mobile-only close button — visible only when drawer is open and viewport is narrow. */}
       <button
         type="button"
         aria-label="Close source panel"
-        onClick={() => setBodyDrawer(false)}
-        className="ks-rail-close absolute right-2 top-2 z-10 inline-flex items-center justify-center w-7 h-7 border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted/40 min-[1100px]:hidden"
+        onClick={onClose}
+        className="ks-rail-close absolute right-2 top-2 z-10 inline-flex items-center justify-center w-7 h-7 border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted/40"
       >
         ✕
       </button>
