@@ -167,6 +167,27 @@ export const COMPONENTS: ComponentMeta[] = [
     dependencies: BASE_DEPS,
     registryDependencies: BASE_REGISTRY_DEPS,
   },
+  {
+    name: "stack",
+    title: "Stack",
+    description: "Flex container with direction, gap, alignment, and wrap variants.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "grid",
+    title: "Grid",
+    description: "CSS grid container with cols and gap variants.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "heading",
+    title: "Heading",
+    description: "Semantic heading h1–h4 with canonical type scale.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
 ];
 
 export function filesFor(name: string, fw: Framework): RegistryFile[] {

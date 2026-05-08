@@ -12,6 +12,9 @@ import {
   CardContent as CardContentRoot,
   CardFooter as CardFooterRoot,
 } from "@registry/card/card.tsx";
+import { Stack as StackRoot } from "@registry/stack/stack.tsx";
+import { Grid as GridRoot } from "@registry/grid/grid.tsx";
+import { Heading as HeadingRoot } from "@registry/heading/heading.tsx";
 import { Input } from "@registry/input/input.tsx";
 import { Textarea } from "@registry/textarea/textarea.tsx";
 import { Label } from "@registry/label/label.tsx";
@@ -37,68 +40,50 @@ import {
   type SwitchFieldProps,
 } from "./catalog";
 
-const gapMap: Record<string, string> = {
-  "0": "gap-0", "1": "gap-1", "2": "gap-2", "3": "gap-3",
-  "4": "gap-4", "5": "gap-5", "6": "gap-6", "8": "gap-8",
-};
-
 export const { registry } = defineRegistry(catalog, {
   components: {
-    // ── Layout ────────────────────────────────────────────────────────────
+    // ── Layout (wrappers around real ui26 components) ─────────────────────
     Stack: ({ props, children }: BaseComponentProps<StackProps>) => (
-      <div
-        className={cn(
-          "flex",
-          props.direction === "row" ? "flex-row" : "flex-col",
-          props.gap ? gapMap[props.gap] : "gap-4",
-          props.align === "center" && "items-center",
-          props.align === "end"    && "items-end",
-          props.align === "start"  && "items-start",
-          props.align === "stretch" && "items-stretch",
-          props.justify === "between" && "justify-between",
-          props.justify === "center"  && "justify-center",
-          props.justify === "end"     && "justify-end",
-          props.wrap && "flex-wrap",
-          props.className,
-        )}
+      <StackRoot
+        direction={props.direction ?? undefined}
+        gap={props.gap ?? undefined}
+        align={props.align ?? undefined}
+        justify={props.justify ?? undefined}
+        wrap={props.wrap ?? undefined}
+        className={props.className ?? undefined}
       >
         {children}
-      </div>
+      </StackRoot>
     ),
 
     Grid: ({ props, children }: BaseComponentProps<GridProps>) => (
-      <div
-        className={cn(
-          "grid",
-          props.cols === "2" && "grid-cols-2",
-          props.cols === "3" && "grid-cols-3",
-          props.cols === "4" && "grid-cols-4",
-          props.gap ? gapMap[props.gap] : "gap-4",
-          props.className,
-        )}
+      <GridRoot
+        cols={props.cols ?? undefined}
+        gap={props.gap ?? undefined}
+        className={props.className ?? undefined}
       >
         {children}
-      </div>
+      </GridRoot>
     ),
 
     // ── Typography ────────────────────────────────────────────────────────
-    Heading: ({ props }: BaseComponentProps<HeadingProps>) => {
-      const Tag = (props.level ?? "h2") as "h1" | "h2" | "h3" | "h4";
-      const sizeMap = {
-        h1: "text-3xl font-bold tracking-tight",
-        h2: "text-2xl font-semibold tracking-tight",
-        h3: "text-xl font-semibold",
-        h4: "text-lg font-medium",
-      } as const;
-      return <Tag className={sizeMap[Tag]}>{props.text}</Tag>;
-    },
+    Heading: ({ props }: BaseComponentProps<HeadingProps>) => (
+      <HeadingRoot
+        level={props.level ?? undefined}
+        className={props.className ?? undefined}
+      >
+        {props.text}
+      </HeadingRoot>
+    ),
 
+    // Text is Spec-only — lowers to <p className="..."> in generated source.
     Text: ({ props }: BaseComponentProps<TextProps>) => (
       <p
         className={cn(
           props.size ? `text-${props.size}` : "text-sm",
           props.muted && "text-muted-foreground",
           props.mono && "font-mono",
+          props.className,
         )}
       >
         {props.content}
@@ -111,6 +96,7 @@ export const { registry } = defineRegistry(catalog, {
         variant={props.variant ?? "default"}
         size={props.size ?? "default"}
         disabled={props.disabled ?? false}
+        className={props.className ?? undefined}
         onClick={() => emit("press")}
       >
         {props.label}
@@ -118,7 +104,12 @@ export const { registry } = defineRegistry(catalog, {
     ),
 
     Badge: ({ props }: BaseComponentProps<BadgeProps>) => (
-      <Bdg variant={props.variant ?? "default"}>{props.text}</Bdg>
+      <Bdg
+        variant={props.variant ?? "default"}
+        className={props.className ?? undefined}
+      >
+        {props.text}
+      </Bdg>
     ),
 
     // ── Card ──────────────────────────────────────────────────────────────
@@ -150,7 +141,7 @@ export const { registry } = defineRegistry(catalog, {
 
     // ── Form fields ───────────────────────────────────────────────────────
     InputField: ({ props }: BaseComponentProps<InputFieldProps>) => (
-      <div className="flex flex-col gap-1.5">
+      <div className={cn("flex flex-col gap-1.5", props.className)}>
         <Label htmlFor={props.id ?? undefined}>{props.label}</Label>
         <Input
           id={props.id ?? undefined}
@@ -169,7 +160,7 @@ export const { registry } = defineRegistry(catalog, {
     ),
 
     TextareaField: ({ props }: BaseComponentProps<TextareaFieldProps>) => (
-      <div className="flex flex-col gap-1.5">
+      <div className={cn("flex flex-col gap-1.5", props.className)}>
         <Label htmlFor={props.id ?? undefined}>{props.label}</Label>
         <Textarea
           id={props.id ?? undefined}
@@ -188,6 +179,7 @@ export const { registry } = defineRegistry(catalog, {
         className={cn(
           "flex items-start gap-2.5 cursor-pointer",
           props.disabled && "opacity-50",
+          props.className,
         )}
       >
         <Checkbox
@@ -205,7 +197,7 @@ export const { registry } = defineRegistry(catalog, {
     ),
 
     SwitchField: ({ props }: BaseComponentProps<SwitchFieldProps>) => (
-      <label className="flex items-start gap-3 cursor-pointer">
+      <label className={cn("flex items-start gap-3 cursor-pointer", props.className)}>
         <Switch defaultChecked={props.checked ?? false} />
         <span>
           <span className="block text-[13px] text-foreground leading-snug">{props.label}</span>
@@ -217,7 +209,10 @@ export const { registry } = defineRegistry(catalog, {
     ),
 
     Separator: ({ props }: BaseComponentProps<SeparatorProps>) => (
-      <Sep orientation={props.orientation ?? "horizontal"} />
+      <Sep
+        orientation={props.orientation ?? "horizontal"}
+        className={props.className ?? undefined}
+      />
     ),
   },
 });

@@ -9,11 +9,13 @@ const buttonProps = z.object({
   variant: z.enum(["default", "destructive", "outline", "secondary", "ghost", "link"]).nullable(),
   size: z.enum(["default", "sm", "lg", "xs", "icon"]).nullable(),
   disabled: z.boolean().nullable(),
+  className: z.string().nullable(),
 });
 
 const badgeProps = z.object({
   text: z.string(),
   variant: z.enum(["default", "secondary", "destructive", "outline", "ghost", "link"]).nullable(),
+  className: z.string().nullable(),
 });
 
 const stackProps = z.object({
@@ -36,11 +38,13 @@ const textProps = z.object({
   size: z.enum(["xs", "sm", "base", "lg", "xl"]).nullable(),
   muted: z.boolean().nullable(),
   mono: z.boolean().nullable(),
+  className: z.string().nullable(),
 });
 
 const headingProps = z.object({
   text: z.string(),
   level: z.enum(["h1", "h2", "h3", "h4"]).nullable(),
+  className: z.string().nullable(),
 });
 
 const cardProps = z.object({
@@ -62,6 +66,7 @@ const cardFooterProps = z.object({
 
 const separatorProps = z.object({
   orientation: z.enum(["horizontal", "vertical"]).nullable(),
+  className: z.string().nullable(),
 });
 
 const inputFieldProps = z.object({
@@ -72,6 +77,7 @@ const inputFieldProps = z.object({
   value: z.string().nullable(),
   helper: z.string().nullable(),
   error: z.string().nullable(),
+  className: z.string().nullable(),
 });
 
 const textareaFieldProps = z.object({
@@ -81,6 +87,7 @@ const textareaFieldProps = z.object({
   value: z.string().nullable(),
   rows: z.number().nullable(),
   helper: z.string().nullable(),
+  className: z.string().nullable(),
 });
 
 const checkboxFieldProps = z.object({
@@ -88,12 +95,14 @@ const checkboxFieldProps = z.object({
   description: z.string().nullable(),
   checked: z.boolean().nullable(),
   disabled: z.boolean().nullable(),
+  className: z.string().nullable(),
 });
 
 const switchFieldProps = z.object({
   label: z.string(),
   description: z.string().nullable(),
   checked: z.boolean().nullable(),
+  className: z.string().nullable(),
 });
 
 // ─── catalog ──────────────────────────────────────────────────────────────

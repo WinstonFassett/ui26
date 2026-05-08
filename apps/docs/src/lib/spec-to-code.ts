@@ -15,13 +15,6 @@ const SLOT_PROP: Record<string, string> = {
   AlertDescription: 'text',
 }
 
-// json-render abstractions that should be emitted as HTML primitives in
-// generated source — consumers don't have Stack/Grid/Text/Heading installed.
-const GAP_CLASS: Record<string, string> = {
-  '0': 'gap-0', '1': 'gap-1', '2': 'gap-2', '3': 'gap-3',
-  '4': 'gap-4', '5': 'gap-5', '6': 'gap-6', '8': 'gap-8',
-}
-
 interface Lowered {
   type: string
   classes: string[]
@@ -29,50 +22,20 @@ interface Lowered {
   consumedProps: Set<string>
 }
 
+// Spec-only abstractions get lowered to HTML primitives in generated source.
+// Text is currently the only one; size/muted/mono/className collapse onto a <p>.
 function lowerElement(type: string, props: Record<string, unknown>): Lowered | null {
-  if (type === 'Stack') {
-    const cls = ['flex']
-    cls.push(props.direction === 'row' ? 'flex-row' : 'flex-col')
-    if (typeof props.gap === 'string' && GAP_CLASS[props.gap]) cls.push(GAP_CLASS[props.gap])
-    else cls.push('gap-4')
-    if (props.align === 'center') cls.push('items-center')
-    else if (props.align === 'start') cls.push('items-start')
-    else if (props.align === 'end') cls.push('items-end')
-    else if (props.align === 'stretch') cls.push('items-stretch')
-    if (props.justify === 'center') cls.push('justify-center')
-    else if (props.justify === 'between') cls.push('justify-between')
-    else if (props.justify === 'end') cls.push('justify-end')
-    if (props.wrap) cls.push('flex-wrap')
-    if (typeof props.className === 'string') cls.push(props.className)
-    return { type: 'div', classes: cls, consumedProps: new Set(['direction','gap','align','justify','wrap','className']) }
-  }
-  if (type === 'Grid') {
-    const cls = ['grid']
-    if (props.cols === '2') cls.push('grid-cols-2')
-    else if (props.cols === '3') cls.push('grid-cols-3')
-    else if (props.cols === '4') cls.push('grid-cols-4')
-    if (typeof props.gap === 'string' && GAP_CLASS[props.gap]) cls.push(GAP_CLASS[props.gap])
-    else cls.push('gap-4')
-    if (typeof props.className === 'string') cls.push(props.className)
-    return { type: 'div', classes: cls, consumedProps: new Set(['cols','gap','className']) }
-  }
   if (type === 'Text') {
+    const cn = typeof props.className === 'string' ? props.className : ''
+    // Skip default size if className already specifies one (avoids text-sm + text-xs duplicates).
+    const cnHasTextSize = /(^|\s)text-(\[|xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)/.test(cn)
     const cls: string[] = []
     if (typeof props.size === 'string') cls.push(`text-${props.size}`)
-    else cls.push('text-sm')
+    else if (!cnHasTextSize) cls.push('text-sm')
     if (props.muted) cls.push('text-muted-foreground')
     if (props.mono) cls.push('font-mono')
-    return { type: 'p', classes: cls, consumedProps: new Set(['size','muted','mono','content']) }
-  }
-  if (type === 'Heading') {
-    const level = (typeof props.level === 'string' ? props.level : 'h2') as 'h1'|'h2'|'h3'|'h4'
-    const sizeMap: Record<string, string> = {
-      h1: 'text-3xl font-bold tracking-tight',
-      h2: 'text-2xl font-semibold tracking-tight',
-      h3: 'text-xl font-semibold',
-      h4: 'text-lg font-medium',
-    }
-    return { type: level, classes: sizeMap[level].split(' '), consumedProps: new Set(['level','text']) }
+    if (cn) cls.push(cn)
+    return { type: 'p', classes: cls, consumedProps: new Set(['size','muted','mono','content','className']) }
   }
   return null
 }
@@ -124,11 +87,10 @@ function renderElement(spec: Spec, id: string, depth: number, fw: Framework): st
   const el = spec.elements[id]
   const propsRaw = el.props as Record<string, unknown>
 
-  // Lower json-render abstractions to HTML primitives.
   const lowered = lowerElement(el.type, propsRaw)
   const emitType = lowered ? lowered.type : el.type
 
-  // Build effective props: strip lowered-consumed keys, fold lowering classes into class.
+  // Strip props consumed by lowering; emit their collapsed classes as className.
   let effectiveProps: Record<string, unknown> = propsRaw
   if (lowered) {
     effectiveProps = Object.fromEntries(

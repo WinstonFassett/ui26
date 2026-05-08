@@ -11,27 +11,60 @@ export interface BlockDef {
   spec: Spec;
 }
 
+// Eight type-scale rows. Each row is (label · sample · metric).
+// Tailwind named scale only — no arbitrary px.
+type SampleSpec =
+  | { kind: "heading"; level: "h1" | "h2" | "h3" | "h4"; className?: string }
+  | { kind: "text"; size?: "xs" | "sm" | "base" | "lg" | "xl"; muted?: boolean; mono?: boolean; className?: string };
+
+const TS_ROWS: Array<{ tag: string; sample: string; metric: string; spec: SampleSpec }> = [
+  { tag: "display/xl", sample: "Composable state.",                                                                                                      metric: "60/500", spec: { kind: "heading", level: "h1", className: "font-serif italic font-medium text-6xl tracking-tight" } },
+  { tag: "display/lg", sample: "State, without ceremony.",                                                                                               metric: "48/500", spec: { kind: "heading", level: "h1", className: "font-serif font-medium text-5xl tracking-tight" } },
+  { tag: "h1",         sample: "Ticket: Payment retry loop",                                                                                             metric: "30/600", spec: { kind: "heading", level: "h1" } },
+  { tag: "h2",         sample: "Transitions, guarded",                                                                                                   metric: "24/600", spec: { kind: "heading", level: "h2" } },
+  { tag: "body",       sample: "Matchina handles state transitions, effects, and pattern matching — end-to-end typed.",                                  metric: "14/400", spec: { kind: "text", size: "sm", className: "leading-relaxed" } },
+  { tag: "caption",    sample: "Last edited 3 hours ago by kai.",                                                                                        metric: "12/400", spec: { kind: "text", size: "xs", muted: true } },
+  { tag: "mono/sm",    sample: "v0.4.0 · 2kb gzipped · 0 dependencies",                                                                                  metric: "12/400", spec: { kind: "text", size: "xs", mono: true } },
+  { tag: "eyebrow",    sample: "now · shipping · api reference",                                                                                         metric: "10/500", spec: { kind: "text", mono: true, className: "text-[10px] uppercase tracking-wider text-muted-foreground" } },
+];
+
+const TS_GRID_CHILDREN: string[] = [];
+const TS_ELEMENTS: Record<string, { type: string; props: Record<string, unknown>; children: string[] }> = {};
+for (let i = 0; i < TS_ROWS.length; i++) {
+  const row = TS_ROWS[i];
+  const tagId = `t${i}`, sampleId = `s${i}`, metricId = `z${i}`;
+  TS_GRID_CHILDREN.push(tagId, sampleId, metricId);
+  TS_ELEMENTS[tagId] = {
+    type: "Text",
+    props: { content: row.tag, size: "xs", mono: true, className: "uppercase tracking-wider text-muted-foreground" },
+    children: [],
+  };
+  TS_ELEMENTS[sampleId] = row.spec.kind === "heading"
+    ? { type: "Heading", props: { text: row.sample, level: row.spec.level, className: row.spec.className }, children: [] }
+    : { type: "Text", props: { content: row.sample, size: row.spec.size, muted: row.spec.muted, mono: row.spec.mono, className: row.spec.className }, children: [] };
+  TS_ELEMENTS[metricId] = {
+    type: "Text",
+    props: { content: row.metric, size: "xs", mono: true, className: "text-muted-foreground" },
+    children: [],
+  };
+}
+
 export const TYPE_SCALE: BlockDef = {
   id: "type-scale",
   componentName: "TypeScale",
   title: "Type scale",
-  description: "Canonical typography pyramid — h1 through caption.",
-  registryDependencies: [],
+  description:
+    "Eight-step type scale — display, headings, body, caption, mono, eyebrow. Tailwind named sizes throughout.",
+  registryDependencies: ["heading", "stack"],
   spec: {
-    root: "stack",
+    root: "grid",
     elements: {
-      stack: { type: "Stack", props: { direction: "col", gap: "4" }, children: ["h1", "h2", "h3", "body", "caption"] },
-      h1: { type: "Heading", props: { text: "Ticket: Payment retry loop", level: "h1" }, children: [] },
-      h2: { type: "Heading", props: { text: "Transitions, guarded", level: "h2" }, children: [] },
-      h3: { type: "Heading", props: { text: "Section heading", level: "h3" }, children: [] },
-      body: {
-        type: "Text",
-        props: {
-          content: "Matchina handles state transitions, effects, and pattern matching — end-to-end typed.",
-        },
-        children: [],
+      grid: {
+        type: "Grid",
+        props: { className: "grid-cols-[140px_1fr_80px] items-baseline gap-x-6 gap-y-4 pb-3 border-b border-border" },
+        children: TS_GRID_CHILDREN,
       },
-      caption: { type: "Text", props: { content: "Last edited 3 hours ago", size: "xs", muted: true }, children: [] },
+      ...TS_ELEMENTS,
     },
   },
 };

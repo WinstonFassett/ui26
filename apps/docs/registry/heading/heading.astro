@@ -1,0 +1,17 @@
+---
+import { cn } from "../lib/utils";
+import { heading, type HeadingVariants } from "./heading.tv";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"h1">, "class"> &
+  HeadingVariants & {
+    class?: string;
+  };
+
+const { level = "h2", class: className, ...rest } = Astro.props;
+const Tag = (level ?? "h2") as "h1" | "h2" | "h3" | "h4";
+---
+
+<Tag class={cn(heading({ level }), className)} {...rest}>
+  <slot />
+</Tag>
