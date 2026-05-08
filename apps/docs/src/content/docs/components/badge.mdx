@@ -3,14 +3,6 @@ title: Badge
 description: Stateless Badge primitive. Tailwind-variants config with variant prop.
 ---
 
-import BadgeAstro from "@registry/badge/badge.astro";
+import { BadgeDocSample } from '@/components/demos/badge-doc-sample'
 
-## Variants
-
-<div class="not-content flex flex-wrap gap-3 my-6">
-  <BadgeAstro>default</BadgeAstro>
-  <BadgeAstro variant="secondary">secondary</BadgeAstro>
-  <BadgeAstro variant="outline">outline</BadgeAstro>
-  <BadgeAstro variant="ghost">ghost</BadgeAstro>
-  <BadgeAstro variant="destructive">destructive</BadgeAstro>
-</div>
+<BadgeDocSample client:only="react" />
