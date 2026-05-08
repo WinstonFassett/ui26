@@ -129,7 +129,9 @@ function DemoSection({
           </DemoTile>
         ))}
       </div>
-      <DemoCodeBlock spec={selected.spec} demoName={selected.label} />
+      <div className="mt-4">
+        <DemoCodeBlock spec={selected.spec} demoName={selected.label} />
+      </div>
     </div>
   )
 }
