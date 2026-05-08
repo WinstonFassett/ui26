@@ -40,43 +40,71 @@ import {
   type SwitchFieldProps,
 } from "./catalog";
 
+// Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
+// React props expect undefined for unset, so coerce at the registry boundary.
+function u<T extends Record<string, unknown>>(props: T): { [K in keyof T]: Exclude<T[K], null> | undefined } {
+  const out: Record<string, unknown> = {};
+  for (const k in props) out[k] = props[k] === null ? undefined : props[k];
+  return out as { [K in keyof T]: Exclude<T[K], null> | undefined };
+}
+
 export const { registry } = defineRegistry(catalog, {
   components: {
-    // ── Layout (wrappers around real ui26 components) ─────────────────────
+    // ── Pass-throughs (catalog props match component props 1:1) ──────────
     Stack: ({ props, children }: BaseComponentProps<StackProps>) => (
-      <StackRoot
-        direction={props.direction ?? undefined}
-        gap={props.gap ?? undefined}
-        align={props.align ?? undefined}
-        justify={props.justify ?? undefined}
-        wrap={props.wrap ?? undefined}
-        className={props.className ?? undefined}
-      >
-        {children}
-      </StackRoot>
+      <StackRoot {...u(props)}>{children}</StackRoot>
     ),
-
     Grid: ({ props, children }: BaseComponentProps<GridProps>) => (
-      <GridRoot
-        cols={props.cols ?? undefined}
-        gap={props.gap ?? undefined}
-        className={props.className ?? undefined}
-      >
-        {children}
-      </GridRoot>
+      <GridRoot {...u(props)}>{children}</GridRoot>
     ),
-
-    // ── Typography ────────────────────────────────────────────────────────
-    Heading: ({ props }: BaseComponentProps<HeadingProps>) => (
-      <HeadingRoot
-        level={props.level ?? undefined}
-        className={props.className ?? undefined}
-      >
-        {props.text}
-      </HeadingRoot>
+    Card: ({ props, children }: BaseComponentProps<CardProps>) => (
+      <CardRoot {...u(props)}>{children}</CardRoot>
     ),
+    CardHeader: ({ props, children }: BaseComponentProps<CardSlotProps>) => (
+      <CardHeaderRoot {...u(props)}>{children}</CardHeaderRoot>
+    ),
+    CardContent: ({ props, children }: BaseComponentProps<CardSlotProps>) => (
+      <CardContentRoot {...u(props)}>{children}</CardContentRoot>
+    ),
+    Separator: ({ props }: BaseComponentProps<SeparatorProps>) => <Sep {...u(props)} />,
 
-    // Text is Spec-only — lowers to <p className="..."> in generated source.
+    // ── Content-prop mapping (catalog has `text`/`label`; component takes children) ──
+    Heading: ({ props }: BaseComponentProps<HeadingProps>) => {
+      const { text, ...rest } = u(props);
+      return <HeadingRoot {...rest}>{text}</HeadingRoot>;
+    },
+    CardTitle: ({ props }: BaseComponentProps<CardTextSlotProps>) => {
+      const { text, ...rest } = u(props);
+      return <CardTitleRoot {...rest}>{text}</CardTitleRoot>;
+    },
+    CardDescription: ({ props }: BaseComponentProps<CardTextSlotProps>) => {
+      const { text, ...rest } = u(props);
+      return <CardDescriptionRoot {...rest}>{text}</CardDescriptionRoot>;
+    },
+    Badge: ({ props }: BaseComponentProps<BadgeProps>) => {
+      const { text, ...rest } = u(props);
+      return <Bdg {...rest}>{text}</Bdg>;
+    },
+    Button: ({ props, emit }: BaseComponentProps<ButtonProps>) => {
+      const { label, ...rest } = u(props);
+      return (
+        <Btn {...rest} onClick={() => emit("press")}>
+          {label}
+        </Btn>
+      );
+    },
+
+    // CardFooter adds layout (border-top + spacing) on top of the underlying component.
+    CardFooter: ({ props, children }: BaseComponentProps<CardFooterProps>) => {
+      const { className, ...rest } = u(props);
+      return (
+        <CardFooterRoot {...rest} className={cn("mt-4 border-t border-border pt-4", className)}>
+          {children}
+        </CardFooterRoot>
+      );
+    },
+
+    // ── Spec-only Text — lowers to <p className="..."> in generated source. ──
     // cn() / twMerge resolves any conflicts between defaults and props.className.
     Text: ({ props }: BaseComponentProps<TextProps>) => (
       <p
@@ -91,56 +119,7 @@ export const { registry } = defineRegistry(catalog, {
       </p>
     ),
 
-    // ── Actions ───────────────────────────────────────────────────────────
-    Button: ({ props, emit }: BaseComponentProps<ButtonProps>) => (
-      <Btn
-        variant={props.variant ?? "default"}
-        size={props.size ?? "default"}
-        disabled={props.disabled ?? false}
-        className={props.className ?? undefined}
-        onClick={() => emit("press")}
-      >
-        {props.label}
-      </Btn>
-    ),
-
-    Badge: ({ props }: BaseComponentProps<BadgeProps>) => (
-      <Bdg
-        variant={props.variant ?? "default"}
-        className={props.className ?? undefined}
-      >
-        {props.text}
-      </Bdg>
-    ),
-
-    // ── Card ──────────────────────────────────────────────────────────────
-    Card: ({ props, children }: BaseComponentProps<CardProps>) => (
-      <CardRoot className={props.className ?? undefined}>{children}</CardRoot>
-    ),
-
-    CardHeader: ({ props, children }: BaseComponentProps<CardSlotProps>) => (
-      <CardHeaderRoot className={props.className ?? undefined}>{children}</CardHeaderRoot>
-    ),
-
-    CardTitle: ({ props }: BaseComponentProps<CardTextSlotProps>) => (
-      <CardTitleRoot className={props.className ?? undefined}>{props.text}</CardTitleRoot>
-    ),
-
-    CardDescription: ({ props }: BaseComponentProps<CardTextSlotProps>) => (
-      <CardDescriptionRoot className={props.className ?? undefined}>{props.text}</CardDescriptionRoot>
-    ),
-
-    CardContent: ({ props, children }: BaseComponentProps<CardSlotProps>) => (
-      <CardContentRoot className={props.className ?? undefined}>{children}</CardContentRoot>
-    ),
-
-    CardFooter: ({ props, children }: BaseComponentProps<CardFooterProps>) => (
-      <CardFooterRoot className={cn("mt-4 border-t border-border pt-4", props.className ?? undefined)}>
-        {children}
-      </CardFooterRoot>
-    ),
-
-    // ── Form fields ───────────────────────────────────────────────────────
+    // ── Form fields — composite (label + control + helper/error). ──
     InputField: ({ props }: BaseComponentProps<InputFieldProps>) => (
       <div className={cn("flex flex-col gap-1.5", props.className)}>
         <Label htmlFor={props.id ?? undefined}>{props.label}</Label>
@@ -151,12 +130,8 @@ export const { registry } = defineRegistry(catalog, {
           defaultValue={props.value ?? undefined}
           aria-invalid={props.error ? true : undefined}
         />
-        {props.helper && (
-          <p className="font-mono text-[10px] text-muted-foreground">{props.helper}</p>
-        )}
-        {props.error && (
-          <p className="text-[11px] text-destructive">{props.error}</p>
-        )}
+        {props.helper && <p className="font-mono text-[10px] text-muted-foreground">{props.helper}</p>}
+        {props.error && <p className="text-[11px] text-destructive">{props.error}</p>}
       </div>
     ),
 
@@ -169,25 +144,13 @@ export const { registry } = defineRegistry(catalog, {
           rows={props.rows ?? 4}
           defaultValue={props.value ?? undefined}
         />
-        {props.helper && (
-          <p className="font-mono text-[10px] text-muted-foreground self-end">{props.helper}</p>
-        )}
+        {props.helper && <p className="font-mono text-[10px] text-muted-foreground self-end">{props.helper}</p>}
       </div>
     ),
 
     CheckboxField: ({ props }: BaseComponentProps<CheckboxFieldProps>) => (
-      <label
-        className={cn(
-          "flex items-start gap-2.5 cursor-pointer",
-          props.disabled && "opacity-50",
-          props.className,
-        )}
-      >
-        <Checkbox
-          className="mt-0.5"
-          defaultChecked={props.checked ?? false}
-          disabled={props.disabled ?? false}
-        />
+      <label className={cn("flex items-start gap-2.5 cursor-pointer", props.disabled && "opacity-50", props.className)}>
+        <Checkbox className="mt-0.5" defaultChecked={props.checked ?? false} disabled={props.disabled ?? false} />
         <span>
           <span className="block text-[13px] text-foreground leading-snug">{props.label}</span>
           {props.description && (
@@ -207,13 +170,6 @@ export const { registry } = defineRegistry(catalog, {
           )}
         </span>
       </label>
-    ),
-
-    Separator: ({ props }: BaseComponentProps<SeparatorProps>) => (
-      <Sep
-        orientation={props.orientation ?? "horizontal"}
-        className={props.className ?? undefined}
-      />
     ),
   },
 });
