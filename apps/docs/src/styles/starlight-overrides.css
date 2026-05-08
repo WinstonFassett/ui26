@@ -71,9 +71,13 @@ header.header .site-title {
   font-style: italic;
   font-weight: 500;
   letter-spacing: -0.01em;
-  line-height: 1.1;
+  line-height: 1;
   gap: 10px;
   color: var(--sl-color-text);
+  /* Newsreader's ascender metrics sit visually higher than its cap-height center.
+     This 1px shift corrects the optical offset when displayed next to icons in a
+     fixed-height flex bar. See registry/themes/editorial.css for the token note. */
+  translate: 0 1px;
 }
 header.header .site-title img,
 header.header .site-title svg { width: 20px; height: 20px; }
