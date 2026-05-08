@@ -16,16 +16,9 @@ import {
   FRAMEWORK_LABELS,
   specToFiles,
   type Framework,
+  type Spec,
 } from "@/lib/spec-to-code";
-import {
-  BUTTON_VARIANT_DEMOS,
-  BUTTON_SIZE_DEMOS,
-  type ButtonDemo,
-} from "./button-demos";
-
-type Selection =
-  | { kind: "variant"; demo: ButtonDemo }
-  | { kind: "size"; demo: ButtonDemo }
+import { BUTTON_VARIANT_DEMOS, BUTTON_SIZE_DEMOS, type ButtonDemo } from "./button-demos";
 
 function DemoTile({
   label,
@@ -43,10 +36,9 @@ function DemoTile({
       role="button"
       tabIndex={0}
       onClick={onClick}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick()}
       className={cn(
-        "flex flex-1 cursor-pointer flex-col items-center gap-2 px-3 py-4 text-center transition-colors",
-        "border-b-2",
+        "flex flex-1 cursor-pointer flex-col items-center gap-2 px-3 py-4 text-center transition-colors border-b-2",
         active
           ? "border-accent text-foreground"
           : "border-transparent text-muted-foreground hover:text-foreground"
@@ -58,113 +50,120 @@ function DemoTile({
   )
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-      {children}
-    </p>
-  )
-}
-
-export function ButtonDocSample() {
-  const [selection, setSelection] = useState<Selection>({
-    kind: "variant",
-    demo: BUTTON_VARIANT_DEMOS[0],
-  })
+function DemoCodeBlock({ spec, demoName }: { spec: Spec; demoName: string }) {
   const [fw, setFw] = useState<Framework>("react")
-
-  const fileMap = useMemo(() => specToFiles(selection.demo.spec, selection.demo.label), [selection])
+  const fileMap = useMemo(() => specToFiles(spec, demoName), [spec, demoName])
   const data = useMemo(() => FRAMEWORKS.map((f) => fileMap[f]), [fileMap])
   const activeFile = fileMap[fw]
 
   return (
-    <div className="not-content my-6 space-y-6">
-      <div>
-        <SectionLabel>Variants</SectionLabel>
-        <div className="flex border border-border">
-          {BUTTON_VARIANT_DEMOS.map((demo) => (
-            <DemoTile
-              key={demo.id}
-              label={demo.label}
-              active={selection.kind === "variant" && selection.demo.id === demo.id}
-              onClick={() => setSelection({ kind: "variant", demo })}
+    <CodeBlock
+      data={data}
+      value={activeFile.language}
+      onValueChange={(lang) => {
+        const f = FRAMEWORKS.find((f) => fileMap[f].language === lang)
+        if (f) setFw(f)
+      }}
+    >
+      <CodeBlockHeader>
+        <div className="flex grow items-center">
+          {FRAMEWORKS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              onClick={() => setFw(f)}
+              className={cn(
+                "px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] transition-colors",
+                f === fw
+                  ? "border-accent text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground"
+              )}
             >
-              <Button
-                variant={demo.id as "default" | "secondary" | "outline" | "ghost" | "destructive"}
-                size="sm"
-                tabIndex={-1}
-                className="pointer-events-none"
-              >
-                Aa
-              </Button>
-            </DemoTile>
+              {FRAMEWORK_LABELS[f]}
+            </button>
           ))}
         </div>
-      </div>
+        <span className="px-3 font-mono text-[10px] text-muted-foreground">
+          {activeFile.filename}
+        </span>
+        <CodeBlockCopyButton />
+      </CodeBlockHeader>
+      <CodeBlockBody>
+        {(file) => (
+          <CodeBlockItem key={file.language} value={file.language} lineNumbers={false}>
+            <CodeBlockContent language={file.language as "tsx" | "svelte" | "astro"}>
+              {file.code}
+            </CodeBlockContent>
+          </CodeBlockItem>
+        )}
+      </CodeBlockBody>
+    </CodeBlock>
+  )
+}
 
-      <div>
-        <SectionLabel>Sizes</SectionLabel>
-        <div className="flex border border-border">
-          {BUTTON_SIZE_DEMOS.map((demo) => (
-            <DemoTile
-              key={demo.id}
-              label={demo.label}
-              active={selection.kind === "size" && selection.demo.id === demo.id}
-              onClick={() => setSelection({ kind: "size", demo })}
-            >
-              <Button
-                size={demo.id as "sm" | "default" | "lg" | "icon"}
-                tabIndex={-1}
-                className="pointer-events-none"
-              >
-                {demo.id === "icon" ? "⚡" : "Aa"}
-              </Button>
-            </DemoTile>
-          ))}
-        </div>
-      </div>
+function DemoSection({
+  title,
+  demos,
+  renderTile,
+}: {
+  title: string
+  demos: ButtonDemo[]
+  renderTile: (demo: ButtonDemo) => React.ReactNode
+}) {
+  const [selected, setSelected] = useState(demos[0])
 
-      <CodeBlock
-        data={data}
-        value={activeFile.language}
-        onValueChange={(lang) => {
-          const f = FRAMEWORKS.find((f) => fileMap[f].language === lang)
-          if (f) setFw(f)
-        }}
-      >
-        <CodeBlockHeader>
-          <div className="flex grow items-center">
-            {FRAMEWORKS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFw(f)}
-                className={cn(
-                  "px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] transition-colors",
-                  f === fw
-                    ? "border-accent text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {FRAMEWORK_LABELS[f]}
-              </button>
-            ))}
-          </div>
-          <span className="px-3 font-mono text-[10px] text-muted-foreground">
-            {activeFile.filename}
-          </span>
-          <CodeBlockCopyButton />
-        </CodeBlockHeader>
-        <CodeBlockBody>
-          {(file) => (
-            <CodeBlockItem key={file.language} value={file.language} lineNumbers={false}>
-              <CodeBlockContent language={file.language as "tsx" | "svelte" | "astro"}>
-                {file.code}
-              </CodeBlockContent>
-            </CodeBlockItem>
-          )}
-        </CodeBlockBody>
-      </CodeBlock>
+  return (
+    <div className="not-content my-6">
+      <p className="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+        {title}
+      </p>
+      <div className="flex border border-border">
+        {demos.map((demo) => (
+          <DemoTile
+            key={demo.id}
+            label={demo.label}
+            active={selected.id === demo.id}
+            onClick={() => setSelected(demo)}
+          >
+            {renderTile(demo)}
+          </DemoTile>
+        ))}
+      </div>
+      <DemoCodeBlock spec={selected.spec} demoName={selected.label} />
     </div>
+  )
+}
+
+export function ButtonDocSample() {
+  return (
+    <>
+      <DemoSection
+        title="Variants"
+        demos={BUTTON_VARIANT_DEMOS}
+        renderTile={(demo) => (
+          <Button
+            variant={demo.id as "default" | "secondary" | "outline" | "ghost" | "destructive"}
+            size="sm"
+            tabIndex={-1}
+            className="pointer-events-none"
+          >
+            Aa
+          </Button>
+        )}
+      />
+      <DemoSection
+        title="Sizes"
+        demos={BUTTON_SIZE_DEMOS}
+        renderTile={(demo) => (
+          <Button
+            size={demo.id as "sm" | "default" | "lg" | "icon"}
+            tabIndex={-1}
+            className="pointer-events-none"
+          >
+            {demo.id === "icon" ? "⚡" : "Aa"}
+          </Button>
+        )}
+      />
+    </>
   )
 }
