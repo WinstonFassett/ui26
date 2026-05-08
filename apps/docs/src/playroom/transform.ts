@@ -27,7 +27,15 @@ export function compile(source: string): CompileResult {
     };
     const React = require("react").default ?? require("react");
     ${js}
-    return module.exports.default ?? module.exports;
+    // Pick the entry component:
+    //   1. default export if set
+    //   2. otherwise the lone named function export (covers \`export function Demo()\`)
+    //   3. otherwise the whole exports object (caller decides)
+    const exp = module.exports;
+    if (exp.default !== undefined) return exp.default;
+    const fnKeys = Object.keys(exp).filter((k) => typeof exp[k] === "function");
+    if (fnKeys.length === 1) return exp[fnKeys[0]];
+    return exp;
   `;
 
   let fn: (scope: Record<string, unknown>) => unknown;
