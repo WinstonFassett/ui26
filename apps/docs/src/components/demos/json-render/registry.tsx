@@ -28,6 +28,12 @@ import { Avatar as AvatarRoot, AvatarFallback as AvatarFallbackRoot } from "@reg
 import { Skeleton as SkeletonRoot } from "@registry/skeleton/skeleton.tsx";
 import { Progress as ProgressRoot } from "@registry/progress/progress.tsx";
 import {
+  Accordion as AccordionRoot,
+  AccordionItem as AccordionItemRoot,
+  AccordionTrigger as AccordionTriggerRoot,
+  AccordionContent as AccordionContentRoot,
+} from "@registry/accordion/accordion.tsx";
+import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
   FieldLabel as FieldLabelRoot,
@@ -75,6 +81,10 @@ import {
   type AvatarFallbackProps,
   type SkeletonProps,
   type ProgressProps,
+  type AccordionProps,
+  type AccordionItemProps,
+  type AccordionTriggerProps,
+  type AccordionContentProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -259,6 +269,23 @@ export const { registry } = defineRegistry(catalog, {
     FieldSeparator: ({ props }: BaseComponentProps<FieldSeparatorProps>) => {
       const { text, ...rest } = u(props);
       return <FieldSeparatorRoot {...rest}>{text || undefined}</FieldSeparatorRoot>;
+    },
+
+    // ── Accordion ────────────────────────────────────────────────────────────
+    Accordion: ({ props, children }: BaseComponentProps<AccordionProps>) => (
+      <AccordionRoot {...u(props)}>{children}</AccordionRoot>
+    ),
+    AccordionItem: ({ props, children }: BaseComponentProps<AccordionItemProps>) => {
+      const { open, ...rest } = u(props);
+      return <AccordionItemRoot {...rest} open={open}>{children}</AccordionItemRoot>;
+    },
+    AccordionTrigger: ({ props }: BaseComponentProps<AccordionTriggerProps>) => {
+      const { text, ...rest } = u(props);
+      return <AccordionTriggerRoot {...rest}>{text}</AccordionTriggerRoot>;
+    },
+    AccordionContent: ({ props }: BaseComponentProps<AccordionContentProps>) => {
+      const { text, ...rest } = u(props);
+      return <AccordionContentRoot {...rest}>{text}</AccordionContentRoot>;
     },
   },
 });

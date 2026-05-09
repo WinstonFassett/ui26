@@ -211,6 +211,25 @@ const progressProps = z.object({
   className: z.string().nullable(),
 });
 
+const accordionProps = z.object({
+  className: z.string().nullable(),
+});
+
+const accordionItemProps = z.object({
+  open: z.boolean().nullable(),
+  className: z.string().nullable(),
+});
+
+const accordionTriggerProps = z.object({
+  text: z.string(),
+  className: z.string().nullable(),
+});
+
+const accordionContentProps = z.object({
+  text: z.string(),
+  className: z.string().nullable(),
+});
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -424,6 +443,29 @@ export const catalog = defineCatalog(schema, {
       slots: [],
       description: "Horizontal or vertical divider.",
     },
+    Accordion: {
+      props: accordionProps,
+      slots: ["default"],
+      description: "Accordion container. Compose with AccordionItem, AccordionTrigger, AccordionContent.",
+    },
+    AccordionItem: {
+      props: accordionItemProps,
+      slots: ["default"],
+      description: "A single accordion section — renders a <details> element.",
+      example: { open: false },
+    },
+    AccordionTrigger: {
+      props: accordionTriggerProps,
+      slots: [],
+      description: "Clickable trigger for an AccordionItem — renders a <summary>.",
+      example: { text: "Question" },
+    },
+    AccordionContent: {
+      props: accordionContentProps,
+      slots: [],
+      description: "Expanded content inside an AccordionItem.",
+      example: { text: "Answer text." },
+    },
   },
   actions: {},
 });
@@ -465,3 +507,7 @@ export type AvatarProps             = z.output<typeof avatarProps>;
 export type AvatarFallbackProps     = z.output<typeof avatarFallbackProps>;
 export type SkeletonProps           = z.output<typeof skeletonProps>;
 export type ProgressProps           = z.output<typeof progressProps>;
+export type AccordionProps          = z.output<typeof accordionProps>;
+export type AccordionItemProps      = z.output<typeof accordionItemProps>;
+export type AccordionTriggerProps   = z.output<typeof accordionTriggerProps>;
+export type AccordionContentProps   = z.output<typeof accordionContentProps>;

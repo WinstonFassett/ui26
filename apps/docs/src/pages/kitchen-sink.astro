@@ -72,7 +72,11 @@ const WORKSPACE_FORM = getSample("workspace-form")!;
 const SELECTION_CONTROLS = getSample("selection-controls")!;
 const SKELETON_CARD = getSample("skeleton-card")!;
 const AVATAR_ROW = getSample("avatar-row")!;
-const CONTEXT_MENU = getSample("context-menu")!;
+const CONTEXT_MENU = getSample("context-menu")!
+const TICKET_TABLE = getSample("ticket-table")!
+const ONBOARDING_CARD = getSample("onboarding-card")!
+const PROGRESS_CARD = getSample("progress-card")!
+const ACCORDION_CARD = getSample("accordion-card")!;
 
 const RAIL_REGIONS = [...ALL_BLOCKS, ...ALL_ATOMS].map((s) => ({
   id: s.id,
@@ -300,56 +304,10 @@ const typeScale = [
     </Breadcrumb>
 
     {/* Ticket table */}
-    <div class="border border-border rounded bg-card overflow-hidden mb-4">
-      <div class="flex items-center gap-3 px-4 py-3 border-b border-border">
-        <span class="text-[13px] font-semibold text-foreground">All issues</span>
-        <Badge variant="secondary">128</Badge>
-        <span class="flex-1" />
-        <Button size="sm" variant="ghost">⌕ Filter</Button>
-        <Button size="sm" variant="ghost">↕ Sort</Button>
-        <Button size="sm" variant="ghost">⊞ Group by</Button>
-        <Button size="sm">＋ New</Button>
-      </div>
-      <div class="grid grid-cols-[24px_80px_1fr_120px_80px_120px_80px] items-center gap-2.5 px-4 py-2 font-mono text-[10px] tracking-[0.06em] uppercase text-text-mute border-b border-border">
-        <span />
-        <span>ID</span>
-        <span>Title</span>
-        <span>Status</span>
-        <span>Priority</span>
-        <span>Assignees</span>
-        <span>Updated</span>
-      </div>
-      {[
-        { id: "MCN-142", title: "Payment retry loops past paying → idle briefly", st: "In progress", stCls: "text-info", p: "P1", pTone: "warn", a: ["KM", "JR"], aCol: ["bg-accent", "bg-info"], u: "3m", active: true },
-        { id: "MCN-141", title: "useMachine persist flag should accept a key", st: "Review", stCls: "text-warn", p: "P2", pTone: "info", a: ["LS"], aCol: ["bg-success"], u: "1h" },
-        { id: "MCN-140", title: "Type inference breaks on nested effect() resolve", st: "Blocked", stCls: "text-destructive", p: "P0", pTone: "destructive", a: ["AP"], aCol: ["bg-purple"], u: "2h" },
-        { id: "MCN-139", title: "Docs: examples/checkout.ts missing retry arrow", st: "Draft", stCls: "text-purple", p: "P3", pTone: "secondary", a: ["KM"], aCol: ["bg-accent"], u: "5h" },
-        { id: "MCN-138", title: "Add matchState narrow utility to public API", st: "Shipping", stCls: "text-success", p: "P2", pTone: "info", a: ["JR", "AP", "LS"], aCol: ["bg-info", "bg-purple", "bg-success"], u: "yesterday" },
-        { id: "MCN-137", title: "Playground: ⌘+Enter should run, not submit", st: "In progress", stCls: "text-info", p: "P2", pTone: "info", a: ["KM"], aCol: ["bg-accent"], u: "yesterday" },
-        { id: "MCN-136", title: "createMachine throws on empty state set", st: "Shipping", stCls: "text-success", p: "P1", pTone: "warn", a: ["AP"], aCol: ["bg-purple"], u: "2d" },
-      ].map((r, i, arr) => (
-        <div class:list={[
-          "grid grid-cols-[24px_80px_1fr_120px_80px_120px_80px] items-center gap-2.5 px-4 py-2.5 text-[13px]",
-          i < arr.length - 1 && "border-b border-border",
-          r.active && "bg-muted",
-        ]}>
-          <Checkbox checked={r.active} />
-          <span class="font-mono text-[11px] text-muted-foreground">{r.id}</span>
-          <span class="text-foreground tracking-[-0.005em]">{r.title}</span>
-          <Badge variant="outline" class={r.stCls}>● {r.st}</Badge>
-          <Badge variant={r.pTone === "destructive" ? "destructive" : r.pTone === "secondary" ? "secondary" : "outline"} class={r.pTone === "warn" ? "text-warn" : r.pTone === "info" ? "text-info" : ""}>{r.p}</Badge>
-          <div class="flex">
-            {r.a.map((name, j) => (
-              <div class:list={[
-                "w-[18px] h-[18px] rounded-full grid place-items-center font-mono text-[8px] font-semibold text-background border-2",
-                r.active ? "border-muted" : "border-card",
-                r.aCol[j],
-              ]} style={j > 0 ? "margin-left: -5px" : ""}>{name}</div>
-            ))}
-          </div>
-          <span class="font-mono text-[11px] text-text-mute">{r.u}</span>
-        </div>
-      ))}
+    <div class="mb-4">
+      <RegionWrap id={TICKET_TABLE.id}>
+        <BlockPreview spec={TICKET_TABLE.spec} client:load />
+      </RegionWrap>
     </div>
 
     {/* Ticket table pagination */}
@@ -542,43 +500,9 @@ const typeScale = [
       </div>
 
       {/* Onboarding progress + steps */}
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Onboarding</CardDescription>
-          <CardTitle>Connect your first machine</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="flex flex-col gap-3.5">
-            <div>
-              <div class="flex justify-between font-mono text-[10px] text-text-mute tracking-[0.06em] uppercase mb-1.5">
-                <span>Step 2 of 4</span>
-                <span>50%</span>
-              </div>
-              <Progress value={50} class="h-1" />
-            </div>
-            {[
-              { n: 1, l: "Install matchina", d: "$ npm i matchina", s: "done" },
-              { n: 2, l: "Define a machine", d: "createMachine({ idle, loading, … })", s: "active" },
-              { n: 3, l: "Mount in your app", d: "useMachine(machine)", s: "pending" },
-              { n: 4, l: "Test transitions", d: "machine.send(\"start\")", s: "pending" },
-            ].map((st) => (
-              <div class="flex gap-3 items-start">
-                <div class:list={[
-                  "w-[22px] h-[22px] border grid place-items-center font-mono text-[11px] font-semibold flex-shrink-0 rounded-full",
-                  st.s === "done" && "bg-accent border-accent text-accent-ink",
-                  st.s === "active" && "border-accent text-accent",
-                  st.s === "pending" && "border-border text-text-mute",
-                ]}>{st.s === "done" ? "✓" : st.n}</div>
-                <div class:list={["flex-1", st.s === "pending" && "opacity-55"]}>
-                  <div class:list={["text-[13px] text-foreground", st.s === "active" && "font-medium"]}>{st.l}</div>
-                  <div class="font-mono text-[11px] text-muted-foreground mt-0.5">{st.d}</div>
-                </div>
-                {st.s === "active" && <Button size="sm">Open</Button>}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <RegionWrap id={ONBOARDING_CARD.id}>
+        <BlockPreview spec={ONBOARDING_CARD.spec} client:load />
+      </RegionWrap>
     </div>
 
     {/* Skeleton loading states */}
@@ -587,51 +511,13 @@ const typeScale = [
         <BlockPreview spec={SKELETON_CARD.spec} client:load />
       </RegionWrap>
 
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Progress</CardDescription>
-          <CardTitle>Upload queue</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="space-y-3">
-            <div>
-              <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1.5"><span>checkout.ts</span><span>100%</span></div>
-              <Progress value={100} variant="success" />
-            </div>
-            <div>
-              <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1.5"><span>fetcher.ts</span><span>72%</span></div>
-              <Progress value={72} />
-            </div>
-            <div>
-              <div class="flex justify-between font-mono text-[10px] text-text-mute mb-1.5"><span>auth.ts</span><span>38%</span></div>
-              <Progress value={38} variant="destructive" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <RegionWrap id={PROGRESS_CARD.id}>
+        <BlockPreview spec={PROGRESS_CARD.spec} client:load />
+      </RegionWrap>
 
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Accordion</CardDescription>
-          <CardTitle>FAQ</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Accordion>
-            <AccordionItem open>
-              <AccordionTrigger>What is matchina?</AccordionTrigger>
-              <AccordionContent>A typed state-machine library — composable, framework-agnostic, zero config.</AccordionContent>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionTrigger>How does persistence work?</AccordionTrigger>
-              <AccordionContent>Pass <code class="font-mono text-[11px]">persist: 'key'</code> to useMachine — survives remounts and page reloads.</AccordionContent>
-            </AccordionItem>
-            <AccordionItem>
-              <AccordionTrigger>Is it accessible?</AccordionTrigger>
-              <AccordionContent>Yes — built on native details/summary, zero JS overhead.</AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
+      <RegionWrap id={ACCORDION_CARD.id}>
+        <BlockPreview spec={ACCORDION_CARD.spec} client:load />
+      </RegionWrap>
     </div>
 
     {/* Avatars */}
