@@ -5,23 +5,11 @@ import { ClickDockShell } from "@/components/livecode/ClickDockShell";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
 import { CopyBtn } from "@/components/livecode/CopyBtn";
-import { BLOCKS } from "@/lib/blocks";
 import { getSamples } from "@/samples";
 
 const CATEGORY_ORDER = ["Editorial", "Cards", "Forms", "Marketing", "Feedback", "Productivity", "AI"];
 
-// Union: samples win over legacy BLOCKS on collision
-const SAMPLE_BLOCKS = getSamples({ kind: "block" });
-const SAMPLE_IDS = new Set(SAMPLE_BLOCKS.map((s) => s.id));
-const ALL_BLOCKS = [
-  ...SAMPLE_BLOCKS,
-  ...BLOCKS.filter((b) => !SAMPLE_IDS.has(b.id)).map((b) => ({
-    ...b,
-    order: undefined as number | undefined,
-    featured: undefined as boolean | undefined,
-    indexable: undefined as boolean | undefined,
-  })),
-].filter((b) => b.indexable !== false);
+const ALL_BLOCKS = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
 
 const GROUPED = CATEGORY_ORDER
   .map((cat) => ({
@@ -83,9 +71,9 @@ const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
                 <div class="not-content">
                   <div class="mb-3 flex items-baseline gap-3">
                     <span class="font-mono text-[10px] tracking-[0.12em] uppercase text-accent">{b.id}</span>
-                    {b.registryDependencies.length > 0 && (
+                    {(b.registryDependencies ?? []).length > 0 && (
                       <span class="font-mono text-[10px] tracking-wider text-muted-foreground">
-                        deps: {b.registryDependencies.join(", ")}
+                        deps: {(b.registryDependencies ?? []).join(", ")}
                       </span>
                     )}
                   </div>

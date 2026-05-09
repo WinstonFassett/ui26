@@ -1,8 +1,12 @@
 import type { Sample, SampleFilter } from "./types"
 
-const modules = import.meta.glob<{ default: Sample }>("./*.sample.ts", { eager: true })
+const singles = import.meta.glob<{ default: Sample }>("./*.sample.ts", { eager: true })
+const arrays = import.meta.glob<{ default: Sample[] }>("./*.samples.ts", { eager: true })
 
-const ALL: Sample[] = Object.values(modules).map((m) => m.default)
+const ALL: Sample[] = [
+  ...Object.values(singles).map((m) => m.default),
+  ...Object.values(arrays).flatMap((m) => m.default),
+]
 
 const BY_ID = new Map(ALL.map((s) => [s.id, s]))
 

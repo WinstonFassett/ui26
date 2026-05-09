@@ -2,7 +2,9 @@
 
 import { Alert, AlertTitle, AlertDescription } from "@registry/alert/alert";
 import { DemoSection } from "./doc-sample";
-import { ALERT_VARIANT_DEMOS } from "./alert-demos";
+import type { Demo } from "./doc-sample";
+import { getSamples } from "@/samples";
+import type { Sample } from "@/samples/types";
 
 const COPY: Record<string, { title: string; body: string }> = {
   default: { title: "Heads up", body: "You can add components using the CLI." },
@@ -11,12 +13,15 @@ const COPY: Record<string, { title: string; body: string }> = {
   success: { title: "Success", body: "Your changes have been saved." },
 };
 
+const VARIANT_DEMOS: Demo[] = getSamples({ kind: "atom", relatedComponent: "alert", group: "variants" })
+  .map((s: Sample) => ({ id: s.key ?? s.id, label: s.title, spec: s.spec }));
+
 export function AlertDocSample() {
   return (
     <DemoSection
       title="Variants"
       namePrefix="Alert"
-      demos={ALERT_VARIANT_DEMOS}
+      demos={VARIANT_DEMOS}
       renderTile={(demo) => {
         const { title, body } = COPY[demo.id];
         const v = demo.id as "default" | "destructive" | "warning" | "success";

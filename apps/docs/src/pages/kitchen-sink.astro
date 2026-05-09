@@ -44,7 +44,7 @@ import RegionWrap from "@/components/livecode/RegionWrap.astro";
 import { ClickDockShell } from "@/components/livecode/ClickDockShell";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
-import { BLOCKS, TYPE_SCALE, TICKET_CARD, STATS_CARD, UPGRADE_CARD } from "@/lib/blocks";
+import { getSamples, getSample } from "@/samples";
 
 const SECTION_LABEL: Record<string, string> = {
   "type-scale": "§01 Typography",
@@ -53,7 +53,13 @@ const SECTION_LABEL: Record<string, string> = {
   "upgrade-card": "§07 Cards · blocks",
 };
 
-const RAIL_REGIONS = BLOCKS.map((b) => ({
+const ALL_BLOCKS = getSamples({ kind: "block" });
+const TYPE_SCALE = getSample("type-scale")!;
+const TICKET_CARD = getSample("ticket-card")!;
+const STATS_CARD = getSample("stats-card")!;
+const UPGRADE_CARD = getSample("upgrade-card")!;
+
+const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
   id: b.id,
   label: b.title,
   section: SECTION_LABEL[b.id] ?? "Blocks",

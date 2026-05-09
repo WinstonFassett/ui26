@@ -3,18 +3,15 @@
 import { Button } from "@registry/button/button";
 import { DemoSection } from "./doc-sample";
 import type { Demo } from "./doc-sample";
-import { BUTTON_VARIANT_DEMOS, BUTTON_SIZE_DEMOS } from "./button-demos";
 import { getSamples } from "@/samples";
+import type { Sample } from "@/samples/types";
 
-const SAMPLE_VARIANTS: Demo[] = getSamples({ kind: "atom", relatedComponent: "button", group: "variants" })
-  .map((s) => ({ id: s.id.replace(/^button-/, ""), label: s.title, spec: s.spec }));
+function toDemos(samples: Sample[]): Demo[] {
+  return samples.map((s) => ({ id: s.key ?? s.id, label: s.title, spec: s.spec }));
+}
 
-const VARIANT_DEMOS: Demo[] = (() => {
-  const byId = new Map<string, Demo>();
-  for (const d of BUTTON_VARIANT_DEMOS) byId.set(d.id, d);
-  for (const s of SAMPLE_VARIANTS) byId.set(s.id, s);
-  return [...byId.values()];
-})();
+const VARIANT_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "button", group: "variants" }));
+const SIZE_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "button", group: "sizes" }));
 
 export function ButtonDocSample() {
   return (
@@ -37,7 +34,7 @@ export function ButtonDocSample() {
       <DemoSection
         title="Sizes"
         namePrefix="Button"
-        demos={BUTTON_SIZE_DEMOS}
+        demos={SIZE_DEMOS}
         renderTile={(demo) => (
           <Button
             size={demo.id as "sm" | "default" | "lg" | "icon"}

@@ -2,7 +2,16 @@
 
 import { Input } from "@registry/input/input";
 import { DemoSection } from "./doc-sample";
-import { INPUT_STATE_DEMOS, INPUT_TYPE_DEMOS } from "./input-demos";
+import type { Demo } from "./doc-sample";
+import { getSamples } from "@/samples";
+import type { Sample } from "@/samples/types";
+
+function toDemos(samples: Sample[]): Demo[] {
+  return samples.map((s) => ({ id: s.key ?? s.id, label: s.title, spec: s.spec }));
+}
+
+const STATE_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "input", group: "states" }));
+const TYPE_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "input", group: "types" }));
 
 const STATE_TILES: Record<string, React.ReactNode> = {
   default: <Input placeholder="Type here" className="w-44" tabIndex={-1} />,
@@ -17,13 +26,13 @@ export function InputDocSample() {
       <DemoSection
         title="States"
         namePrefix="Input"
-        demos={INPUT_STATE_DEMOS}
+        demos={STATE_DEMOS}
         renderTile={(demo) => STATE_TILES[demo.id]}
       />
       <DemoSection
         title="Types"
         namePrefix="Input"
-        demos={INPUT_TYPE_DEMOS}
+        demos={TYPE_DEMOS}
         renderTile={(demo) => (
           <Input
             type={demo.id as "text" | "email" | "password" | "search"}

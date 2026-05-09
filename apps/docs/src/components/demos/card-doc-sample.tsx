@@ -2,12 +2,16 @@
 
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { DemoCodeBlock } from "./doc-sample";
-import { CARD_DEMOS } from "./card-demos";
+import { getSamples } from "@/samples";
+import type { Sample } from "@/samples/types";
+
+const DEMOS = getSamples({ kind: "atom", relatedComponent: "card", group: "examples" })
+  .map((s: Sample) => ({ id: s.key ?? s.id, label: s.title, spec: s.spec }));
 
 export function CardDocSample() {
   return (
     <>
-      {CARD_DEMOS.map((demo) => (
+      {DEMOS.map((demo) => (
         <section key={demo.id} className="not-content my-8">
           <p className="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
             {demo.label}
