@@ -20,29 +20,25 @@ export function ButtonDocSample() {
         title="Variants"
         namePrefix="Button"
         demos={VARIANT_DEMOS}
-        renderTile={(demo) => (
-          <Button
-            variant={demo.id as "default" | "secondary" | "outline" | "ghost" | "destructive"}
-            size="sm"
-            tabIndex={-1}
-            className="pointer-events-none"
-          >
-            Aa
-          </Button>
+        renderTile={() => (
+          <div className="flex flex-wrap items-center gap-1">
+            {(["default", "secondary", "outline", "ghost", "destructive"] as const).map((v) => (
+              <Button key={v} variant={v} size="sm" tabIndex={-1} className="pointer-events-none">Aa</Button>
+            ))}
+          </div>
         )}
       />
       <DemoSection
         title="Sizes"
         namePrefix="Button"
         demos={SIZE_DEMOS}
-        renderTile={(demo) => (
-          <Button
-            size={demo.id as "sm" | "default" | "lg" | "icon"}
-            tabIndex={-1}
-            className="pointer-events-none"
-          >
-            {demo.id === "icon" ? "⚡" : "Aa"}
-          </Button>
+        renderTile={() => (
+          <div className="flex items-center gap-1">
+            {(["sm", "default", "lg"] as const).map((s) => (
+              <Button key={s} size={s} tabIndex={-1} className="pointer-events-none">Aa</Button>
+            ))}
+            <Button size="icon" tabIndex={-1} className="pointer-events-none">⚡</Button>
+          </div>
         )}
       />
     </>

@@ -15,10 +15,12 @@ export function BadgeDocSample() {
       title="Variants"
       namePrefix="Badge"
       demos={VARIANT_DEMOS}
-      renderTile={(demo) => (
-        <Badge variant={demo.id as "default" | "secondary" | "outline" | "ghost" | "destructive"}>
-          Badge
-        </Badge>
+      renderTile={() => (
+        <div className="flex flex-wrap items-center gap-1">
+          {(["default", "secondary", "outline", "ghost", "destructive"] as const).map((v) => (
+            <Badge key={v} variant={v}>Badge</Badge>
+          ))}
+        </div>
       )}
     />
   )

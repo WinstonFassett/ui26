@@ -22,16 +22,15 @@ export function AlertDocSample() {
       title="Variants"
       namePrefix="Alert"
       demos={VARIANT_DEMOS}
-      renderTile={(demo) => {
-        const { title, body } = COPY[demo.id];
-        const v = demo.id as "default" | "destructive" | "warning" | "success";
-        return (
-          <Alert variant={v === "default" ? undefined : v} className="w-full max-w-xs text-left pointer-events-none">
-            <AlertTitle>{title}</AlertTitle>
-            <AlertDescription>{body}</AlertDescription>
-          </Alert>
-        );
-      }}
+      renderTile={() => (
+        <div className="flex flex-col gap-2 w-full max-w-xs pointer-events-none">
+          {(["default", "destructive", "warning", "success"] as const).map((v) => (
+            <Alert key={v} variant={v === "default" ? undefined : v} className="py-2 text-left">
+              <AlertTitle className="text-xs">{COPY[v].title}</AlertTitle>
+            </Alert>
+          ))}
+        </div>
+      )}
     />
   );
 }

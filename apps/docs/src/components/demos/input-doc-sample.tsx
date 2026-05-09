@@ -13,12 +13,6 @@ function toDemos(samples: Sample[]): Demo[] {
 const STATE_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "input", group: "states" }));
 const TYPE_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "input", group: "types" }));
 
-const STATE_TILES: Record<string, React.ReactNode> = {
-  default: <Input placeholder="Type here" className="w-44" tabIndex={-1} />,
-  invalid: <Input defaultValue="not-an-email" aria-invalid className="w-44" tabIndex={-1} />,
-  disabled: <Input placeholder="Disabled" disabled className="w-44" tabIndex={-1} />,
-  file: <Input type="file" className="w-44 text-xs" tabIndex={-1} />,
-};
 
 export function InputDocSample() {
   return (
@@ -27,19 +21,25 @@ export function InputDocSample() {
         title="States"
         namePrefix="Input"
         demos={STATE_DEMOS}
-        renderTile={(demo) => STATE_TILES[demo.id]}
+        renderTile={() => (
+          <div className="flex flex-col gap-1">
+            <Input placeholder="Type here" className="w-40" tabIndex={-1} />
+            <Input defaultValue="not-an-email" aria-invalid className="w-40" tabIndex={-1} />
+            <Input placeholder="Disabled" disabled className="w-40" tabIndex={-1} />
+          </div>
+        )}
       />
       <DemoSection
         title="Types"
         namePrefix="Input"
         demos={TYPE_DEMOS}
-        renderTile={(demo) => (
-          <Input
-            type={demo.id as "text" | "email" | "password" | "search"}
-            placeholder={demo.id === "search" ? "Search…" : demo.id === "email" ? "you@company.com" : undefined}
-            className="w-44"
-            tabIndex={-1}
-          />
+        renderTile={() => (
+          <div className="flex flex-col gap-1">
+            <Input type="text" placeholder="Text" className="w-40" tabIndex={-1} />
+            <Input type="email" placeholder="you@company.com" className="w-40" tabIndex={-1} />
+            <Input type="password" placeholder="Password" className="w-40" tabIndex={-1} />
+            <Input type="search" placeholder="Search…" className="w-40" tabIndex={-1} />
+          </div>
         )}
       />
     </>
