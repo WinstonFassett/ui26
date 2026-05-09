@@ -204,6 +204,13 @@ const skeletonProps = z.object({
   className: z.string().nullable(),
 });
 
+const progressProps = z.object({
+  value: z.number().nullable(),
+  max: z.number().nullable(),
+  variant: z.enum(["default", "destructive", "success"]).nullable(),
+  className: z.string().nullable(),
+});
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -406,6 +413,12 @@ export const catalog = defineCatalog(schema, {
       slots: [],
       description: "Shimmering placeholder for loading states.",
     },
+    Progress: {
+      props: progressProps,
+      slots: [],
+      description: "Horizontal progress bar with optional variant (default, destructive, success).",
+      example: { value: 72, max: 100, variant: "default" },
+    },
     Separator: {
       props: separatorProps,
       slots: [],
@@ -451,3 +464,4 @@ export type SliderProps             = z.output<typeof sliderProps>;
 export type AvatarProps             = z.output<typeof avatarProps>;
 export type AvatarFallbackProps     = z.output<typeof avatarFallbackProps>;
 export type SkeletonProps           = z.output<typeof skeletonProps>;
+export type ProgressProps           = z.output<typeof progressProps>;

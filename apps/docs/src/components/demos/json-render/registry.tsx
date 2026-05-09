@@ -26,6 +26,7 @@ import { Toggle as ToggleRoot } from "@registry/toggle/toggle.tsx";
 import { Slider as SliderRoot } from "@registry/slider/slider.tsx";
 import { Avatar as AvatarRoot, AvatarFallback as AvatarFallbackRoot } from "@registry/avatar/avatar.tsx";
 import { Skeleton as SkeletonRoot } from "@registry/skeleton/skeleton.tsx";
+import { Progress as ProgressRoot } from "@registry/progress/progress.tsx";
 import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
@@ -73,6 +74,7 @@ import {
   type AvatarProps,
   type AvatarFallbackProps,
   type SkeletonProps,
+  type ProgressProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -118,6 +120,10 @@ export const { registry } = defineRegistry(catalog, {
       return <AvatarFallbackRoot {...rest}>{text}</AvatarFallbackRoot>;
     },
     Skeleton: ({ props }: BaseComponentProps<SkeletonProps>) => <SkeletonRoot {...u(props)} />,
+    Progress: ({ props }: BaseComponentProps<ProgressProps>) => {
+      const { value, ...rest } = u(props);
+      return <ProgressRoot {...rest} value={value ?? 0} />;
+    },
 
     // ── Content-prop mapping (catalog has `text`/`label`; component takes children) ──
     Heading: ({ props }: BaseComponentProps<HeadingProps>) => {
