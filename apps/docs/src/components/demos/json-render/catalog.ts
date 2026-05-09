@@ -230,6 +230,18 @@ const accordionContentProps = z.object({
   className: z.string().nullable(),
 });
 
+const breadcrumbProps         = z.object({ className: z.string().nullable() });
+const breadcrumbListProps     = z.object({ className: z.string().nullable() });
+const breadcrumbItemProps     = z.object({ className: z.string().nullable() });
+const breadcrumbLinkProps     = z.object({ text: z.string(), href: z.string().nullable(), className: z.string().nullable() });
+const breadcrumbPageProps     = z.object({ text: z.string(), className: z.string().nullable() });
+const breadcrumbSeparatorProps = z.object({ className: z.string().nullable() });
+
+const paginationProps         = z.object({ className: z.string().nullable() });
+const paginationContentProps  = z.object({ className: z.string().nullable() });
+const paginationItemProps     = z.object({ className: z.string().nullable() });
+const paginationLinkProps     = z.object({ text: z.string(), href: z.string().nullable(), isActive: z.boolean().nullable(), className: z.string().nullable() });
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -466,6 +478,18 @@ export const catalog = defineCatalog(schema, {
       description: "Expanded content inside an AccordionItem.",
       example: { text: "Answer text." },
     },
+    // breadcrumb family
+    Breadcrumb: { props: breadcrumbProps, slots: ["default"], description: "Breadcrumb nav wrapper." },
+    BreadcrumbList: { props: breadcrumbListProps, slots: ["default"], description: "Ordered list of breadcrumb items." },
+    BreadcrumbItem: { props: breadcrumbItemProps, slots: ["default"], description: "Single breadcrumb item — wraps a BreadcrumbLink or BreadcrumbPage." },
+    BreadcrumbLink: { props: breadcrumbLinkProps, slots: [], description: "Clickable breadcrumb segment.", example: { text: "Home", href: "#" } },
+    BreadcrumbPage: { props: breadcrumbPageProps, slots: [], description: "Current-page breadcrumb segment (non-interactive).", example: { text: "Current" } },
+    BreadcrumbSeparator: { props: breadcrumbSeparatorProps, slots: [], description: "Separator chevron between breadcrumb items." },
+    // pagination family
+    Pagination: { props: paginationProps, slots: ["default"], description: "Pagination nav wrapper." },
+    PaginationContent: { props: paginationContentProps, slots: ["default"], description: "Flex row of pagination items." },
+    PaginationItem: { props: paginationItemProps, slots: ["default"], description: "Wrapper for a single pagination link." },
+    PaginationLink: { props: paginationLinkProps, slots: [], description: "Pagination page link.", example: { text: "1", href: "#", isActive: false } },
   },
   actions: {},
 });
@@ -510,4 +534,14 @@ export type ProgressProps           = z.output<typeof progressProps>;
 export type AccordionProps          = z.output<typeof accordionProps>;
 export type AccordionItemProps      = z.output<typeof accordionItemProps>;
 export type AccordionTriggerProps   = z.output<typeof accordionTriggerProps>;
-export type AccordionContentProps   = z.output<typeof accordionContentProps>;
+export type AccordionContentProps      = z.output<typeof accordionContentProps>;
+export type BreadcrumbProps            = z.output<typeof breadcrumbProps>;
+export type BreadcrumbListProps        = z.output<typeof breadcrumbListProps>;
+export type BreadcrumbItemProps        = z.output<typeof breadcrumbItemProps>;
+export type BreadcrumbLinkProps        = z.output<typeof breadcrumbLinkProps>;
+export type BreadcrumbPageProps        = z.output<typeof breadcrumbPageProps>;
+export type BreadcrumbSeparatorProps   = z.output<typeof breadcrumbSeparatorProps>;
+export type PaginationProps            = z.output<typeof paginationProps>;
+export type PaginationContentProps     = z.output<typeof paginationContentProps>;
+export type PaginationItemProps        = z.output<typeof paginationItemProps>;
+export type PaginationLinkProps        = z.output<typeof paginationLinkProps>;

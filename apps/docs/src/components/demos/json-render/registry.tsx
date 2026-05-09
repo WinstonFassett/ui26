@@ -34,6 +34,20 @@ import {
   AccordionContent as AccordionContentRoot,
 } from "@registry/accordion/accordion.tsx";
 import {
+  Breadcrumb as BreadcrumbRoot,
+  BreadcrumbList as BreadcrumbListRoot,
+  BreadcrumbItem as BreadcrumbItemRoot,
+  BreadcrumbLink as BreadcrumbLinkRoot,
+  BreadcrumbPage as BreadcrumbPageRoot,
+  BreadcrumbSeparator as BreadcrumbSeparatorRoot,
+} from "@registry/breadcrumb/breadcrumb.tsx";
+import {
+  Pagination as PaginationRoot,
+  PaginationContent as PaginationContentRoot,
+  PaginationItem as PaginationItemRoot,
+  PaginationLink as PaginationLinkRoot,
+} from "@registry/pagination/pagination.tsx";
+import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
   FieldLabel as FieldLabelRoot,
@@ -85,6 +99,16 @@ import {
   type AccordionItemProps,
   type AccordionTriggerProps,
   type AccordionContentProps,
+  type BreadcrumbProps,
+  type BreadcrumbListProps,
+  type BreadcrumbItemProps,
+  type BreadcrumbLinkProps,
+  type BreadcrumbPageProps,
+  type BreadcrumbSeparatorProps,
+  type PaginationProps,
+  type PaginationContentProps,
+  type PaginationItemProps,
+  type PaginationLinkProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -286,6 +310,43 @@ export const { registry } = defineRegistry(catalog, {
     AccordionContent: ({ props }: BaseComponentProps<AccordionContentProps>) => {
       const { text, ...rest } = u(props);
       return <AccordionContentRoot {...rest}>{text}</AccordionContentRoot>;
+    },
+
+    // ── Breadcrumb ───────────────────────────────────────────────────────────
+    Breadcrumb: ({ props, children }: BaseComponentProps<BreadcrumbProps>) => (
+      <BreadcrumbRoot {...u(props)}>{children}</BreadcrumbRoot>
+    ),
+    BreadcrumbList: ({ props, children }: BaseComponentProps<BreadcrumbListProps>) => (
+      <BreadcrumbListRoot {...u(props)}>{children}</BreadcrumbListRoot>
+    ),
+    BreadcrumbItem: ({ props, children }: BaseComponentProps<BreadcrumbItemProps>) => (
+      <BreadcrumbItemRoot {...u(props)}>{children}</BreadcrumbItemRoot>
+    ),
+    BreadcrumbLink: ({ props }: BaseComponentProps<BreadcrumbLinkProps>) => {
+      const { text, ...rest } = u(props);
+      return <BreadcrumbLinkRoot {...rest}>{text}</BreadcrumbLinkRoot>;
+    },
+    BreadcrumbPage: ({ props }: BaseComponentProps<BreadcrumbPageProps>) => {
+      const { text, ...rest } = u(props);
+      return <BreadcrumbPageRoot {...rest}>{text}</BreadcrumbPageRoot>;
+    },
+    BreadcrumbSeparator: ({ props }: BaseComponentProps<BreadcrumbSeparatorProps>) => (
+      <BreadcrumbSeparatorRoot {...u(props)} />
+    ),
+
+    // ── Pagination ───────────────────────────────────────────────────────────
+    Pagination: ({ props, children }: BaseComponentProps<PaginationProps>) => (
+      <PaginationRoot {...u(props)}>{children}</PaginationRoot>
+    ),
+    PaginationContent: ({ props, children }: BaseComponentProps<PaginationContentProps>) => (
+      <PaginationContentRoot {...u(props)}>{children}</PaginationContentRoot>
+    ),
+    PaginationItem: ({ props, children }: BaseComponentProps<PaginationItemProps>) => (
+      <PaginationItemRoot {...u(props)}>{children}</PaginationItemRoot>
+    ),
+    PaginationLink: ({ props }: BaseComponentProps<PaginationLinkProps>) => {
+      const { text, isActive, ...rest } = u(props);
+      return <PaginationLinkRoot {...rest} isActive={isActive ?? false}>{text}</PaginationLinkRoot>;
     },
   },
 });

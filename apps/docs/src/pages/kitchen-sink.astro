@@ -76,7 +76,11 @@ const CONTEXT_MENU = getSample("context-menu")!
 const TICKET_TABLE = getSample("ticket-table")!
 const ONBOARDING_CARD = getSample("onboarding-card")!
 const PROGRESS_CARD = getSample("progress-card")!
-const ACCORDION_CARD = getSample("accordion-card")!;
+const ACCORDION_CARD = getSample("accordion-card")!
+const BREADCRUMB_NAV = getSample("breadcrumb-nav")!
+const PAGINATION_BAR = getSample("pagination-bar")!
+const MACHINE_STATS = getSample("machine-stats")!
+const TOOLTIP_CARD = getSample("tooltip-card")!;
 
 const RAIL_REGIONS = [...ALL_BLOCKS, ...ALL_ATOMS].map((s) => ({
   id: s.id,
@@ -287,21 +291,11 @@ const typeScale = [
     </div>
 
     {/* Breadcrumb nav */}
-    <Breadcrumb class="mb-3">
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Workspace</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href="#">Matchina</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>All issues</BreadcrumbPage>
-        </BreadcrumbItem>
-      </BreadcrumbList>
-    </Breadcrumb>
+    <div class="mb-3">
+      <RegionWrap id={BREADCRUMB_NAV.id}>
+        <BlockPreview spec={BREADCRUMB_NAV.spec} client:load />
+      </RegionWrap>
+    </div>
 
     {/* Ticket table */}
     <div class="mb-4">
@@ -311,19 +305,10 @@ const typeScale = [
     </div>
 
     {/* Ticket table pagination */}
-    <div class="flex items-center justify-between mb-6">
-      <span class="font-mono text-[11px] text-text-mute">Showing 1–7 of 128 issues</span>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem><PaginationLink href="#">«</PaginationLink></PaginationItem>
-          <PaginationItem><PaginationLink href="#" isActive>1</PaginationLink></PaginationItem>
-          <PaginationItem><PaginationLink href="#">2</PaginationLink></PaginationItem>
-          <PaginationItem><PaginationLink href="#">3</PaginationLink></PaginationItem>
-          <PaginationItem><PaginationLink href="#">…</PaginationLink></PaginationItem>
-          <PaginationItem><PaginationLink href="#">19</PaginationLink></PaginationItem>
-          <PaginationItem><PaginationLink href="#">»</PaginationLink></PaginationItem>
-        </PaginationContent>
-      </Pagination>
+    <div class="mb-6">
+      <RegionWrap id={PAGINATION_BAR.id}>
+        <BlockPreview spec={PAGINATION_BAR.spec} client:load />
+      </RegionWrap>
     </div>
 
     {/* Ticket detail + Document */}
@@ -447,57 +432,11 @@ const typeScale = [
       </RegionWrap>
     </div>
 
-    {/* Tabs + sparkline + stats */}
+    {/* Machine stats + onboarding */}
     <div class="grid grid-cols-[1.2fr_1fr] gap-5 mb-6">
-      <div class="border border-border rounded bg-card overflow-hidden">
-        <div class="flex border-b border-border pl-3.5">
-          {[
-            { l: "Overview", active: true },
-            { l: "States", n: 5 },
-            { l: "Transitions", n: 6 },
-            { l: "Effects", n: 2 },
-            { l: "History", n: 42 },
-          ].map((tab) => (
-            <div class:list={[
-              "px-4 py-3 text-[13px] flex gap-1.5 items-center -mb-px",
-              tab.active ? "text-foreground font-medium border-b-[1.5px] border-accent" : "text-muted-foreground",
-            ]}>
-              <span>{tab.l}</span>
-              {typeof tab.n === "number" && (
-                <span class="font-mono text-[10px] text-text-mute bg-muted px-1.5 border border-border">{tab.n}</span>
-              )}
-            </div>
-          ))}
-        </div>
-        <div class="p-5">
-          <div class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute mb-2">Daily transitions · past 7 days</div>
-          <div class="flex items-end gap-1.5 h-20">
-            {[36, 42, 58, 31, 77, 64, 81].map((v, i) => (
-              <div class="flex-1 flex flex-col items-center gap-1">
-                <div class:list={[
-                  "w-full border",
-                  i === 6 ? "bg-accent border-accent" : "bg-secondary border-border",
-                ]} style={`height: ${v}px`} />
-                <div class="font-mono text-[9px] text-text-mute">{["M", "T", "W", "T", "F", "S", "S"][i]}</div>
-              </div>
-            ))}
-          </div>
-          <Separator class="my-4" />
-          <div class="grid grid-cols-3 gap-4">
-            {[
-              { l: "Transitions", v: "1,284", d: "+12%", pos: true },
-              { l: "Avg latency", v: "142ms", d: "-6%", pos: true },
-              { l: "Error rate", v: "0.3%", d: "+0.1%", pos: false },
-            ].map((s) => (
-              <div>
-                <div class="font-mono text-[10px] text-text-mute tracking-[0.06em] uppercase">{s.l}</div>
-                <div class="font-serif italic font-medium text-[28px] tracking-[-0.02em] text-foreground mt-1">{s.v}</div>
-                <div class:list={["font-mono text-[10px] mt-0.5", s.pos ? "text-success" : "text-destructive"]}>{s.d}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <RegionWrap id={MACHINE_STATS.id}>
+        <BlockPreview spec={MACHINE_STATS.spec} client:load />
+      </RegionWrap>
 
       {/* Onboarding progress + steps */}
       <RegionWrap id={ONBOARDING_CARD.id}>
@@ -533,24 +472,9 @@ const typeScale = [
         <BlockPreview spec={CONTEXT_MENU.spec} client:load />
       </RegionWrap>
 
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Tooltip</CardDescription>
-          <CardTitle>Hover states</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="flex gap-5 items-center py-5">
-            <div class="relative">
-              <Button variant="outline">↑ Assign</Button>
-              <div class="absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 bg-foreground text-background px-2 py-1 text-[11px] whitespace-nowrap">
-                Assign ticket <span class="font-mono text-text-mute ml-1">A</span>
-              </div>
-            </div>
-            <Button variant="outline">🕮 Docs</Button>
-            <Button variant="outline">⌘ ⌘K</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <RegionWrap id={TOOLTIP_CARD.id}>
+        <BlockPreview spec={TOOLTIP_CARD.spec} client:load />
+      </RegionWrap>
 
       <RegionWrap id={EMPTY_STATE.id}>
         <BlockPreview spec={EMPTY_STATE.spec} client:load />
