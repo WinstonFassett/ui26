@@ -62,6 +62,14 @@ const COLOR_PALETTE = getSample("color-palette")!;
 const TICKET_CARD = getSample("ticket-card")!;
 const STATS_CARD = getSample("stats-card")!;
 const UPGRADE_CARD = getSample("upgrade-card")!;
+const ALERT_GALLERY = getSample("alert-gallery")!;
+const NOTIFICATION_LIST = getSample("notification-list")!;
+const CONFIRM_DIALOG = getSample("confirm-dialog")!;
+const EMPTY_STATE = getSample("empty-state")!;
+const COMMAND_PALETTE = getSample("command-palette")!;
+const BADGE_COMPOSITIONS = getSample("badge-compositions")!;
+const WORKSPACE_FORM = getSample("workspace-form")!;
+const SELECTION_CONTROLS = getSample("selection-controls")!;
 
 const RAIL_REGIONS = [...ALL_BLOCKS, ...ALL_ATOMS].map((s) => ({
   id: s.id,
@@ -187,34 +195,9 @@ const typeScale = [
       <AtomGroup label="Variants" id="badge-variants" />
 
       {/* Usage examples — realistic compositions, not single atoms. */}
-      <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-3.5 items-center mt-2">
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Status</div>
-        <div class="flex gap-1.5 flex-wrap">
-          <Badge>Active</Badge>
-          <Badge variant="outline" class="text-success">● Shipping</Badge>
-          <Badge variant="outline" class="text-warn">● Review</Badge>
-          <Badge variant="destructive">Blocked</Badge>
-          <Badge variant="outline" class="text-info">● In progress</Badge>
-          <Badge variant="outline" class="text-purple">● Draft</Badge>
-          <Badge variant="secondary">Archived</Badge>
-        </div>
-
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Priority</div>
-        <div class="flex gap-1.5">
-          <Badge variant="destructive">P0 · Critical</Badge>
-          <Badge variant="outline" class="text-warn">P1 · High</Badge>
-          <Badge variant="outline" class="text-info">P2 · Medium</Badge>
-          <Badge variant="secondary">P3 · Low</Badge>
-        </div>
-
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Inline tags</div>
-        <div class="flex gap-1.5 flex-wrap">
-          <Badge variant="secondary">#billing</Badge>
-          <Badge variant="secondary">#fetcher</Badge>
-          <Badge variant="secondary">#needs-repro</Badge>
-          <Badge variant="secondary">+3</Badge>
-        </div>
-      </div>
+      <RegionWrap id={BADGE_COMPOSITIONS.id} class="mt-2">
+        <BlockPreview spec={BADGE_COMPOSITIONS.spec} client:load />
+      </RegionWrap>
     </div>
   </section>
 
@@ -234,47 +217,9 @@ const typeScale = [
       <AtomGroup label="Slider" id="slider-examples" />
     </div>
 
-    <div class="grid grid-cols-2 gap-7 pb-5 border-b border-border">
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-col gap-1.5">
-          <Label for="ks-workspace">Workspace name <span class="text-accent">*</span></Label>
-          <Input id="ks-workspace" value="Acme Retrospective" />
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label for="ks-slug">Slug</Label>
-          <Input id="ks-slug" value="acme-retro" />
-          <div class="font-mono text-[10px] text-text-mute">lowercase · dashes</div>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label for="ks-email">Email</Label>
-          <Input id="ks-email" type="email" placeholder="you@company.com" aria-invalid />
-          <div class="text-[11px] text-destructive flex items-center gap-1.5">
-            <span class="font-mono">✕</span>Already in use — try signing in instead
-          </div>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label for="ks-search">Search</Label>
-          <Input id="ks-search" placeholder="Search tickets, docs, people…" />
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <Label for="ks-volume">
-            <span class="flex justify-between w-full">
-              <span>Confidence threshold</span>
-              <span class="font-mono text-[10px] text-muted-foreground">65%</span>
-            </span>
-          </Label>
-          <Slider id="ks-volume" min={0} max={100} value={65} />
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-col gap-1.5">
-          <Label for="ks-bug">Bug description</Label>
-          <Textarea id="ks-bug" rows={5}>After clicking 'Retry' in the paying state, the fetcher briefly flashes back to 'idle' before transitioning to 'loading'. Expected: direct paying → loading.</Textarea>
-          <div class="font-mono text-[10px] text-text-mute self-end">198/2000</div>
-        </div>
-      </div>
-    </div>
+    <RegionWrap id={WORKSPACE_FORM.id} class="pb-5 border-b border-border">
+      <BlockPreview spec={WORKSPACE_FORM.spec} client:load />
+    </RegionWrap>
   </section>
 
   {/* ──────────────────────────────────────────────── 06 · Selection */}
@@ -293,82 +238,9 @@ const typeScale = [
       <AtomGroup label="Separator" id="separator-examples" />
     </div>
 
-    <div class="grid grid-cols-3 gap-7 pb-5 border-b border-border">
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Checkbox</div>
-        <div class="flex flex-col gap-2.5">
-          <label class="flex items-start gap-2.5 cursor-pointer">
-            <Checkbox checked class="mt-0.5" />
-            <span>
-              <span class="block text-[13px] text-foreground leading-[1.35]">Enable streaming responses</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Token-by-token updates to the UI.</span>
-            </span>
-          </label>
-          <label class="flex items-start gap-2.5 cursor-pointer">
-            <Checkbox class="mt-0.5" />
-            <span class="text-[13px] text-foreground">Allow guest edits</span>
-          </label>
-          <label class="flex items-start gap-2.5 cursor-pointer opacity-50">
-            <Checkbox checked disabled class="mt-0.5" />
-            <span>
-              <span class="block text-[13px] text-foreground">Legacy sync (enterprise)</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Managed by your admin</span>
-            </span>
-          </label>
-        </div>
-      </div>
-
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Switch</div>
-        <div class="flex flex-col gap-3">
-          <label class="flex items-start gap-3 cursor-pointer">
-            <Switch checked />
-            <span>
-              <span class="block text-[13px] text-foreground">Claude suggestions</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Inline completions while you type.</span>
-            </span>
-          </label>
-          <label class="flex items-start gap-3 cursor-pointer">
-            <Switch />
-            <span class="text-[13px] text-foreground">Auto-run effects in dev</span>
-          </label>
-          <label class="flex items-start gap-3 cursor-pointer">
-            <Switch checked />
-            <span>
-              <span class="block text-[13px] text-foreground">Telemetry</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Anonymous · opt-out any time</span>
-            </span>
-          </label>
-        </div>
-      </div>
-
-      <div>
-        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute mb-2.5">Radio group</div>
-        <div class="flex flex-col gap-2.5">
-          <label class="flex items-start gap-2.5 cursor-pointer">
-            <RadioGroupItem name="ks-plan" value="free" checked class="mt-0.5" />
-            <span>
-              <span class="block text-[13px] text-foreground leading-[1.35]">Free</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Up to 3 machines.</span>
-            </span>
-          </label>
-          <label class="flex items-start gap-2.5 cursor-pointer">
-            <RadioGroupItem name="ks-plan" value="pro" class="mt-0.5" />
-            <span>
-              <span class="block text-[13px] text-foreground leading-[1.35]">Pro · $19/mo</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Unlimited machines + effects.</span>
-            </span>
-          </label>
-          <label class="flex items-start gap-2.5 cursor-pointer opacity-50">
-            <RadioGroupItem name="ks-plan" value="enterprise" disabled class="mt-0.5" />
-            <span>
-              <span class="block text-[13px] text-foreground">Enterprise</span>
-              <span class="block text-[11px] text-muted-foreground mt-0.5">Managed by your admin.</span>
-            </span>
-          </label>
-        </div>
-      </div>
-    </div>
+    <RegionWrap id={SELECTION_CONTROLS.id} class="pb-5 border-b border-border">
+      <BlockPreview spec={SELECTION_CONTROLS.spec} client:load />
+    </RegionWrap>
   </section>
 
   {/* ──────────────────────────────────────────────── 07 · Cards · blocks */}
@@ -601,91 +473,17 @@ const typeScale = [
     </div>
 
     {/* Alerts */}
-    <div class="grid grid-cols-2 gap-3 mb-6">
-      <Alert>
-        <AlertTitle>Heads up</AlertTitle>
-        <AlertDescription>You can now publish machines to the edge network — see the deploy docs.</AlertDescription>
-      </Alert>
-      <Alert variant="success">
-        <AlertTitle>Deployed</AlertTitle>
-        <AlertDescription>checkout@2.1.0 is live — 1.2 kb gzipped.</AlertDescription>
-      </Alert>
-      <Alert variant="warning">
-        <AlertTitle>Breaking change in 2.0</AlertTitle>
-        <AlertDescription>The <code class="font-mono text-[11px]">send()</code> API now returns a promise — update your callers.</AlertDescription>
-      </Alert>
-      <Alert variant="destructive">
-        <AlertTitle>Type error</AlertTitle>
-        <AlertDescription>paying.fail → "falied" — did you mean "failed"?</AlertDescription>
-      </Alert>
-    </div>
+    <RegionWrap id={ALERT_GALLERY.id} class="mb-6">
+      <BlockPreview spec={ALERT_GALLERY.spec} client:load />
+    </RegionWrap>
 
     <div class="grid grid-cols-2 gap-5 mb-6">
-      {/* Toasts */}
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Toasts</CardDescription>
-          <CardTitle>Notifications</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="flex flex-col gap-2">
-            {[
-              { tone: "success", i: "✓", title: "Machine deployed", s: "checkout@2.1.0 · 1.2kb gzipped" },
-              { tone: "warn", i: "⚠", title: "Effect timed out", s: "fetchUser() exceeded 3s — retrying" },
-              { tone: "destructive", i: "✕", title: "Type error in transitions", s: "paying.fail → \"falied\" — did you mean \"failed\"?" },
-              { tone: "info", i: "ℹ", title: "Claude finished rollup", s: "42 tickets → 7 changelog entries · Review now ↗" },
-            ].map((n) => (
-              <div class:list={[
-                "flex gap-3 border border-border bg-card px-3 py-2.5 rounded border-l-2",
-                n.tone === "success" && "border-l-success",
-                n.tone === "warn" && "border-l-warn",
-                n.tone === "destructive" && "border-l-destructive",
-                n.tone === "info" && "border-l-info",
-              ]}>
-                <span class:list={[
-                  "font-mono text-[13px]",
-                  n.tone === "success" && "text-success",
-                  n.tone === "warn" && "text-warn",
-                  n.tone === "destructive" && "text-destructive",
-                  n.tone === "info" && "text-info",
-                ]}>{n.i}</span>
-                <span class="flex-1">
-                  <span class="block text-[13px] font-medium text-foreground">{n.title}</span>
-                  <span class="block text-[11.5px] text-muted-foreground mt-0.5">{n.s}</span>
-                </span>
-                <span class="text-text-mute font-mono text-[11px]">✕</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Dialog */}
-      <div class="border border-border rounded bg-card overflow-hidden">
-        <div class="px-5 pt-5">
-          <div class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute mb-1.5">Dialog</div>
-          <div class="text-[14px] font-semibold text-foreground">Delete state machine?</div>
-        </div>
-        <div class="px-5 py-4 text-[13px] text-muted-foreground leading-[1.55]">
-          <p class="m-0">
-            This will permanently remove <strong class="text-foreground font-mono text-[12px] bg-code border border-border px-1">checkout</strong> and all <strong class="text-foreground">14</strong> connected effects.
-          </p>
-          <div class="mt-3 flex flex-col gap-1.5">
-            <Label for="ks-confirm">Type 'checkout' to confirm</Label>
-            <Input id="ks-confirm" value="checkout" />
-          </div>
-          <div class="mt-2.5">
-            <label class="flex items-center gap-2.5 cursor-pointer">
-              <Checkbox />
-              <span class="text-[13px] text-foreground">I understand this cannot be undone.</span>
-            </label>
-          </div>
-        </div>
-        <div class="px-5 py-3 border-t border-border flex gap-2 justify-end bg-muted">
-          <Button variant="ghost">Cancel</Button>
-          <Button variant="destructive">Delete machine</Button>
-        </div>
-      </div>
+      <RegionWrap id={NOTIFICATION_LIST.id}>
+        <BlockPreview spec={NOTIFICATION_LIST.spec} client:load />
+      </RegionWrap>
+      <RegionWrap id={CONFIRM_DIALOG.id}>
+        <BlockPreview spec={CONFIRM_DIALOG.spec} client:load />
+      </RegionWrap>
     </div>
 
     {/* Tabs + sparkline + stats */}
@@ -921,23 +719,9 @@ const typeScale = [
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Empty state</CardDescription>
-          <CardTitle>No tickets match</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="py-2.5 text-center">
-            <div class="mx-auto mb-3 w-10 h-10 border border-dashed border-border grid place-items-center text-text-mute font-mono text-[14px] rounded">∅</div>
-            <div class="text-[13px] text-foreground font-medium mb-1">Nothing here yet</div>
-            <div class="text-[12px] text-muted-foreground mb-3">Try loosening the filter, or let Claude draft a ticket for you.</div>
-            <div class="flex gap-1.5 justify-center">
-              <Button size="sm" variant="ghost">Clear filters</Button>
-              <Button size="sm">✦ Draft with Claude</Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <RegionWrap id={EMPTY_STATE.id}>
+        <BlockPreview spec={EMPTY_STATE.spec} client:load />
+      </RegionWrap>
     </div>
   </section>
 
@@ -949,33 +733,9 @@ const typeScale = [
       <span class="flex-1 h-px bg-border" />
     </div>
 
-    <div class="max-w-[720px] border border-border rounded bg-card overflow-hidden">
-      <div class="px-4 py-3 border-b border-border flex items-center gap-2.5">
-        <span class="text-text-mute font-mono">/</span>
-        <span class="flex-1 text-[14px] text-foreground">ask claude to refactor checkout.ts</span>
-        <kbd class="font-mono text-[10px] border border-border px-1.5 py-px text-muted-foreground bg-muted rounded">↵</kbd>
-      </div>
-      {[
-        { ico: "✦", l: "Ask Claude", s: "Free-form prompt with current file", k: "⌘↵", active: true },
-        { ico: "⤓", l: "Apply fix", s: "Use the suggestion from turn 6", k: "⌥↵" },
-        { ico: "⎘", l: "Copy as markdown", s: "Conversation export", k: "⇧⎘" },
-        { ico: "↗", l: "Open in new ticket", s: "From conversation thread", k: "⌘N" },
-        { ico: "⌕", l: "Search tickets", s: "Text · labels · assignee", k: "⌘P" },
-      ].map((c, i, arr) => (
-        <div class:list={[
-          "px-4 py-2 flex items-center gap-3.5",
-          i < arr.length - 1 && "border-b border-border",
-          c.active && "bg-muted",
-        ]}>
-          <span class="text-accent font-mono text-[14px] w-4">{c.ico}</span>
-          <span class="flex-1">
-            <span class="block text-[13px] text-foreground">{c.l}</span>
-            <span class="block text-[11px] text-muted-foreground mt-0.5">{c.s}</span>
-          </span>
-          <kbd class="font-mono text-[10px] border border-border px-1.5 py-px text-muted-foreground bg-muted rounded">{c.k}</kbd>
-        </div>
-      ))}
-    </div>
+    <RegionWrap id={COMMAND_PALETTE.id}>
+      <BlockPreview spec={COMMAND_PALETTE.spec} client:load />
+    </RegionWrap>
   </section>
 
   {/* Footer */}
