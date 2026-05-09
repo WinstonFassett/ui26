@@ -3,20 +3,6 @@ title: Separator
 description: Separator primitive with horizontal and vertical orientation.
 ---
 
-import SeparatorAstro from "@registry/separator/separator.astro";
+import { SeparatorDocSample } from '@/components/demos/separator-doc-sample'
 
-## Horizontal
-
-<div class="not-content my-6">
-  <p class="text-sm">Above</p>
-  <SeparatorAstro class="my-3" />
-  <p class="text-sm">Below</p>
-</div>
-
-## Vertical
-
-<div class="not-content flex items-center gap-3 h-8 my-6">
-  <p class="text-sm">Left</p>
-  <SeparatorAstro orientation="vertical" />
-  <p class="text-sm">Right</p>
-</div>
+<SeparatorDocSample client:only="react" />

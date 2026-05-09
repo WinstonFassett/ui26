@@ -3,30 +3,6 @@ title: Skeleton
 description: Pulsing placeholder for loading states. Compose freely — size with Tailwind width/height utilities.
 ---
 
-import SkeletonAstro from "@registry/skeleton/skeleton.astro";
+import { SkeletonDocSample } from '@/components/demos/skeleton-doc-sample'
 
-## Basic
-
-<div class="not-content my-6 space-y-2 max-w-sm">
-  <SkeletonAstro class="h-4 w-3/4" />
-  <SkeletonAstro class="h-4 w-full" />
-  <SkeletonAstro class="h-4 w-1/2" />
-</div>
-
-## Card skeleton
-
-<div class="not-content my-6 max-w-sm space-y-3 rounded-lg border border-border p-4">
-  <SkeletonAstro class="h-32 w-full rounded-md" />
-  <SkeletonAstro class="h-4 w-3/4" />
-  <SkeletonAstro class="h-4 w-1/2" />
-</div>
-
-## Avatar skeleton
-
-<div class="not-content my-6 flex items-center gap-3">
-  <SkeletonAstro class="size-10 rounded-full" />
-  <div class="space-y-2">
-    <SkeletonAstro class="h-4 w-32" />
-    <SkeletonAstro class="h-3 w-24" />
-  </div>
-</div>
+<SkeletonDocSample client:only="react" />

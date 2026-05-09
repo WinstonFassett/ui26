@@ -3,34 +3,6 @@ title: Avatar
 description: User identity avatar with image and text fallback. Supports sm / default / lg / xl sizes.
 ---
 
-import AvatarAstro from "@registry/avatar/avatar.astro";
-import AvatarImageAstro from "@registry/avatar/avatar-image.astro";
-import AvatarFallbackAstro from "@registry/avatar/avatar-fallback.astro";
+import { AvatarDocSample } from '@/components/demos/avatar-doc-sample'
 
-## With fallback
-
-<div class="not-content my-6 flex flex-wrap gap-4 items-center">
-  <AvatarAstro>
-    <AvatarFallbackAstro>JD</AvatarFallbackAstro>
-  </AvatarAstro>
-  <AvatarAstro>
-    <AvatarFallbackAstro>AB</AvatarFallbackAstro>
-  </AvatarAstro>
-</div>
-
-## Sizes
-
-<div class="not-content my-6 flex flex-wrap gap-4 items-center">
-  <AvatarAstro size="sm">
-    <AvatarFallbackAstro>SM</AvatarFallbackAstro>
-  </AvatarAstro>
-  <AvatarAstro size="default">
-    <AvatarFallbackAstro>MD</AvatarFallbackAstro>
-  </AvatarAstro>
-  <AvatarAstro size="lg">
-    <AvatarFallbackAstro>LG</AvatarFallbackAstro>
-  </AvatarAstro>
-  <AvatarAstro size="xl">
-    <AvatarFallbackAstro>XL</AvatarFallbackAstro>
-  </AvatarAstro>
-</div>
+<AvatarDocSample client:only="react" />

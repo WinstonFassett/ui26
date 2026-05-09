@@ -3,22 +3,6 @@ title: Slider
 description: Native range input styled with accent-primary. Inherits all browser range input behavior.
 ---
 
-import SliderAstro from "@registry/slider/slider.astro";
+import { SliderDocSample } from '@/components/demos/slider-doc-sample'
 
-## Default
-
-<div class="not-content my-6 max-w-sm space-y-4">
-  <SliderAstro min={0} max={100} value={40} />
-</div>
-
-## With step
-
-<div class="not-content my-6 max-w-sm">
-  <SliderAstro min={0} max={100} step={10} value={50} />
-</div>
-
-## Disabled
-
-<div class="not-content my-6 max-w-sm">
-  <SliderAstro min={0} max={100} value={60} disabled />
-</div>
+<SliderDocSample client:only="react" />
