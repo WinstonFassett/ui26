@@ -8,7 +8,7 @@ import { CopyBtn } from "@/components/livecode/CopyBtn";
 import { getSamples } from "@/samples";
 import BackToDocs from "@/components/BackToDocs.astro";
 
-const CATEGORY_ORDER = ["Editorial", "Cards", "Forms", "Marketing", "Feedback", "Productivity", "AI"];
+const CATEGORY_ORDER = ["Cards", "Forms", "Marketing", "Feedback", "Productivity", "AI"];
 
 const ALL_BLOCKS = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
 
@@ -16,7 +16,7 @@ const GROUPED = CATEGORY_ORDER
   .map((cat) => ({
     category: cat,
     blocks: ALL_BLOCKS
-      .filter((b) => (b.category ?? "Editorial") === cat)
+      .filter((b) => b.category === cat)
       .sort((a, b) => (a.order ?? 999) - (b.order ?? 999)),
   }))
   .filter((g) => g.blocks.length > 0);
@@ -24,7 +24,7 @@ const GROUPED = CATEGORY_ORDER
 const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
   id: b.id,
   label: b.title,
-  section: b.category ?? "Editorial",
+  section: b.category ?? "",
   spec: b.spec,
   componentName: b.componentName,
 }));
