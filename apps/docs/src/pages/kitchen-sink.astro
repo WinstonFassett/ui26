@@ -168,8 +168,8 @@ const typeScale = [
     </div>
 
     <div class="pb-5 border-b border-border">
-      <AtomGroup label="Variants" relatedComponent="button" group="variants" />
-      <AtomGroup label="Sizes" relatedComponent="button" group="sizes" />
+      <AtomGroup label="Variants" id="button-variants" />
+      <AtomGroup label="Sizes" id="button-sizes" />
 
       <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-2 items-center mb-3">
         <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Toggle</div>
@@ -196,7 +196,7 @@ const typeScale = [
     </div>
 
     <div class="pb-5 border-b border-border">
-      <AtomGroup label="Variants" relatedComponent="badge" group="variants" />
+      <AtomGroup label="Variants" id="badge-variants" />
 
       {/* Usage examples — realistic compositions, not single atoms. */}
       <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-3.5 items-center mt-2">
@@ -239,9 +239,10 @@ const typeScale = [
     </div>
 
     <div class="pb-5 mb-5 border-b border-border">
-      <AtomGroup label="Input states" relatedComponent="input" />
-      <AtomGroup label="Textarea states" relatedComponent="textarea" />
-      <AtomGroup label="Label" relatedComponent="label" />
+      <AtomGroup label="Input states" id="input-states" />
+      <AtomGroup label="Input types" id="input-types" />
+      <AtomGroup label="Textarea states" id="textarea-states" />
+      <AtomGroup label="Label" id="label-compositions" />
     </div>
 
     <div class="grid grid-cols-2 gap-7 pb-5 border-b border-border">
@@ -296,8 +297,8 @@ const typeScale = [
     </div>
 
     <div class="pb-5 mb-5 border-b border-border">
-      <AtomGroup label="Checkbox states" relatedComponent="checkbox" />
-      <AtomGroup label="Switch states" relatedComponent="switch" />
+      <AtomGroup label="Checkbox states" id="checkbox-states" />
+      <AtomGroup label="Switch states" id="switch-states" />
     </div>
 
     <div class="grid grid-cols-4 gap-7 pb-5 border-b border-border">

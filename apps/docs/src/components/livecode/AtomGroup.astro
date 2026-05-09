@@ -1,28 +1,21 @@
 ---
 import RegionWrap from "@/components/livecode/RegionWrap.astro";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
-import { getSamples } from "@/samples";
+import { getSample } from "@/samples";
 
 interface Props {
   label: string;
-  relatedComponent: string;
-  group?: string;
-  /** Tailwind classes for the tile-row container. Default: flex-wrap row. */
-  rowClass?: string;
+  id: string;
 }
 
-const { label, relatedComponent, group, rowClass = "flex flex-wrap items-center gap-2" } = Astro.props;
-
-const items = getSamples({ relatedComponent, ...(group ? { group } : {}) });
+const { label, id } = Astro.props;
+const sample = getSample(id);
+if (!sample) throw new Error(`AtomGroup: unknown sample id "${id}"`);
 ---
 
 <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-2 items-center mb-3">
   <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">{label}</div>
-  <div class={rowClass}>
-    {items.map((s) => (
-      <RegionWrap id={s.id} class="!m-0 !p-1.5">
-        <BlockPreview spec={s.spec} client:load />
-      </RegionWrap>
-    ))}
-  </div>
+  <RegionWrap id={sample.id} class="m-0!">
+    <BlockPreview spec={sample.spec} client:load />
+  </RegionWrap>
 </div>
