@@ -70,6 +70,9 @@ const COMMAND_PALETTE = getSample("command-palette")!;
 const BADGE_COMPOSITIONS = getSample("badge-compositions")!;
 const WORKSPACE_FORM = getSample("workspace-form")!;
 const SELECTION_CONTROLS = getSample("selection-controls")!;
+const SKELETON_CARD = getSample("skeleton-card")!;
+const AVATAR_ROW = getSample("avatar-row")!;
+const CONTEXT_MENU = getSample("context-menu")!;
 
 const RAIL_REGIONS = [...ALL_BLOCKS, ...ALL_ATOMS].map((s) => ({
   id: s.id,
@@ -580,26 +583,9 @@ const typeScale = [
 
     {/* Skeleton loading states */}
     <div class="grid grid-cols-3 gap-5 mb-5">
-      <Card>
-        <CardHeader>
-          <CardDescription class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute">Loading state</CardDescription>
-          <CardTitle>Skeleton</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div class="space-y-3">
-            <div class="flex items-center gap-3">
-              <Skeleton class="size-9 rounded-full shrink-0" />
-              <div class="space-y-1.5 flex-1">
-                <Skeleton class="h-3 w-3/4" />
-                <Skeleton class="h-3 w-1/2" />
-              </div>
-            </div>
-            <Skeleton class="h-3 w-full" />
-            <Skeleton class="h-3 w-5/6" />
-            <Skeleton class="h-20 w-full rounded-md" />
-          </div>
-        </CardContent>
-      </Card>
+      <RegionWrap id={SKELETON_CARD.id}>
+        <BlockPreview spec={SKELETON_CARD.spec} client:load />
+      </RegionWrap>
 
       <Card>
         <CardHeader>
@@ -649,56 +635,17 @@ const typeScale = [
     </div>
 
     {/* Avatars */}
-    <div class="flex items-center gap-4 mb-5 px-0.5">
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute shrink-0">Team</div>
-      <div class="flex items-center gap-2">
-        <Avatar size="sm"><AvatarFallback>JR</AvatarFallback></Avatar>
-        <Avatar size="sm"><AvatarFallback>KM</AvatarFallback></Avatar>
-        <Avatar size="sm"><AvatarFallback>AP</AvatarFallback></Avatar>
-        <Avatar size="sm"><AvatarFallback>LS</AvatarFallback></Avatar>
-        <span class="font-mono text-[11px] text-muted-foreground ml-1">+12 members</span>
-      </div>
-      <div class="flex-1 h-px bg-border" />
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute shrink-0">Sizes</div>
-      <div class="flex items-end gap-2">
-        <Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
-        <Avatar><AvatarFallback>MD</AvatarFallback></Avatar>
-        <Avatar size="lg"><AvatarFallback>LG</AvatarFallback></Avatar>
-        <Avatar size="xl"><AvatarFallback>XL</AvatarFallback></Avatar>
-      </div>
+    <div class="mb-5">
+      <RegionWrap id={AVATAR_ROW.id}>
+        <BlockPreview spec={AVATAR_ROW.spec} client:load />
+      </RegionWrap>
     </div>
 
     {/* Menu + Tooltip + Empty state */}
     <div class="grid grid-cols-3 gap-5">
-      <div class="border border-border rounded bg-card overflow-hidden">
-        <div class="px-5 pt-5">
-          <div class="font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute mb-1.5">Menu (right-click)</div>
-          <div class="text-[14px] font-semibold text-foreground mb-2.5">Ticket actions</div>
-        </div>
-        {[
-          { i: "↵", l: "Open", k: "↵", active: true },
-          { i: "↗", l: "Open in new tab", k: "⌘↵" },
-          { i: "⎘", l: "Copy link", k: "⌘C" },
-          { sep: true },
-          { i: "↑", l: "Assign to…", k: "A" },
-          { i: "⧉", l: "Duplicate", k: "D" },
-          { sep: true },
-          { i: "✕", l: "Delete", k: "⌫", danger: true },
-        ].map((m) => m.sep ? (
-          <div class="h-px bg-border mx-2" />
-        ) : (
-          <div class:list={[
-            "px-4 py-1.5 flex items-center gap-2.5 text-[13px]",
-            m.danger ? "text-destructive" : "text-foreground",
-            m.active && "bg-muted",
-          ]}>
-            <span class:list={["font-mono text-[11px] w-3.5", m.danger ? "text-destructive" : "text-text-mute"]}>{m.i}</span>
-            <span class="flex-1">{m.l}</span>
-            <span class="font-mono text-[10px] text-text-mute">{m.k}</span>
-          </div>
-        ))}
-        <div class="h-4" />
-      </div>
+      <RegionWrap id={CONTEXT_MENU.id}>
+        <BlockPreview spec={CONTEXT_MENU.spec} client:load />
+      </RegionWrap>
 
       <Card>
         <CardHeader>
