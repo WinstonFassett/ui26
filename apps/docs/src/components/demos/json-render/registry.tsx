@@ -22,6 +22,10 @@ import { Switch as SwitchRoot } from "@registry/switch/switch.tsx";
 import { Label as LabelRoot } from "@registry/label/label.tsx";
 import { Alert as AlertRoot, AlertTitle as AlertTitleRoot, AlertDescription as AlertDescriptionRoot } from "@registry/alert/alert.tsx";
 import { Separator as Sep } from "@registry/separator/separator.tsx";
+import { Toggle as ToggleRoot } from "@registry/toggle/toggle.tsx";
+import { Slider as SliderRoot } from "@registry/slider/slider.tsx";
+import { Avatar as AvatarRoot, AvatarFallback as AvatarFallbackRoot } from "@registry/avatar/avatar.tsx";
+import { Skeleton as SkeletonRoot } from "@registry/skeleton/skeleton.tsx";
 import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
@@ -64,6 +68,11 @@ import {
   type FieldLegendProps,
   type FieldTitleProps,
   type FieldSeparatorProps,
+  type ToggleProps,
+  type SliderProps,
+  type AvatarProps,
+  type AvatarFallbackProps,
+  type SkeletonProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -93,6 +102,22 @@ export const { registry } = defineRegistry(catalog, {
       <CardContentRoot {...u(props)}>{children}</CardContentRoot>
     ),
     Separator: ({ props }: BaseComponentProps<SeparatorProps>) => <Sep {...u(props)} />,
+    Toggle: ({ props }: BaseComponentProps<ToggleProps>) => {
+      const { label, ...rest } = u(props);
+      return <ToggleRoot {...rest}>{label}</ToggleRoot>;
+    },
+    Slider: ({ props }: BaseComponentProps<SliderProps>) => {
+      const { value, ...rest } = u(props);
+      return <SliderRoot {...rest} defaultValue={value !== undefined ? String(value) : undefined} />;
+    },
+    Avatar: ({ props, children }: BaseComponentProps<AvatarProps>) => (
+      <AvatarRoot {...u(props)}>{children}</AvatarRoot>
+    ),
+    AvatarFallback: ({ props }: BaseComponentProps<AvatarFallbackProps>) => {
+      const { text, ...rest } = u(props);
+      return <AvatarFallbackRoot {...rest}>{text}</AvatarFallbackRoot>;
+    },
+    Skeleton: ({ props }: BaseComponentProps<SkeletonProps>) => <SkeletonRoot {...u(props)} />,
 
     // ── Content-prop mapping (catalog has `text`/`label`; component takes children) ──
     Heading: ({ props }: BaseComponentProps<HeadingProps>) => {

@@ -172,6 +172,38 @@ const fieldSeparatorProps = z.object({
   className: z.string().nullable(),
 });
 
+const toggleProps = z.object({
+  label: z.string(),
+  variant: z.enum(["default", "outline", "ghost"]).nullable(),
+  size: z.enum(["default", "sm", "lg", "icon"]).nullable(),
+  pressed: z.boolean().nullable(),
+  disabled: z.boolean().nullable(),
+  className: z.string().nullable(),
+});
+
+const sliderProps = z.object({
+  min: z.number().nullable(),
+  max: z.number().nullable(),
+  value: z.number().nullable(),
+  step: z.number().nullable(),
+  disabled: z.boolean().nullable(),
+  className: z.string().nullable(),
+});
+
+const avatarProps = z.object({
+  size: z.enum(["sm", "default", "lg", "xl"]).nullable(),
+  className: z.string().nullable(),
+});
+
+const avatarFallbackProps = z.object({
+  text: z.string(),
+  className: z.string().nullable(),
+});
+
+const skeletonProps = z.object({
+  className: z.string().nullable(),
+});
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -346,6 +378,34 @@ export const catalog = defineCatalog(schema, {
       slots: [],
       description: "Horizontal divider between fields, optionally labeled with text.",
     },
+    Toggle: {
+      props: toggleProps,
+      slots: [],
+      description: "Toggleable button. Tracks pressed state via aria-pressed.",
+      example: { label: "Bold", variant: "default" },
+    },
+    Slider: {
+      props: sliderProps,
+      slots: [],
+      description: "Range input slider.",
+      example: { min: 0, max: 100, value: 50 },
+    },
+    Avatar: {
+      props: avatarProps,
+      slots: ["default"],
+      description: "Circular avatar container. Compose with AvatarFallback.",
+      example: { size: "default" },
+    },
+    AvatarFallback: {
+      props: avatarFallbackProps,
+      slots: [],
+      description: "Initials fallback rendered inside Avatar.",
+    },
+    Skeleton: {
+      props: skeletonProps,
+      slots: [],
+      description: "Shimmering placeholder for loading states.",
+    },
     Separator: {
       props: separatorProps,
       slots: [],
@@ -386,3 +446,8 @@ export type FieldSetProps           = z.output<typeof fieldSetProps>;
 export type FieldLegendProps        = z.output<typeof fieldLegendProps>;
 export type FieldTitleProps         = z.output<typeof fieldTitleProps>;
 export type FieldSeparatorProps     = z.output<typeof fieldSeparatorProps>;
+export type ToggleProps             = z.output<typeof toggleProps>;
+export type SliderProps             = z.output<typeof sliderProps>;
+export type AvatarProps             = z.output<typeof avatarProps>;
+export type AvatarFallbackProps     = z.output<typeof avatarFallbackProps>;
+export type SkeletonProps           = z.output<typeof skeletonProps>;

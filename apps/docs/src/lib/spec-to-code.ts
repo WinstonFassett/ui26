@@ -21,6 +21,8 @@ const SLOT_PROP: Record<string, string> = {
   FieldLegend: 'text',
   FieldTitle: 'text',
   FieldSeparator: 'text',
+  Toggle: 'label',
+  AvatarFallback: 'text',
 }
 
 interface Lowered {
