@@ -5,18 +5,37 @@ import { ClickDockShell } from "@/components/livecode/ClickDockShell";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
 import { CopyBtn } from "@/components/livecode/CopyBtn";
-import { BLOCKS, type BlockCategory } from "@/lib/blocks";
+import { BLOCKS } from "@/lib/blocks";
+import { getSamples } from "@/samples";
 
-const CATEGORY_ORDER: BlockCategory[] = ["Editorial", "Cards", "Forms", "Marketing", "Productivity", "AI"];
+const CATEGORY_ORDER = ["Editorial", "Cards", "Forms", "Marketing", "Feedback", "Productivity", "AI"];
+
+// Union: samples win over legacy BLOCKS on collision
+const SAMPLE_BLOCKS = getSamples({ kind: "block" });
+const SAMPLE_IDS = new Set(SAMPLE_BLOCKS.map((s) => s.id));
+const ALL_BLOCKS = [
+  ...SAMPLE_BLOCKS,
+  ...BLOCKS.filter((b) => !SAMPLE_IDS.has(b.id)).map((b) => ({
+    ...b,
+    order: undefined as number | undefined,
+    featured: undefined as boolean | undefined,
+    indexable: undefined as boolean | undefined,
+  })),
+].filter((b) => b.indexable !== false);
 
 const GROUPED = CATEGORY_ORDER
-  .map((cat) => ({ category: cat, blocks: BLOCKS.filter((b) => b.category === cat) }))
+  .map((cat) => ({
+    category: cat,
+    blocks: ALL_BLOCKS
+      .filter((b) => (b.category ?? "Editorial") === cat)
+      .sort((a, b) => (a.order ?? 999) - (b.order ?? 999)),
+  }))
   .filter((g) => g.blocks.length > 0);
 
-const RAIL_REGIONS = BLOCKS.map((b) => ({
+const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
   id: b.id,
   label: b.title,
-  section: b.category,
+  section: b.category ?? "Editorial",
   spec: b.spec,
   componentName: b.componentName,
 }));
