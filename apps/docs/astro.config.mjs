@@ -65,12 +65,12 @@ export default defineConfig({
                     { label: 'Kitchen Sink', link: '/kitchen-sink' },
                 ],
             },
-            // {
-            //     label: 'Guides',
-            //     items: [
-            //         { label: 'Example Guide', slug: 'guides/example' },
-            //     ],
-            // },
+            {
+                label: 'Guides',
+                items: [
+                    { label: 'JSON Render', slug: 'guides/json-render' },
+                ],
+            },
             {
                 label: 'Tools',
                 items: [

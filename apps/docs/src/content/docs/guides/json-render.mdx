@@ -1,0 +1,169 @@
+---
+title: JSON Render
+description: Wire @json-render/react to ui26 components for fully declarative, JSON-driven UIs.
+---
+
+import { JsonRenderDemo } from "@/components/demos/json-render/JsonRenderDemo";
+
+`@json-render/react` turns a plain JSON **Spec** into a rendered React tree, using a component registry you provide. ui26 ships a ready-made registry that wires all primitive components — Button, Badge, Card, Field, Alert, and more — to this renderer.
+
+## How it works
+
+A **Spec** is a flat map of element nodes. Each node names a `type` (matched to a registry entry), carries `props`, and lists `children` by key.
+
+```json
+{
+  "root": "btn",
+  "elements": {
+    "btn": { "type": "Button", "props": { "label": "Save changes" }, "children": [] }
+  }
+}
+```
+
+The renderer walks the tree from `root`, resolves each `type` through the registry, and passes serialised `props` + resolved `children` to the component. Null props are coerced to `undefined` at the registry boundary so React components stay clean.
+
+## Setup
+
+Install the peer package and import the ui26 registry:
+
+```ts
+// registry is pre-built; wire it into JSONUIProvider
+import { registry } from "@/components/demos/json-render/registry";
+import { Renderer, JSONUIProvider } from "@json-render/react";
+
+export function MyDemo({ spec }) {
+  return (
+    <JSONUIProvider registry={registry}>
+      <Renderer spec={spec} registry={registry} />
+    </JSONUIProvider>
+  );
+}
+```
+
+## Supported components
+
+| Type | Props |
+|------|-------|
+| `Button` | `label`, `variant`, `size`, `disabled` |
+| `Badge` | `text`, `variant` |
+| `Text` | `content`, `size`, `muted`, `mono`, `className` |
+| `Heading` | `text`, `level`, `className` |
+| `Stack` | `direction`, `gap`, `align`, `justify`, `wrap`, `className` |
+| `Grid` | `cols`, `gap`, `className` |
+| `Card` / `CardHeader` / `CardContent` / `CardFooter` | `className` |
+| `CardTitle` / `CardDescription` | `text`, `className` |
+| `Input` | `id`, `type`, `placeholder`, `value`, `invalid`, `disabled` |
+| `Textarea` | `id`, `placeholder`, `value`, `rows`, `invalid`, `disabled` |
+| `Checkbox` | `id`, `checked`, `disabled` |
+| `Switch` | `id`, `checked`, `disabled` |
+| `Label` | `text`, `htmlFor` |
+| `Alert` / `AlertTitle` / `AlertDescription` | `variant`, `text`, `className` |
+| `Field` / `FieldContent` / `FieldLabel` / `FieldDescription` / `FieldError` | orientation, text, htmlFor |
+| `Separator` | `orientation`, `decorative` |
+
+---
+
+## Examples
+
+### Buttons
+
+export const buttonsSpec = {
+  root: "root",
+  elements: {
+    root: { type: "Stack", props: { direction: "col", gap: "5" }, children: ["variants", "sizes"] },
+    variants: { type: "Stack", props: { direction: "row", gap: "2", align: "center" }, children: ["b-default", "b-secondary", "b-outline", "b-ghost", "b-destructive"] },
+    "b-default":     { type: "Button", props: { label: "Create ticket",  variant: "default"      }, children: [] },
+    "b-secondary":   { type: "Button", props: { label: "Save changes",   variant: "secondary"    }, children: [] },
+    "b-outline":     { type: "Button", props: { label: "Cancel",         variant: "outline"      }, children: [] },
+    "b-ghost":       { type: "Button", props: { label: "Discard",        variant: "ghost"        }, children: [] },
+    "b-destructive": { type: "Button", props: { label: "Delete machine", variant: "destructive"  }, children: [] },
+    sizes: { type: "Stack", props: { direction: "row", gap: "2", align: "center" }, children: ["sz-sm", "sz-md", "sz-lg"] },
+    "sz-sm": { type: "Button", props: { label: "Small",  size: "sm"      }, children: [] },
+    "sz-md": { type: "Button", props: { label: "Medium", size: "default" }, children: [] },
+    "sz-lg": { type: "Button", props: { label: "Large",  size: "lg"      }, children: [] },
+  },
+};
+
+<JsonRenderDemo spec={buttonsSpec} client:load />
+
+---
+
+### Fields & forms
+
+export const fieldsSpec = {
+  root: "root",
+  elements: {
+    root: { type: "Grid", props: { cols: "2", gap: "6" }, children: ["col-left", "col-right"] },
+    "col-left": { type: "Stack", props: { direction: "col", gap: "4" }, children: ["fld-workspace", "fld-slug", "fld-email", "fld-search"] },
+
+    "fld-workspace": { type: "Field", props: {}, children: ["lbl-workspace", "in-workspace"] },
+    "lbl-workspace": { type: "FieldLabel", props: { text: "Workspace name", htmlFor: "workspace" }, children: [] },
+    "in-workspace": { type: "Input", props: { id: "workspace", type: "text", value: "Acme Retrospective" }, children: [] },
+
+    "fld-slug": { type: "Field", props: {}, children: ["lbl-slug", "in-slug", "desc-slug"] },
+    "lbl-slug": { type: "FieldLabel", props: { text: "Slug", htmlFor: "slug" }, children: [] },
+    "in-slug": { type: "Input", props: { id: "slug", type: "text", value: "acme-retro" }, children: [] },
+    "desc-slug": { type: "FieldDescription", props: { text: "lowercase · dashes" }, children: [] },
+
+    "fld-email": { type: "Field", props: {}, children: ["lbl-email", "in-email", "err-email"] },
+    "lbl-email": { type: "FieldLabel", props: { text: "Email", htmlFor: "email" }, children: [] },
+    "in-email": { type: "Input", props: { id: "email", type: "email", placeholder: "you@company.com", invalid: true }, children: [] },
+    "err-email": { type: "FieldError", props: { text: "Already in use — try signing in instead" }, children: [] },
+
+    "fld-search": { type: "Field", props: {}, children: ["lbl-search", "in-search"] },
+    "lbl-search": { type: "FieldLabel", props: { text: "Search", htmlFor: "search" }, children: [] },
+    "in-search": { type: "Input", props: { id: "search", type: "search", placeholder: "Search tickets, docs, people…" }, children: [] },
+
+    "col-right": { type: "Stack", props: { direction: "col", gap: "4" }, children: ["fld-bug"] },
+    "fld-bug": { type: "Field", props: {}, children: ["lbl-bug", "ta-bug", "desc-bug"] },
+    "lbl-bug": { type: "FieldLabel", props: { text: "Bug description", htmlFor: "bug" }, children: [] },
+    "ta-bug": { type: "Textarea", props: { id: "bug", value: "After clicking 'Retry' in the paying state, the fetcher briefly flashes back to 'idle' before transitioning to 'loading'.", rows: 5 }, children: [] },
+    "desc-bug": { type: "FieldDescription", props: { text: "198/2000", className: "self-end" }, children: [] },
+  },
+};
+
+<JsonRenderDemo spec={fieldsSpec} client:load />
+
+---
+
+### Cards
+
+export const cardsSpec = {
+  root: "root",
+  elements: {
+    root: { type: "Grid", props: { cols: "3", gap: "4" }, children: ["card-ticket", "card-usage", "card-upgrade"] },
+
+    "card-ticket": { type: "Card", props: {}, children: ["ticket-hdr", "ticket-content", "ticket-footer"] },
+    "ticket-hdr": { type: "CardHeader", props: {}, children: ["ticket-title", "ticket-desc"] },
+    "ticket-title": { type: "CardTitle", props: { text: "Ticket: Payment retry loop" }, children: [] },
+    "ticket-desc": { type: "CardDescription", props: { text: "Flashing back to idle between paying and loading." }, children: [] },
+    "ticket-content": { type: "CardContent", props: {}, children: ["ticket-badges"] },
+    "ticket-badges": { type: "Stack", props: { direction: "row", gap: "1", wrap: true }, children: ["tb1","tb2","tb3"] },
+    "tb1": { type: "Badge", props: { text: "P0",       variant: "destructive" }, children: [] },
+    "tb2": { type: "Badge", props: { text: "#billing", variant: "secondary"   }, children: [] },
+    "tb3": { type: "Badge", props: { text: "#fetcher", variant: "secondary"   }, children: [] },
+    "ticket-footer": { type: "CardFooter", props: {}, children: ["ticket-btn"] },
+    "ticket-btn": { type: "Button", props: { label: "Open", variant: "outline", size: "sm" }, children: [] },
+
+    "card-usage": { type: "Card", props: {}, children: ["usage-hdr", "usage-content"] },
+    "usage-hdr": { type: "CardHeader", props: {}, children: ["usage-title", "usage-desc"] },
+    "usage-title": { type: "CardTitle", props: { text: "Weekly transitions" }, children: [] },
+    "usage-desc": { type: "CardDescription", props: { text: "Past 7 days across all machines." }, children: [] },
+    "usage-content": { type: "CardContent", props: {}, children: ["usage-stats"] },
+    "usage-stats": { type: "Stack", props: { direction: "col", gap: "2" }, children: ["stat-transitions","stat-latency","stat-errors"] },
+    "stat-transitions": { type: "Text", props: { content: "Transitions · 1,284 (+12%)", size: "sm" }, children: [] },
+    "stat-latency":     { type: "Text", props: { content: "Avg latency · 142ms (−6%)",  size: "sm", muted: true }, children: [] },
+    "stat-errors":      { type: "Text", props: { content: "Error rate · 0.3% (+0.1%)",  size: "sm", muted: true }, children: [] },
+
+    "card-upgrade": { type: "Card", props: {}, children: ["upgrade-hdr", "upgrade-content", "upgrade-footer"] },
+    "upgrade-hdr": { type: "CardHeader", props: {}, children: ["upgrade-title", "upgrade-desc"] },
+    "upgrade-title": { type: "CardTitle", props: { text: "Upgrade your plan" }, children: [] },
+    "upgrade-desc": { type: "CardDescription", props: { text: "Unlock more projects and seats." }, children: [] },
+    "upgrade-content": { type: "CardContent", props: {}, children: ["upgrade-text"] },
+    "upgrade-text": { type: "Text", props: { content: "$19/month, cancel anytime.", size: "sm", muted: true }, children: [] },
+    "upgrade-footer": { type: "CardFooter", props: {}, children: ["upgrade-btn"] },
+    "upgrade-btn": { type: "Button", props: { label: "Upgrade" }, children: [] },
+  },
+};
+
+<JsonRenderDemo spec={cardsSpec} client:load />
