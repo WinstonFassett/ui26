@@ -16,7 +16,7 @@ export function CardDocSample() {
             <BlockPreview spec={demo.spec} />
           </div>
           <div className="mt-4">
-            <DemoCodeBlock spec={demo.spec} demoName={demo.label} />
+            <DemoCodeBlock spec={demo.spec} demoName={demo.id} namePrefix="Card" />
           </div>
         </section>
       ))}
