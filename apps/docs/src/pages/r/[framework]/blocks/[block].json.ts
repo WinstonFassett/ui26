@@ -2,12 +2,37 @@ import type { APIRoute, GetStaticPaths } from "astro";
 import path from "node:path";
 import { FRAMEWORKS, type Framework } from "../../../../../registry/registry.meta";
 import { BLOCKS } from "../../../../lib/blocks";
+import { getSamples } from "../../../../samples";
 import { specToCode, FRAMEWORK_EXTS } from "../../../../lib/spec-to-code";
+
+const SAMPLE_BLOCKS = getSamples({ kind: "block" });
+const SAMPLE_IDS = new Set(SAMPLE_BLOCKS.map((s) => s.id));
+
+interface BlockEntry {
+  id: string;
+  title: string;
+  description: string;
+  componentName: string;
+  spec: import("../../../../lib/spec-to-code").Spec;
+  registryDependencies: string[];
+}
+
+const ALL_BLOCKS: BlockEntry[] = [
+  ...SAMPLE_BLOCKS.map((s): BlockEntry => ({
+    id: s.id,
+    title: s.title,
+    description: s.description,
+    componentName: s.componentName,
+    spec: s.spec,
+    registryDependencies: s.registryDependencies ?? [],
+  })),
+  ...BLOCKS.filter((b) => !SAMPLE_IDS.has(b.id)),
+];
 
 export const getStaticPaths: GetStaticPaths = () => {
   const paths: { params: { framework: string; block: string } }[] = [];
   for (const fw of FRAMEWORKS) {
-    for (const b of BLOCKS) {
+    for (const b of ALL_BLOCKS) {
       paths.push({ params: { framework: fw, block: b.id } });
     }
   }
@@ -17,7 +42,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const GET: APIRoute = ({ params, request }) => {
   const fw = params.framework as Framework;
   const id = params.block!;
-  const block = BLOCKS.find((b) => b.id === id);
+  const block = ALL_BLOCKS.find((b) => b.id === id);
   if (!block) return new Response("not found", { status: 404 });
 
   const ext = FRAMEWORK_EXTS[fw];
