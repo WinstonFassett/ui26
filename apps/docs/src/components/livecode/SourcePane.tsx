@@ -71,7 +71,7 @@ export function SourcePane({
       >
         <CodeBlockContent
           language={file.language as "tsx" | "svelte" | "astro"}
-          themes={{ light: "github-light-default", dark: "github-dark-default" }}
+          themes={{ light: "github-light", dark: "github-dark-default" }}
         >
           {file.code}
         </CodeBlockContent>

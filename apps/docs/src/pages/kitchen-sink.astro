@@ -530,6 +530,8 @@ const typeScale = [
         padding-top: 12px;
       }
       body[data-rail-open="true"] .ks-rail { transform: translateY(0); }
+      body[data-rail-open="true"] { overflow: hidden; }
+      .ks-rail { overscroll-behavior: contain; }
       .ks-rail .ks-rail-grabber { display: block; }
       .ks-rail .ks-rail-close { top: 10px; }
     }
