@@ -23,6 +23,7 @@ export interface Sample {
   order?: number        // within-category sort, lower = first
   featured?: boolean    // include in homepage teaser
   indexable?: boolean   // default true; false = exists but hidden from /blocks index
+  span?: "full" | "auto" // "full" = col-span-2, overrides grid; default "auto"
 }
 
 export interface SampleFilter {

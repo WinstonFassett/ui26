@@ -6,6 +6,7 @@ import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
 import { CopyBtn } from "@/components/livecode/CopyBtn";
 import { getSamples } from "@/samples";
+import BackToDocs from "@/components/BackToDocs.astro";
 
 const CATEGORY_ORDER = ["Editorial", "Cards", "Forms", "Marketing", "Feedback", "Productivity", "AI"];
 
@@ -42,6 +43,7 @@ const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
 
   <div class="blocks-page blocks-with-rail">
     <main class="blocks-main">
+      <BackToDocs />
       <section class="not-content mb-12">
         <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-muted-foreground mb-3">
           ui26 · blocks
@@ -67,7 +69,7 @@ const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
           </header>
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {group.blocks.map((b) => (
-              <RegionWrap id={b.id}>
+              <RegionWrap id={b.id} class={b.span === "full" ? "lg:col-span-2" : ""}>
                 <div class="not-content">
                   <div class="mb-3 flex items-baseline gap-3">
                     <span class="font-mono text-[10px] tracking-[0.12em] uppercase text-accent">{b.id}</span>

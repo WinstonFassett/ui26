@@ -1,5 +1,6 @@
 ---
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import BackToDocs from "@/components/BackToDocs.astro";
 import Button from "@registry/button/button.astro";
 import Badge from "@registry/badge/badge.astro";
 import Card from "@registry/card/card.astro";
@@ -41,6 +42,7 @@ import PaginationLink from "@registry/pagination/pagination-link.astro";
 import RadioGroup from "@registry/radio-group/radio-group.astro";
 import RadioGroupItem from "@registry/radio-group/radio-group-item.astro";
 import RegionWrap from "@/components/livecode/RegionWrap.astro";
+import AtomGroup from "@/components/livecode/AtomGroup.astro";
 import { ClickDockShell } from "@/components/livecode/ClickDockShell";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
@@ -54,33 +56,20 @@ const SECTION_LABEL: Record<string, string> = {
 };
 
 const ALL_BLOCKS = getSamples({ kind: "block" });
+const ALL_ATOMS = getSamples({ kind: "atom" });
 const TYPE_SCALE = getSample("type-scale")!;
+const COLOR_PALETTE = getSample("color-palette")!;
 const TICKET_CARD = getSample("ticket-card")!;
 const STATS_CARD = getSample("stats-card")!;
 const UPGRADE_CARD = getSample("upgrade-card")!;
 
-const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
-  id: b.id,
-  label: b.title,
-  section: SECTION_LABEL[b.id] ?? "Blocks",
-  spec: b.spec,
-  componentName: b.componentName,
+const RAIL_REGIONS = [...ALL_BLOCKS, ...ALL_ATOMS].map((s) => ({
+  id: s.id,
+  label: s.title,
+  section: SECTION_LABEL[s.id] ?? (s.kind === "atom" ? (s.relatedComponent ?? "Atoms") : "Blocks"),
+  spec: s.spec,
+  componentName: s.componentName,
 }));
-
-const paletteTokens = [
-  { name: "background", var: "--background" },
-  { name: "foreground", var: "--foreground" },
-  { name: "card", var: "--card" },
-  { name: "muted", var: "--muted" },
-  { name: "border", var: "--border" },
-  { name: "ring", var: "--ring" },
-  { name: "accent", var: "--accent" },
-  { name: "success", var: "--success" },
-  { name: "warn", var: "--warn" },
-  { name: "info", var: "--info" },
-  { name: "purple", var: "--purple" },
-  { name: "destructive", var: "--destructive" },
-];
 
 const typeScale = [
   { tag: "display/xl", cls: "font-serif italic font-medium text-[64px] leading-[1.02] tracking-[-0.022em]", size: "64/500", sample: "Composable state." },
@@ -109,6 +98,7 @@ const typeScale = [
 
   <div class="ks-page">
 
+  <BackToDocs />
   {/* ──────────────────────────────────────────────── Hero (full-width, above rail) */}
   <section class="not-content mb-12">
     <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute mb-3">
@@ -164,17 +154,9 @@ const typeScale = [
       <span class="flex-1 h-px bg-border" />
     </div>
 
-    <div class="grid grid-cols-6 gap-2.5">
-      {paletteTokens.map((s) => (
-        <div class="border border-border rounded overflow-hidden">
-          <div class="h-[52px] border-b border-border" style={`background: var(${s.var})`} />
-          <div class="px-2.5 py-2">
-            <div class="font-mono text-[11px] text-foreground">{s.name}</div>
-            <div class="font-mono text-[10px] text-text-mute mt-0.5">{s.var}</div>
-          </div>
-        </div>
-      ))}
-    </div>
+    <RegionWrap id={COLOR_PALETTE.id}>
+      <BlockPreview spec={COLOR_PALETTE.spec} client:load />
+    </RegionWrap>
   </section>
 
   {/* ──────────────────────────────────────────────── 03 · Buttons */}
@@ -185,42 +167,22 @@ const typeScale = [
       <span class="flex-1 h-px bg-border" />
     </div>
 
-    <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-5 items-center pb-5 border-b border-border">
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Variants</div>
-      <div class="flex gap-2 items-center flex-wrap">
-        <Button>Create ticket</Button>
-        <Button variant="secondary">Save changes</Button>
-        <Button variant="outline">Cancel</Button>
-        <Button variant="ghost">Discard</Button>
-        <Button variant="destructive">Delete machine</Button>
-        <Button disabled>Disabled</Button>
-      </div>
+    <div class="pb-5 border-b border-border">
+      <AtomGroup label="Variants" relatedComponent="button" group="variants" />
+      <AtomGroup label="Sizes" relatedComponent="button" group="sizes" />
 
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Sizes</div>
-      <div class="flex gap-2 items-center">
-        <Button size="sm">Small</Button>
-        <Button>Medium</Button>
-        <Button size="lg">Large</Button>
-      </div>
-
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Group</div>
-      <div class="inline-flex border border-border rounded overflow-hidden w-fit">
-        <div class="px-3 py-1.5 text-[12px] text-muted-foreground border-r border-border">All</div>
-        <div class="px-3 py-1.5 text-[12px] text-foreground font-medium bg-muted border-r border-border">Mine</div>
-        <div class="px-3 py-1.5 text-[12px] text-muted-foreground border-r border-border">Assigned</div>
-        <div class="px-3 py-1.5 text-[12px] text-muted-foreground">Watching</div>
-      </div>
-
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Toggle</div>
-      <div class="flex gap-2 items-center flex-wrap">
-        <Toggle>Bold</Toggle>
-        <Toggle pressed>Italic</Toggle>
-        <Toggle variant="outline">Underline</Toggle>
-        <Toggle variant="ghost">Code</Toggle>
-        <Toggle size="icon">B</Toggle>
-        <Toggle size="icon" pressed>I</Toggle>
-        <Toggle size="sm" pressed>sm</Toggle>
-        <Toggle disabled>Disabled</Toggle>
+      <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-2 items-center mb-3">
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Toggle</div>
+        <div class="flex gap-2 items-center flex-wrap">
+          <Toggle>Bold</Toggle>
+          <Toggle pressed>Italic</Toggle>
+          <Toggle variant="outline">Underline</Toggle>
+          <Toggle variant="ghost">Code</Toggle>
+          <Toggle size="icon">B</Toggle>
+          <Toggle size="icon" pressed>I</Toggle>
+          <Toggle size="sm" pressed>sm</Toggle>
+          <Toggle disabled>Disabled</Toggle>
+        </div>
       </div>
     </div>
   </section>
@@ -233,32 +195,37 @@ const typeScale = [
       <span class="flex-1 h-px bg-border" />
     </div>
 
-    <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-3.5 items-center pb-5 border-b border-border">
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Status</div>
-      <div class="flex gap-1.5 flex-wrap">
-        <Badge>Active</Badge>
-        <Badge variant="outline" class="text-success">● Shipping</Badge>
-        <Badge variant="outline" class="text-warn">● Review</Badge>
-        <Badge variant="destructive">Blocked</Badge>
-        <Badge variant="outline" class="text-info">● In progress</Badge>
-        <Badge variant="outline" class="text-purple">● Draft</Badge>
-        <Badge variant="secondary">Archived</Badge>
-      </div>
+    <div class="pb-5 border-b border-border">
+      <AtomGroup label="Variants" relatedComponent="badge" group="variants" />
 
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Priority</div>
-      <div class="flex gap-1.5">
-        <Badge variant="destructive">P0 · Critical</Badge>
-        <Badge variant="outline" class="text-warn">P1 · High</Badge>
-        <Badge variant="outline" class="text-info">P2 · Medium</Badge>
-        <Badge variant="secondary">P3 · Low</Badge>
-      </div>
+      {/* Usage examples — realistic compositions, not single atoms. */}
+      <div class="grid grid-cols-[180px_1fr] gap-x-6 gap-y-3.5 items-center mt-2">
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Status</div>
+        <div class="flex gap-1.5 flex-wrap">
+          <Badge>Active</Badge>
+          <Badge variant="outline" class="text-success">● Shipping</Badge>
+          <Badge variant="outline" class="text-warn">● Review</Badge>
+          <Badge variant="destructive">Blocked</Badge>
+          <Badge variant="outline" class="text-info">● In progress</Badge>
+          <Badge variant="outline" class="text-purple">● Draft</Badge>
+          <Badge variant="secondary">Archived</Badge>
+        </div>
 
-      <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Inline tags</div>
-      <div class="flex gap-1.5 flex-wrap">
-        <Badge variant="secondary">#billing</Badge>
-        <Badge variant="secondary">#fetcher</Badge>
-        <Badge variant="secondary">#needs-repro</Badge>
-        <Badge variant="secondary">+3</Badge>
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Priority</div>
+        <div class="flex gap-1.5">
+          <Badge variant="destructive">P0 · Critical</Badge>
+          <Badge variant="outline" class="text-warn">P1 · High</Badge>
+          <Badge variant="outline" class="text-info">P2 · Medium</Badge>
+          <Badge variant="secondary">P3 · Low</Badge>
+        </div>
+
+        <div class="font-mono text-[10px] uppercase tracking-[0.06em] text-text-mute">Inline tags</div>
+        <div class="flex gap-1.5 flex-wrap">
+          <Badge variant="secondary">#billing</Badge>
+          <Badge variant="secondary">#fetcher</Badge>
+          <Badge variant="secondary">#needs-repro</Badge>
+          <Badge variant="secondary">+3</Badge>
+        </div>
       </div>
     </div>
   </section>
@@ -269,6 +236,12 @@ const typeScale = [
       <span class="text-accent">§05</span>
       <span>Fields &amp; forms</span>
       <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="pb-5 mb-5 border-b border-border">
+      <AtomGroup label="Input states" relatedComponent="input" />
+      <AtomGroup label="Textarea states" relatedComponent="textarea" />
+      <AtomGroup label="Label" relatedComponent="label" />
     </div>
 
     <div class="grid grid-cols-2 gap-7 pb-5 border-b border-border">
@@ -320,6 +293,11 @@ const typeScale = [
       <span class="text-accent">§06</span>
       <span>Selection controls</span>
       <span class="flex-1 h-px bg-border" />
+    </div>
+
+    <div class="pb-5 mb-5 border-b border-border">
+      <AtomGroup label="Checkbox states" relatedComponent="checkbox" />
+      <AtomGroup label="Switch states" relatedComponent="switch" />
     </div>
 
     <div class="grid grid-cols-4 gap-7 pb-5 border-b border-border">

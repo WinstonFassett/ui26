@@ -57,6 +57,7 @@ const sample: Sample = {
   componentName: "TypeScale",
   category: "Editorial",
   order: 1,
+  span: "full",
   registryDependencies: ["heading", "stack"],
   spec,
 }

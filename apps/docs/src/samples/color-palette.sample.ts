@@ -73,6 +73,7 @@ const sample: Sample = {
   componentName: "ColorPalette",
   category: "Editorial",
   order: 5,
+  span: "full",
   registryDependencies: ["stack", "grid"],
   spec,
 }

@@ -17,6 +17,17 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [fw, setFw] = useFw();
 
+  // Activate region from URL hash on mount.
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash && regions.some((r) => r.id === hash)) {
+      setOpenId(hash);
+      setTimeout(() => {
+        document.querySelector(`[data-region-id="${hash}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    }
+  }, []);
+
   // Listen for region clicks anywhere in the document.
   useEffect(() => {
     const handler = (e: MouseEvent) => {
