@@ -1,11 +1,6 @@
-import { useMemo } from "react";
-import { CodeBlockContent } from "@/components/kibo-ui/code-block";
+import type { Framework } from "@/lib/spec-to-code";
+import type { RenderedFiles } from "@/lib/prerender-source";
 import { cn } from "@/lib/utils";
-import {
-  specToFiles,
-  type Framework,
-  type Spec,
-} from "@/lib/spec-to-code";
 import { CopyBtn } from "./CopyBtn";
 import { FwTabs } from "./FwTabs";
 import { PlayroomLink } from "./PlayroomLink";
@@ -14,9 +9,7 @@ export interface SourcePaneRegion {
   id: string;
   label: string;
   section: string;
-  spec: Spec;
-  /** PascalCase name for React function and filename stem. Defaults to id. */
-  componentName?: string;
+  files: RenderedFiles;
 }
 
 export function SourcePane({
@@ -30,11 +23,7 @@ export function SourcePane({
   setFw: (fw: Framework) => void;
   className?: string;
 }) {
-  const files = useMemo(
-    () => specToFiles(region.spec, region.componentName ?? region.id, region.id),
-    [region],
-  );
-  const file = files[fw];
+  const file = region.files[fw];
 
   return (
     <div
@@ -61,28 +50,21 @@ export function SourcePane({
         className={cn(
           "flex-1 overflow-auto bg-muted/40 px-4 py-3.5",
           "[&_.shiki]:bg-transparent! [&_pre]:m-0! [&_pre]:p-0! [&_code]:text-[12px]! [&_code]:leading-[1.6]! [&_code]:font-mono",
-          // Shiki multi-theme dark-mode color overrides (mirrors kibo CodeBlock).
           "dark:[&_.shiki]:text-[var(--shiki-dark)]!",
           "dark:[&_.shiki_span]:text-[var(--shiki-dark)]!",
           "dark:[&_.shiki_span]:[font-style:var(--shiki-dark-font-style)]!",
           "dark:[&_.shiki_span]:[font-weight:var(--shiki-dark-font-weight)]!",
           "dark:[&_.shiki_span]:[text-decoration:var(--shiki-dark-text-decoration)]!"
         )}
-      >
-        <CodeBlockContent
-          language={file.language as "tsx" | "svelte" | "astro"}
-          themes={{ light: "github-light", dark: "github-dark-default" }}
-        >
-          {file.code}
-        </CodeBlockContent>
-      </div>
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: pre-rendered by server-side shiki at build time
+        dangerouslySetInnerHTML={{ __html: file.html }}
+      />
 
       <div className="flex items-center justify-between px-3.5 py-2 border-t border-border bg-card">
         <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
           ui26/{fw}
         </span>
-        {/* Playroom is React-only — always link to the React source for the active region. */}
-        <PlayroomLink code={files.react.code} />
+        <PlayroomLink code={region.files.react.code} />
       </div>
     </div>
   );

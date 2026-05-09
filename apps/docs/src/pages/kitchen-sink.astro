@@ -47,6 +47,7 @@ import { ClickDockShell } from "@/components/livecode/ClickDockShell";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
 import { getSamples, getSample } from "@/samples";
+import { prerenderFiles } from "@/lib/prerender-source";
 
 const SECTION_LABEL: Record<string, string> = {
   "type-scale": "§01 Typography",
@@ -82,13 +83,12 @@ const PAGINATION_BAR = getSample("pagination-bar")!
 const MACHINE_STATS = getSample("machine-stats")!
 const TOOLTIP_CARD = getSample("tooltip-card")!;
 
-const RAIL_REGIONS = [...ALL_BLOCKS, ...ALL_ATOMS].map((s) => ({
+const RAIL_REGIONS = await Promise.all([...ALL_BLOCKS, ...ALL_ATOMS].map(async (s) => ({
   id: s.id,
   label: s.title,
   section: SECTION_LABEL[s.id] ?? (s.kind === "atom" ? (s.relatedComponent ?? "Atoms") : "Blocks"),
-  spec: s.spec,
-  componentName: s.componentName,
-}));
+  files: await prerenderFiles(s.spec, s.componentName, s.id),
+})));
 
 const typeScale = [
   { tag: "display/xl", cls: "font-serif italic font-medium text-[64px] leading-[1.02] tracking-[-0.022em]", size: "64/500", sample: "Composable state." },

@@ -6,6 +6,7 @@ import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { FrameworkPicker } from "@/components/livecode/FrameworkPicker";
 import { CopyBtn } from "@/components/livecode/CopyBtn";
 import { getSamples } from "@/samples";
+import { prerenderFiles } from "@/lib/prerender-source";
 import BackToDocs from "@/components/BackToDocs.astro";
 
 const CATEGORY_ORDER = ["Cards", "Forms", "Marketing", "Feedback", "Productivity", "AI"];
@@ -21,13 +22,12 @@ const GROUPED = CATEGORY_ORDER
   }))
   .filter((g) => g.blocks.length > 0);
 
-const RAIL_REGIONS = ALL_BLOCKS.map((b) => ({
+const RAIL_REGIONS = await Promise.all(ALL_BLOCKS.map(async (b) => ({
   id: b.id,
   label: b.title,
   section: b.category ?? "",
-  spec: b.spec,
-  componentName: b.componentName,
-}));
+  files: await prerenderFiles(b.spec, b.componentName, b.id),
+})));
 ---
 
 <StarlightPage
