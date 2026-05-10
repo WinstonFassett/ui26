@@ -77,7 +77,7 @@ export default defineConfig({
                     label: 'Dev',
                     items: [
                         { label: 'Kitchen Sink', link: '/kitchen-sink' },
-                        { label: 'Ecosystem', link: '/installs' },
+                        { label: 'Ecosystem', link: '/ecosystem' },
                         { label: 'Tix App', link: '/tix-app' },
                         { label: 'Playroom', link: '/playroom' },
                     ],
