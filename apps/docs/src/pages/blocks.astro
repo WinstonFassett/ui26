@@ -104,6 +104,17 @@ const RAIL_REGIONS = await Promise.all(ALL_BLOCKS.map(async (b) => ({
   </div>
 
   <style is:global>
+    /* Narrow: dim backdrop behind the drawer (pointer-events:none — click-outside handled in JS). */
+    @media (max-width: 1099px) {
+      body[data-rail-open="true"]::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 39;
+        background: rgba(0,0,0,0.45);
+        pointer-events: none;
+      }
+    }
     /* Narrow (<1100px): rail is a slide-up drawer pinned to the viewport bottom. */
     @media (max-width: 1099px) {
       .blocks-rail {
@@ -127,7 +138,6 @@ const RAIL_REGIONS = await Promise.all(ALL_BLOCKS.map(async (b) => ({
       body[data-rail-open="true"] { overflow: hidden; }
       .blocks-rail { overscroll-behavior: contain; }
       .blocks-rail .ks-rail-grabber { display: block; }
-      .blocks-rail .ks-rail-close { top: 10px; }
     }
     @media (min-width: 1100px) {
       .blocks-with-rail { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 1.5rem; }

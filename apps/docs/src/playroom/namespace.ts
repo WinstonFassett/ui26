@@ -17,6 +17,11 @@ import {
   FieldLabel,
   FieldDescription,
   FieldError,
+  FieldGroup,
+  FieldSet,
+  FieldLegend,
+  FieldTitle,
+  FieldSeparator,
 } from "@registry/field/field.tsx";
 import { Grid } from "@registry/grid/grid.tsx";
 import { Heading } from "@registry/heading/heading.tsx";
@@ -45,6 +50,11 @@ export const tvuiNamespace = {
   FieldLabel,
   FieldDescription,
   FieldError,
+  FieldGroup,
+  FieldSet,
+  FieldLegend,
+  FieldTitle,
+  FieldSeparator,
   Grid,
   Heading,
   Input,
@@ -69,7 +79,7 @@ const uiModules: Record<string, Record<string, unknown>> = {
   "@/components/ui/button":    { Button },
   "@/components/ui/card":      { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter },
   "@/components/ui/checkbox":  { Checkbox },
-  "@/components/ui/field":     { Field, FieldContent, FieldLabel, FieldDescription, FieldError },
+  "@/components/ui/field":     { Field, FieldContent, FieldLabel, FieldDescription, FieldError, FieldGroup, FieldSet, FieldLegend, FieldTitle, FieldSeparator },
   "@/components/ui/grid":      { Grid },
   "@/components/ui/heading":   { Heading },
   "@/components/ui/input":     { Input },

@@ -16,11 +16,13 @@ export function SourcePane({
   region,
   fw,
   setFw,
+  onClose,
   className,
 }: {
   region: SourcePaneRegion;
   fw: Framework;
   setFw: (fw: Framework) => void;
+  onClose?: () => void;
   className?: string;
 }) {
   const file = region.files[fw];
@@ -32,7 +34,7 @@ export function SourcePane({
         className
       )}
     >
-      <div className="flex items-center gap-2.5 px-3.5 py-3 border-b border-border">
+      <div className="flex items-center gap-2 px-3.5 py-3 border-b border-border">
         <div className="flex-1 min-w-0">
           <div className="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
             {region.section}
@@ -42,6 +44,16 @@ export function SourcePane({
           </div>
         </div>
         <CopyBtn text={file.code} />
+        {onClose && (
+          <button
+            type="button"
+            aria-label="Close source panel"
+            onClick={onClose}
+            className="ks-rail-close inline-flex items-center justify-center w-7 h-7 border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted/40"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       <FwTabs fw={fw} setFw={setFw} fileLabel={file.filename} />

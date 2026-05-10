@@ -118,6 +118,7 @@ export function DemoSection({
   namePrefix?: string
 }) {
   const [selected, setSelected] = useState(demos[0])
+  if (!demos.length) return null
 
   return (
     <div className="not-content my-6">

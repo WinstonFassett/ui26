@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { SourcePane, type SourcePaneRegion } from "./SourcePane";
 import { useFw } from "./fw-store";
 
@@ -56,15 +55,25 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
   }, []);
 
   // Listen for region clicks anywhere in the document.
+  // On narrow: also close when clicking outside the rail.
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      const target = (e.target as Element | null)?.closest?.("[data-region-id]");
-      if (!target) return;
-      const id = target.getAttribute("data-region-id");
-      if (!id) return;
-      if (!regions.some((r) => r.id === id)) return;
-      setOpenId(id);
-      if (window.matchMedia(NARROW_QUERY).matches) setBodyDrawer(true);
+      const regionTarget = (e.target as Element | null)?.closest?.("[data-region-id]");
+      if (regionTarget) {
+        const id = regionTarget.getAttribute("data-region-id");
+        if (id && regions.some((r) => r.id === id)) {
+          setOpenId(id);
+          if (window.matchMedia(NARROW_QUERY).matches) setBodyDrawer(true);
+          return;
+        }
+      }
+      // Close on narrow when clicking outside the rail
+      if (window.matchMedia(NARROW_QUERY).matches) {
+        const railEl = getRailEl();
+        if (railEl && !railEl.contains(e.target as Node)) {
+          onClose();
+        }
+      }
     };
     document.addEventListener("click", handler);
 
@@ -134,19 +143,8 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
 
   const active = regions.find((r) => r.id === openId) ?? null;
 
-  const showOverlay = mounted && isNarrow && openId !== null;
-
   return (
     <>
-      {showOverlay && createPortal(
-        <div
-          aria-hidden="true"
-          onClick={onClose}
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 39 }}
-        />,
-        document.body
-      )}
-
       {!active ? (
         <div className="h-full bg-card border border-border flex flex-col items-center justify-center text-center p-6">
           <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-2">
@@ -157,25 +155,17 @@ export function ClickDockShell({ regions }: { regions: DockRegion[] }) {
           </p>
         </div>
       ) : (
-        <div className="h-full relative">
+        <div className="h-full flex flex-col">
           {/* Drag handle — narrow viewports only. Drag down to close. */}
           <button
             ref={grabberRef}
             type="button"
             aria-label="Drag to close source drawer"
-            className="ks-rail-grabber hidden absolute left-1/2 -translate-x-1/2 top-0 z-10 w-12 pt-1.5 pb-2 touch-none cursor-grab"
+            className="ks-rail-grabber hidden self-center w-12 pt-1.5 pb-2 touch-none cursor-grab shrink-0"
           >
             <span className="block mx-auto h-1 w-10 rounded-full bg-muted-foreground/40" />
           </button>
-          <button
-            type="button"
-            aria-label="Close source panel"
-            onClick={onClose}
-            className="ks-rail-close absolute right-2 top-2 z-10 inline-flex items-center justify-center w-7 h-7 border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted/40"
-          >
-            ✕
-          </button>
-          <SourcePane region={active} fw={fw} setFw={setFw} className="min-h-0" />
+          <SourcePane region={active} fw={fw} setFw={setFw} onClose={onClose} className="min-h-0 flex-1" />
         </div>
       )}
     </>

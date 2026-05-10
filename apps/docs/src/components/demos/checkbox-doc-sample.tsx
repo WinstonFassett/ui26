@@ -1,7 +1,6 @@
 "use client";
 
 import { Checkbox } from "@registry/checkbox/checkbox";
-import { Field, FieldLabel } from "@registry/field/field";
 import { DemoSection } from "./doc-sample";
 import type { Demo } from "./doc-sample";
 import { getSamples } from "@/samples";
@@ -12,7 +11,6 @@ function toDemos(samples: Sample[]): Demo[] {
 }
 
 const STATE_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "checkbox", group: "states" }));
-const COMPOSITION_DEMOS = toDemos(getSamples({ kind: "atom", relatedComponent: "checkbox", group: "composition" }));
 
 const STATE_TILES: Record<string, React.ReactNode> = {
   default: <Checkbox tabIndex={-1} />,
@@ -23,24 +21,11 @@ const STATE_TILES: Record<string, React.ReactNode> = {
 
 export function CheckboxDocSample() {
   return (
-    <>
-      <DemoSection
-        title="States"
-        namePrefix="Checkbox"
-        demos={STATE_DEMOS}
-        renderTile={(demo) => STATE_TILES[demo.id]}
-      />
-      <DemoSection
-        title="Composition"
-        namePrefix="Checkbox"
-        demos={COMPOSITION_DEMOS}
-        renderTile={() => (
-          <Field orientation="horizontal" className="pointer-events-none">
-            <Checkbox tabIndex={-1} />
-            <FieldLabel>Accept terms</FieldLabel>
-          </Field>
-        )}
-      />
-    </>
+    <DemoSection
+      title="States"
+      namePrefix="Checkbox"
+      demos={STATE_DEMOS}
+      renderTile={(demo) => STATE_TILES[demo.id]}
+    />
   );
 }
