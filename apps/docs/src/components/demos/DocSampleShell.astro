@@ -1,0 +1,30 @@
+---
+import { getSamples } from "@/samples";
+import { prerenderFiles } from "@/lib/prerender-source";
+import { DemoSectionRendered } from "./DemoSectionRendered";
+
+interface Props {
+  relatedComponent: string;
+  group: string;
+  title: string;
+}
+
+const { relatedComponent, group, title } = Astro.props;
+
+const samples = getSamples({ kind: "atom", relatedComponent, group });
+const demos = await Promise.all(
+  samples.map(async (s) => ({
+    id: s.key ?? s.id,
+    label: s.title,
+    files: await prerenderFiles(s.spec, s.componentName, s.id),
+  }))
+);
+---
+
+<DemoSectionRendered
+  client:only="react"
+  title={title}
+  relatedComponent={relatedComponent}
+  group={group}
+  demos={demos}
+/>

@@ -1,0 +1,28 @@
+---
+import { getSample } from "@/samples";
+import { prerenderFiles } from "@/lib/prerender-source";
+import { BlockPreview } from "@/components/livecode/BlockPreview";
+import { DocCodeBlock } from "./DocCodeBlock";
+
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+const sample = getSample(id)!;
+const files = await prerenderFiles(sample.spec, sample.componentName, sample.id);
+---
+
+<section class="not-content my-8">
+  {sample.title && (
+    <p class="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      {sample.title}
+    </p>
+  )}
+  <div class="border border-border p-6">
+    <BlockPreview spec={sample.spec} client:load />
+  </div>
+  <div class="mt-4">
+    <DocCodeBlock client:load files={files} />
+  </div>
+</section>
