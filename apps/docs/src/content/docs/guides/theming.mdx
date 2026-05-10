@@ -1,136 +1,15 @@
 ---
 title: Theming
-description: How to install a theme, choose between a single theme and a switcher, and add custom themes.
+description: How ui26 themes work, how to install one, and how to build your own.
 ---
 
-ui26 uses the same CSS variable names as shadcn/ui — `--background`, `--primary`, `--foreground`, and so on. The styling layer is different (tailwind-variants instead of CVA), but the token contract is the same.
+ui26 uses the same CSS variable token contract as shadcn/ui — `--background`, `--primary`, `--foreground`, and so on. The styling layer is tailwind-variants instead of CVA, but the token names are identical.
 
-## Are you already on shadcn?
+## Token palette
 
-**Yes** — your existing theme just works. Install a component and it picks up your variables. Skip to [adding a custom theme](#adding-a-custom-theme) if you want to extend further.
+These are the semantic color tokens every ui26 theme defines. Toggle the theme picker (top-right) to see them switch live.
 
-**No** — install the `shad` theme as your baseline. It's a straight port of shadcn's default zinc palette, so it's a solid starting point for greenfield projects too.
-
-## Single theme vs. switcher
-
-Before installing, decide which setup you want:
-
-**Single theme** — one palette on `:root`. Shadcn's model. Light/dark handled by `.dark` on `<html>`. This is what most projects want.
-
-**Switcher** — every theme as a separate CSS file, scoped to `[data-theme="<name>"]`. Lets you ship a theme picker or let users choose at runtime.
-
-Pick the one that fits your product now. You can migrate between them later — the token contract is identical either way.
-
-## Single theme install
-
-```bash
-npx shadcn@latest add https://winston-ui26.netlify.app/r/themes/shad.json
-```
-
-This lands as CSS vars on `:root` (light) and `.dark`, matching shadcn's native single-theme model.
-
-Available themes: `shad`, `editorial`, `tix`, `neon-synthwave`, `cyberpunk-neon`, `pastel-kawaii`, `zen-garden`, `bubblegum-pop`, `retro-arcade`, `tropical-paradise`, `steampunk-cogs`, `space-odyssey`, `vintage-vinyl`, `misty-harbor`.
-
-## Switcher install
-
-Installs all 14 themes as standalone CSS files under `src/styles/themes/` plus an `all-themes.css` barrel:
-
-```bash
-npx shadcn@latest add https://winston-ui26.netlify.app/r/themes.json
-```
-
-Add one line to your global stylesheet:
-
-```css
-@import './styles/themes/all-themes.css';
-```
-
-Then write a compound key to `<html data-theme="...">` to switch:
-
-| Shape | Example |
-|---|---|
-| `<name>` | `editorial`, `tix`, `shad` |
-| `<name>-dark` | `editorial-dark`, `neon-synthwave-dark` |
-
-The default theme (`shad`) also owns `:root`, so pages without a `data-theme` attribute render correctly.
-
-## Theme picker UI
-
-The docs site ships a working picker. It's not extracted into a standalone package yet, but you can copy it from the repo:
-
-- [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro) — pre-paint script that reads `localStorage` and sets `data-theme` before first render (no flash)
-- [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) — dropdown + light/dark/auto toggle
-
-Add your theme keys to the `THEMES` array in each file.
-
-## Adding a custom theme
-
-Create a CSS file with two blocks: `[data-theme="<name>"]` for light and `[data-theme="<name>-dark"]` for dark. The dark block only needs to define what actually changes — values that are the same (radius, fonts, shadow vocabulary) cascade from the light block.
-
-```css
-[data-theme="sunset"] {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-serif: ui-serif, Georgia, serif;
-  --font-mono: ui-monospace, Menlo, monospace;
-
-  --background: oklch(0.98 0.02 60);
-  --foreground: oklch(0.2 0.05 30);
-  /* ... full token contract */
-
-  --radius: 0.5rem;
-
-  --shadow-color: 30 20 10;
-  --shadow-xs: 0 1px 1px rgb(var(--shadow-color) / 0.05);
-  /* ... sm / md / lg / highlight-inset */
-}
-
-[data-theme="sunset-dark"] {
-  --background: oklch(0.14 0.04 30);
-  --foreground: oklch(0.96 0.02 60);
-  /* ... only what flips for dark */
-}
-```
-
-For a single-theme setup, replace `[data-theme="sunset"]` with `:root`.
-
-Import the file in your global stylesheet:
-
-```css
-@import './themes/sunset.css';
-```
-
-Then set `data-theme="sunset"` on `<html>` (or `data-theme="sunset-dark"` for dark mode).
-
-### Token contract
-
-Every theme block must define these tokens. Shadows must be set to `none` explicitly — never omit them.
-
-**Surfaces**
-`--background` `--foreground` `--card` `--card-foreground` `--popover` `--popover-foreground`
-
-**Anchors**
-`--primary` `--primary-foreground` `--secondary` `--secondary-foreground` `--muted` `--muted-foreground` `--accent` `--accent-foreground`
-
-**Feedback**
-`--destructive` `--destructive-foreground` `--success` `--warn` `--info` `--purple`
-
-**Structure**
-`--border` `--border-soft` `--input` `--ring` `--radius`
-
-**Accent / text tiers / code**
-`--accent-ink` `--accent-soft` `--text-mute` `--code`
-
-**Shadows**
-`--shadow-color` `--shadow-xs` `--shadow-sm` `--shadow-md` `--shadow-lg` `--highlight-inset`
-
-**Fonts** (only if your theme diverges from the default stack)
-`--font-sans` `--font-serif` `--font-mono`
-
-## Color palette
-
-Core semantic colors that back all ui26 components. Each theme defines its own palette while maintaining the same token contract. Toggle the theme picker (top-right) to see them switch.
-
-<div class="not-content mb-10">
+<div class="not-content my-8">
   <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
     <div class="border border-border rounded overflow-hidden">
       <div class="h-13 bg-background border-b border-border" />
@@ -190,3 +69,117 @@ Core semantic colors that back all ui26 components. Each theme defines its own p
     </div>
   </div>
 </div>
+
+## Already on shadcn?
+
+Your existing theme works as-is. Install any ui26 component and it picks up your CSS variables automatically — nothing to configure.
+
+If you want to try a different palette, see [available themes](#available-themes) below.
+
+## Starting fresh
+
+If you don't have a shadcn theme set up, install one before adding components. Without it, the CSS variables are undefined and components won't look right.
+
+### Single theme
+
+One palette on `:root`. Light/dark handled by `.dark` on `<html>`. This is what most projects want.
+
+```bash
+npx shadcn@latest add https://winston-ui26.netlify.app/r/themes/shad.json
+```
+
+### Theme switcher
+
+All themes as separate CSS files, each scoped to `[data-theme="<name>"]`. Use this if you want a runtime theme picker.
+
+```bash
+npx shadcn@latest add https://winston-ui26.netlify.app/r/themes.json
+```
+
+Add one line to your global stylesheet:
+
+```css
+@import './styles/themes/all-themes.css';
+```
+
+Set `data-theme` on `<html>` to switch:
+
+| Value | Result |
+|---|---|
+| `editorial` | editorial light |
+| `editorial-dark` | editorial dark |
+| `shad` | default light (also `:root` fallback) |
+
+## Available themes
+
+`shad` · `editorial` · `tix` · `neon-synthwave` · `cyberpunk-neon` · `pastel-kawaii` · `zen-garden` · `bubblegum-pop` · `retro-arcade` · `tropical-paradise` · `steampunk-cogs` · `space-odyssey` · `vintage-vinyl` · `misty-harbor`
+
+## Theme picker UI
+
+The docs site ships a working picker. It's not extracted into a standalone package yet, but you can copy it from the repo:
+
+- [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro) — pre-paint script that reads `localStorage` and sets `data-theme` before first render (no flash)
+- [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) — dropdown + light/dark/auto toggle
+
+Add your theme keys to the `THEMES` array in each file.
+
+## Custom themes
+
+Create a CSS file with two blocks: one for light, one for dark. The dark block only needs tokens whose values actually change — everything else cascades from the light block.
+
+```css
+[data-theme="sunset"] {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, Menlo, monospace;
+
+  --background: oklch(0.98 0.02 60);
+  --foreground: oklch(0.2 0.05 30);
+  /* ... full token contract */
+
+  --radius: 0.5rem;
+
+  --shadow-color: 30 20 10;
+  --shadow-xs: 0 1px 1px rgb(var(--shadow-color) / 0.05);
+  /* ... sm / md / lg / highlight-inset */
+}
+
+[data-theme="sunset-dark"] {
+  --background: oklch(0.14 0.04 30);
+  --foreground: oklch(0.96 0.02 60);
+  /* ... only what flips for dark */
+}
+```
+
+For a single-theme setup, replace `[data-theme="sunset"]` with `:root` and `.dark` for the dark block.
+
+Import in your global stylesheet:
+
+```css
+@import './themes/sunset.css';
+```
+
+### Token contract
+
+Every theme must define all of these. Shadows must be explicitly `none` — never omit them.
+
+**Surfaces**
+`--background` `--foreground` `--card` `--card-foreground` `--popover` `--popover-foreground`
+
+**Interactive**
+`--primary` `--primary-foreground` `--secondary` `--secondary-foreground` `--muted` `--muted-foreground` `--accent` `--accent-foreground`
+
+**Feedback**
+`--destructive` `--destructive-foreground` `--success` `--warn` `--info` `--purple`
+
+**Structure**
+`--border` `--border-soft` `--input` `--ring` `--radius`
+
+**Text / code**
+`--accent-ink` `--accent-soft` `--text-mute` `--code`
+
+**Shadows**
+`--shadow-color` `--shadow-xs` `--shadow-sm` `--shadow-md` `--shadow-lg` `--highlight-inset`
+
+**Fonts** (only if your theme diverges from the default stack)
+`--font-sans` `--font-serif` `--font-mono`
