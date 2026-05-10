@@ -125,3 +125,68 @@ Every theme block must define these tokens. Shadows must be set to `none` explic
 
 **Fonts** (only if your theme diverges from the default stack)
 `--font-sans` `--font-serif` `--font-mono`
+
+## Color palette
+
+Core semantic colors that back all ui26 components. Each theme defines its own palette while maintaining the same token contract. Toggle the theme picker (top-right) to see them switch.
+
+<div class="not-content mb-10">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-background border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-foreground">background</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--background</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-card border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-foreground">card</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--card</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-primary border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-primary-foreground">primary</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--primary</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-secondary border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-foreground">secondary</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--secondary</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-muted border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-foreground">muted</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--muted</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-accent border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-accent-foreground">accent</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--accent</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-destructive border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-destructive-foreground">destructive</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--destructive</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-13 bg-popover border-b border-border" />
+      <div class="px-2.5 py-2">
+        <div class="font-mono text-[11px] text-foreground">popover</div>
+        <div class="font-mono text-[10px] text-text-mute mt-0.5">--popover</div>
+      </div>
+    </div>
+  </div>
+</div>
