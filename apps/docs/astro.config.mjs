@@ -54,15 +54,10 @@ export default defineConfig({
         social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/WinstonFassett/ui26' }],
         sidebar: [
             {
-                label: 'Components',
-                autogenerate: { directory: 'components' },
-            },
-            {
-                label: 'Reference',
+                label: 'Getting Started',
                 items: [
-                    { label: 'Tokens', slug: 'reference/tokens' },
-                    { label: 'Blocks', link: '/blocks' },
-                    { label: 'Kitchen Sink', link: '/kitchen-sink' },
+                    { label: 'Introduction', slug: 'getting-started/introduction' },
+                    { label: 'Quickstart', slug: 'getting-started/quickstart' },
                 ],
             },
             {
@@ -73,11 +68,21 @@ export default defineConfig({
                 ],
             },
             {
-                label: 'Tools',
-                items: [
-                    { label: 'Playroom', link: '/playroom' },
-                ],
+                label: 'Components',
+                autogenerate: { directory: 'components', exclude: ['components/dev/**'] },
             },
+            // { label: 'Playroom', link: '/playroom' },
+            ...(import.meta.env?.DEV ? [
+                {
+                    label: 'Dev',
+                    items: [
+                        { label: 'Kitchen Sink', link: '/kitchen-sink' },
+                        { label: 'Ecosystem', link: '/installs' },
+                        { label: 'Tix App', link: '/tix-app' },
+                        { label: 'Playroom', link: '/playroom' },
+                    ],
+                },
+            ] : []),
         ],
         customCss: ['./src/styles/global.css'],
         }), react(), svelte()],

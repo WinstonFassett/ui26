@@ -1,0 +1,74 @@
+---
+title: Quickstart
+description: Install your first ui26 component in three steps.
+---
+
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+
+## 1. Install a component
+
+Pick a framework and run the install command. ui26 uses the shadcn CLI — no separate tooling needed.
+
+<Tabs>
+  <TabItem label="React">
+    ```bash
+    npx shadcn@latest add https://winston-ui26.netlify.app/r/react/button.json
+    ```
+  </TabItem>
+  <TabItem label="Svelte">
+    ```bash
+    npx shadcn@latest add https://winston-ui26.netlify.app/r/svelte/button.json
+    ```
+  </TabItem>
+  <TabItem label="Astro">
+    ```bash
+    npx shadcn@latest add https://winston-ui26.netlify.app/r/astro/button.json
+    ```
+  </TabItem>
+</Tabs>
+
+## 2. Install a theme (if you don't have shadcn)
+
+If you're already using shadcn, your existing CSS variables work as-is — skip this step.
+
+For new projects, install the `shad` baseline theme:
+
+```bash
+npx shadcn@latest add https://winston-ui26.netlify.app/r/themes/shad.json
+```
+
+This adds CSS vars to `:root` (light) and `.dark` (dark mode), matching shadcn's standard single-theme setup.
+
+## 3. Use it
+
+<Tabs>
+  <TabItem label="React">
+    ```tsx
+    import { Button } from '@/components/ui26/button'
+
+    export default function Page() {
+      return <Button variant="default">Click me</Button>
+    }
+    ```
+  </TabItem>
+  <TabItem label="Svelte">
+    ```svelte
+    <script>
+      import Button from '$lib/components/ui26/button.svelte'
+    </script>
+
+    <Button variant="default">Click me</Button>
+    ```
+  </TabItem>
+  <TabItem label="Astro">
+    ```astro
+    ---
+    import Button from '../components/ui26/button.astro'
+    ---
+
+    <Button variant="default">Click me</Button>
+    ```
+  </TabItem>
+</Tabs>
+
+That's it. See [Theming](/guides/theming/) to customize the palette or add a theme switcher.

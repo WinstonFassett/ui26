@@ -1,0 +1,26 @@
+---
+title: Introduction
+description: What ui26 is, how it fits in the shadcn ecosystem, and when to use it.
+---
+
+ui26 is a cross-framework UI component library for React, Svelte, and Astro. Components are source-distributed — `npx shadcn add` copies them into your project and you own the code from there.
+
+## How it works
+
+Every component ships as three framework wrappers (`.tsx`, `.svelte`, `.astro`) that all share a single [`tailwind-variants`](https://www.tailwind-variants.org) config. The TV config is the only file shared across frameworks — it defines variants, sizes, and compound rules once.
+
+## What it shares with shadcn
+
+- Same installation model: `npx shadcn@latest add <url>`
+- Same CSS variable token contract (`--background`, `--primary`, `--foreground`, etc.)
+- Same light/dark model for single-theme setups
+
+## What's different
+
+- **Three frameworks, one config** — React, Svelte, and Astro components from the same registry
+- **tailwind-variants** instead of CVA — more expressive compound variant rules, no class merging boilerplate
+- **JSON Render** — a serializable spec format that generates framework source code from a single description
+
+## Already on shadcn?
+
+Your existing theme works with ui26 components out of the box. Install a component and it picks up your CSS variables. No theme migration needed.
