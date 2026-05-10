@@ -1,6 +1,6 @@
 # Starlight overrides — agent notes
 
-These files replace Starlight's built-in `ThemeProvider` and `ThemeSelect`. Registered in [`astro.config.mjs`](../../../astro.config.mjs) under `starlight.components`. User-facing docs for the theme system live at [`apps/docs/src/content/docs/reference/themes.mdx`](../../content/docs/reference/themes.mdx); token-authoring rules live at [`apps/docs/registry/AGENTS.md`](../../../registry/AGENTS.md).
+These files replace Starlight's built-in `ThemeProvider` and `ThemeSelect`. Registered in [`astro.config.mjs`](../../../astro.config.mjs) under `starlight.components`. User-facing docs for the theme system live at [`apps/docs/src/content/docs/guides/theming.mdx`](../../content/docs/guides/theming.mdx); token-authoring rules live at [`apps/docs/registry/AGENTS.md`](../../../registry/AGENTS.md).
 
 ## The two `THEMES` lists must agree
 

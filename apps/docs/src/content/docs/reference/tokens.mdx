@@ -1,9 +1,9 @@
 ---
 title: Design Tokens
-description: Core color and radius tokens backing ui26's components. Sourced from tix DESIGN.md.
+description: Core color and radius tokens shared across all ui26 themes.
 ---
 
-These tokens live in [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/registry/tokens.css) and are mapped to Tailwind utilities via `@theme inline` in this app's global stylesheet. Toggle your theme (top-right) to see them switch.
+Tokens are defined per-theme as CSS custom properties. They're mapped to Tailwind utilities via `@theme inline` in the global stylesheet. Toggle the theme picker (top-right) to see them switch.
 
 <div class="not-content mb-10">
   <div class="flex items-center gap-2.5 mb-6 font-mono text-[10px] tracking-[0.12em] uppercase text-text-mute">
@@ -89,7 +89,7 @@ These tokens live in [`registry/tokens.css`](https://github.com/WinstonFassett/u
   <div class="mb-6">
     <div class="font-serif italic font-medium text-[32px] leading-[1.1] tracking-[-0.015em] text-foreground">Implementation</div>
     <div class="text-[13px] text-muted-foreground mt-1.5 max-w-[560px] leading-[1.5]">
-      Each token resolves to a CSS custom property, keyed off <code class="font-mono text-[12px] bg-code border border-border px-1">&lt;html data-theme&gt;</code>. Default <code class="font-mono text-[12px] bg-code border border-border px-1">:root</code> is editorial light; dark and alternate themes use compound keys.
+      Each token resolves to a CSS custom property keyed off <code class="font-mono text-[12px] bg-code border border-border px-1">&lt;html data-theme&gt;</code>. The default theme (<code class="font-mono text-[12px] bg-code border border-border px-1">shad</code>) also owns <code class="font-mono text-[12px] bg-code border border-border px-1">:root</code>, so pages without a <code class="font-mono text-[12px] bg-code border border-border px-1">data-theme</code> attribute render correctly. See <a href="/guides/theming/">Theming</a> for install and customization.
     </div>
   </div>
 

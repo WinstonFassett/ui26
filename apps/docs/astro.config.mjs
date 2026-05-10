@@ -61,7 +61,6 @@ export default defineConfig({
                 label: 'Reference',
                 items: [
                     { label: 'Tokens', slug: 'reference/tokens' },
-                    { label: 'Themes', slug: 'reference/themes' },
                     { label: 'Blocks', link: '/blocks' },
                     { label: 'Kitchen Sink', link: '/kitchen-sink' },
                 ],
@@ -69,6 +68,7 @@ export default defineConfig({
             {
                 label: 'Guides',
                 items: [
+                    { label: 'Theming', slug: 'guides/theming' },
                     { label: 'JSON Render', slug: 'guides/json-render' },
                 ],
             },
