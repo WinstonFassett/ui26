@@ -1,30 +1,28 @@
-/* ui26 design tokens — index of per-theme CSS files.
+/* ui26 themes barrel — index of per-theme CSS files.
  *
  * Each theme lives in its own file under ./themes/ and owns both its
  * light block (`[data-theme="<name>"]`) and dark block
- * (`[data-theme="<name>-dark"]`). This file is a thin index:
- * adding a theme = drop a file under ./themes/ and add one `@import`
- * line below.
+ * (`[data-theme="<name>-dark"]`). This file is the index that pulls
+ * them all in for the multi-theme switcher.
  *
- * The first import is the default theme — its file combines `:root` with
- * `[data-theme="<name>"]` so documents without a `data-theme` attribute
- * render correctly. Reordering here changes the default.
+ * The default theme owns `:root` in addition to its named selector,
+ * so documents without a `data-theme` attribute render correctly.
+ * Today that's `shad`. Reordering here does not change the default —
+ * the default is whichever theme file declares `:root,`.
  *
  * Tailwind's `dark:` variant matches any selector ending in `dark`
  * (see global.css `@custom-variant dark`) — no per-theme wiring needed.
  *
- * Consumer notes:
- *   - `src/pages/r/base.json.ts` serves the default theme as the shadcn
- *     registry `base` payload. Per-theme registry items can be added by
- *     reading any single file under themes/ and wrapping it as its own
- *     registry-item JSON.
- *   - `ThemeProvider.astro` + `theme-picker.tsx` keep their own theme
- *     name lists — update those when adding/removing a theme file here.
+ * Distribution:
+ *   - `/r/themes/<name>.json` serves a single theme as a registry-item
+ *     with cssVars (light + dark), suitable for `npx shadcn@latest add`.
+ *   - `/r/themes.json` serves this barrel + every theme file as
+ *     `registry:file` items for the full data-theme switcher.
  */
 
+@import './themes/shad.css';
 @import './themes/editorial.css';
 @import './themes/tix.css';
-@import './themes/shad.css';
 
 /* Imported themes — adapted from better-chatbot (shadcn-compatible).
  * See ./themes/AGENTS.md for adaptation rules. */

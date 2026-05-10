@@ -81,7 +81,6 @@ export const GET: APIRoute = ({ params, request }) => {
 
   const registryDependencies = meta.registryDependencies.map((dep) => {
     if (dep === "utils") return `${origin}/r/${fw}/utils.json`;
-    if (dep === "base") return `${origin}/r/base.json`;
     return `${origin}/r/${fw}/${dep}.json`;
   });
 

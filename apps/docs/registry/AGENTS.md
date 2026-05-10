@@ -1,6 +1,6 @@
 # Registry — agent notes
 
-Authoring rules for `tokens.css` and anything else under `apps/docs/registry/`. These are taste/adaptation rules, not user-facing documentation. User docs for the theme system live at [`apps/docs/src/content/docs/reference/themes.mdx`](../src/content/docs/reference/themes.mdx).
+Authoring rules for `all-themes.css` and anything else under `apps/docs/registry/`. These are taste/adaptation rules, not user-facing documentation. User docs for the theme system live at [`apps/docs/src/content/docs/reference/themes.mdx`](../src/content/docs/reference/themes.mdx).
 
 ## Token-authoring rules
 
@@ -18,7 +18,7 @@ Authoring rules for `tokens.css` and anything else under `apps/docs/registry/`. 
 
 Every `[data-theme="<name>"]` block must define the full semantic surface (see [`themes.mdx` → Token contract](../src/content/docs/reference/themes.mdx) for the authoritative list — keep that doc in sync if the contract expands). If a consumer component reads `var(--success)` and the active theme didn't set it, you'll get nothing. No fallbacks at the call site — the theme must be complete.
 
-## When editing tokens.css
+## When editing all-themes.css
 
 - Group the comments already in the file (light block / dark block / theme rationale) stay as-is when you add a new theme — match the pattern.
 - Don't reorder existing themes. Append new ones.
@@ -26,4 +26,4 @@ Every `[data-theme="<name>"]` block must define the full semantic surface (see [
 
 ## Transitional aliases
 
-Don't leave `[data-theme="dark"]`-style Starlight-compat aliases in tokens.css. We own the attribute via the ThemeProvider override ([`apps/docs/src/components/starlight/ThemeProvider.astro`](../src/components/starlight/ThemeProvider.astro)) — any code writing bare `dark`/`light` is a bug to fix, not a case to paper over.
+Don't leave `[data-theme="dark"]`-style Starlight-compat aliases in all-themes.css. We own the attribute via the ThemeProvider override ([`apps/docs/src/components/starlight/ThemeProvider.astro`](../src/components/starlight/ThemeProvider.astro)) — any code writing bare `dark`/`light` is a bug to fix, not a case to paper over.

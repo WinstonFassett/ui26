@@ -1,6 +1,6 @@
 ---
 title: Themes
-description: How the multi-theme system works and how to add a new theme.
+description: How the multi-theme system works, how to install, and how to add a new theme.
 ---
 
 ## Model
@@ -16,15 +16,47 @@ State lives on `<html data-theme>` as a compound key:
 
 One dropdown picks the theme; one toggle picks light/dark/auto. Both write to `localStorage` (`ui26-theme-name`, `ui26-theme-mode`) and to the compound `data-theme` attribute pre-paint.
 
-## Pieces
+The default theme is **shad** — its file owns `:root` in addition to `[data-theme="shad"]`, so documents without a `data-theme` attribute render correctly.
+
+## Install
+
+ui26 components don't ship tokens. You install a theme separately, with the standard shadcn CLI — there's no ui26-specific binary.
+
+### Single theme (default `:root` install)
+
+Pick one — it lands as `cssVars` on `:root` (light) and `.dark`. This is the simplest setup and matches shadcn's native single-theme model.
+
+```bash
+npx shadcn@latest add https://ui26.dev/r/themes/shad.json
+```
+
+Available: `shad`, `editorial`, `tix`, `neon-synthwave`, `cyberpunk-neon`, `pastel-kawaii`, `zen-garden`, `bubblegum-pop`, `retro-arcade`, `tropical-paradise`, `steampunk-cogs`, `space-odyssey`, `vintage-vinyl`, `misty-harbor`.
+
+### Full switcher (all themes via `data-theme`)
+
+Drops every theme as a standalone CSS file under `src/styles/themes/` plus an `all-themes.css` barrel:
+
+```bash
+npx shadcn@latest add https://ui26.dev/r/themes.json
+```
+
+Then add one line to your global stylesheet:
+
+```css
+@import './styles/themes/all-themes.css';
+```
+
+Switching themes is now a matter of writing the compound key to `<html data-theme="...">`. Bring your own picker UI, or copy ours from [`apps/docs/src/components/starlight`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight).
+
+## Pieces (in this docs app)
 
 | File | Role |
 |---|---|
-| [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/tokens.css) | All token blocks. One `[data-theme="<name>"]` + one `[data-theme="<name>-dark"]` per theme. |
+| [`registry/all-themes.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/all-themes.css) | Barrel that `@import`s every theme file. |
+| [`registry/themes/<name>.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/themes) | One file per theme; `[data-theme="<name>"]` + `[data-theme="<name>-dark"]`. The default theme additionally prefixes `:root,`. |
 | [`src/components/starlight/ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro) | Pre-paint script. Owns the `THEMES` allowlist and the `window.Ui26Theme` API. |
-| [`src/components/starlight/ThemeSelect.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeSelect.astro) | Starlight header slot — mounts the React picker. |
-| [`src/components/starlight/theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) | Dropdown + light/dark/auto toggle. Owns `THEMES`, `MODES`, `LABELS`. |
-| [`astro.config.mjs`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/astro.config.mjs) | Registers the two Starlight component overrides; inlines critical `--sl-*` FOUC vars. |
+| [`src/components/starlight/theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) | Dropdown + light/dark/auto toggle. |
+| [`astro.config.mjs`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/astro.config.mjs) | Registers the Starlight component overrides; inlines critical `--sl-*` FOUC vars. |
 
 Tailwind's `dark:` variant fires on any selector ending in `dark` via the custom variant in [`global.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/global.css) — no per-theme wiring needed.
 
@@ -59,9 +91,9 @@ The dark block can redefine only what changes. If a value is identical to the li
 
 Say we're adding `sunset`.
 
-### 1. Add two token blocks
+### 1. Drop a theme file
 
-In [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/tokens.css), append:
+Create [`registry/themes/sunset.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/themes):
 
 ```css
 [data-theme="sunset"] {
@@ -89,38 +121,31 @@ In [`registry/tokens.css`](https://github.com/WinstonFassett/ui26/tree/main/apps
 }
 ```
 
-### 2. Register the theme in two places
+### 2. Add to the barrel
 
-In [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro), add the key to the `THEMES` allowlist inside the inline script:
+In [`registry/all-themes.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/registry/all-themes.css), append:
+
+```css
+@import './themes/sunset.css';
+```
+
+### 3. Register the theme in two places
+
+In [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro), add the key to the `THEMES` allowlist:
 
 ```js
-const THEMES = ['editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset'];
+const THEMES = ['shad', 'editorial', 'tix', /* ... */, 'sunset'];
 ```
 
-In [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx), add the key to the local `THEMES` array, extend the `Name` union, and add a `LABELS` entry:
-
-```tsx
-type Name = 'editorial' | 'tix' | 'shad' | 'neon-synthwave' | 'cyberpunk-neon' | 'sunset';
-
-const THEMES: readonly Name[] = [
-  'editorial', 'tix', 'shad', 'neon-synthwave', 'cyberpunk-neon', 'sunset',
-];
-
-const LABELS: Record<Name, string> = {
-  /* ...existing */
-  sunset: 'Sunset',
-};
-```
+In [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx), add the key to the local `THEMES` array, extend the `Name` union, and add a `LABELS` entry.
 
 Both lists must agree. The pre-paint script uses its copy to reject unknown `localStorage` values; the picker uses its copy to render options.
 
-### 3. (Optional) Load web fonts
+### 4. (Optional) Load web fonts
 
-If the theme uses a font not already loaded, add a `<link>` to the `head` array in [`astro.config.mjs`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/astro.config.mjs) alongside the Newsreader/Geist links.
+If the theme uses a font not already loaded, add a `<link>` to the `head` array in [`astro.config.mjs`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/astro.config.mjs).
 
-### 4. Verify
-
-From the docs app:
+### 5. Verify
 
 ```bash
 pnpm dev
@@ -133,4 +158,4 @@ Open a page, pick `Sunset` in the header dropdown, toggle light/dark/auto. Check
 - Reloading the page preserves the choice
 - Components on `/kitchen-sink` and `/installs` look cohesive
 
-If a token is missing, you'll see a flash of an unrelated theme's value (the cascade falls through to the previous theme block). Any missing var = missing block entry.
+If a token is missing, you'll see a flash of an unrelated theme's value. Any missing var = missing block entry.
