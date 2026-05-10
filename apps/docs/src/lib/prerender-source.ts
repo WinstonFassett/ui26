@@ -8,28 +8,36 @@ export interface RenderedFile {
   filename: string
 }
 
-export type RenderedFiles = Record<Framework, RenderedFile>
+export interface RenderedFiles extends Record<Framework, RenderedFile> {
+  json?: RenderedFile
+}
+
+const SHIKI_THEMES = { light: 'github-light', dark: 'github-dark-default' } as const
+
+async function renderFile(code: string, lang: string, filename: string): Promise<RenderedFile> {
+  return {
+    code,
+    filename,
+    html: await codeToHtml(code, { lang, themes: SHIKI_THEMES }),
+  }
+}
 
 export async function prerenderFiles(
   spec: Spec,
   componentName: string,
   id: string,
+  options: { includeJson?: boolean } = {},
 ): Promise<RenderedFiles> {
   const files = specToFiles(spec, componentName, id)
   const entries = await Promise.all(
     (Object.entries(files) as [Framework, { code: string; filename: string; language: string }][]).map(
-      async ([fw, file]) => [
-        fw,
-        {
-          code: file.code,
-          filename: file.filename,
-          html: await codeToHtml(file.code, {
-            lang: file.language,
-            themes: { light: 'github-light', dark: 'github-dark-default' },
-          }),
-        } satisfies RenderedFile,
-      ]
+      async ([fw, file]) => [fw, await renderFile(file.code, file.language, file.filename)]
     )
   )
-  return Object.fromEntries(entries) as RenderedFiles
+  const result = Object.fromEntries(entries) as RenderedFiles
+  if (options.includeJson) {
+    const jsonCode = JSON.stringify(spec, null, 2)
+    result.json = await renderFile(jsonCode, 'json', 'spec.json')
+  }
+  return result
 }

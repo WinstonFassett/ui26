@@ -1,0 +1,41 @@
+---
+import { codeToHtml } from "shiki";
+import { BlockPreview } from "@/components/livecode/BlockPreview";
+import { CopyBtn } from "@/components/livecode/CopyBtn";
+import { SHIKI_CLASSES } from "@/lib/shiki-classes";
+import type { Spec } from "@/lib/spec-to-code";
+
+interface Props {
+  spec: Spec;
+}
+
+const { spec } = Astro.props;
+const code = JSON.stringify(spec, null, 2);
+const html = await codeToHtml(code, {
+  lang: "json",
+  themes: { light: "github-light", dark: "github-dark-default" },
+});
+---
+
+<section class="not-content my-8">
+  <div class="border border-border p-6">
+    <BlockPreview spec={spec} client:load />
+  </div>
+  <div class="mt-4 flex flex-col border border-border bg-card">
+    <div class="flex items-center border-b border-border px-3.5 py-2">
+      <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">JSON</span>
+      <span class="flex-1" />
+      <span class="font-mono text-[10px] tracking-wider lowercase text-muted-foreground">spec.json</span>
+    </div>
+    <div class={SHIKI_CLASSES} set:html={html} />
+    <div class="flex items-center px-3.5 py-2 border-t border-border">
+      <CopyBtn text={code} client:load />
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  :root[data-theme$="dark"] .shiki span {
+    color: var(--shiki-dark) !important;
+  }
+</style>
