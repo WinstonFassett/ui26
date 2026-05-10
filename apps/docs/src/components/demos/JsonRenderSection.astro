@@ -22,18 +22,22 @@ const html = await codeToHtml(code, {
     <BlockPreview spec={spec} client:load />
   </div>
   <details class="mt-4 border border-border bg-card group">
-    <summary class="flex items-center px-3.5 py-2 cursor-pointer list-none">
-      <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">JSON</span>
+    <summary class="flex items-center gap-2 px-3.5 py-2 cursor-pointer list-none select-none">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-muted-foreground shrink-0">
+        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span class="font-mono text-[11px] text-muted-foreground group-open:text-foreground transition-colors">
+        <span class="group-open:hidden">View JSON spec</span>
+        <span class="hidden group-open:inline">Hide JSON spec</span>
+      </span>
       <span class="flex-1" />
-      <span class="font-mono text-[10px] tracking-wider lowercase text-muted-foreground mr-3">spec.json</span>
-      <span class="font-mono text-[10px] text-muted-foreground group-open:hidden">show</span>
-      <span class="font-mono text-[10px] text-muted-foreground hidden group-open:inline">hide</span>
+      <div onclick="event.stopPropagation()">
+        <CopyBtn text={code} client:load />
+      </div>
     </summary>
     <div class="border-t border-border">
       <div class={SHIKI_CLASSES} set:html={html} />
-      <div class="flex items-center px-3.5 py-2 border-t border-border">
-        <CopyBtn text={code} client:load />
-      </div>
     </div>
   </details>
 </section>
