@@ -3,31 +3,6 @@ title: Pagination
 description: Page navigation with previous/next links and active page indicator.
 ---
 
-import PaginationAstro from "@registry/pagination/pagination.astro";
-import PaginationContentAstro from "@registry/pagination/pagination-content.astro";
-import PaginationItemAstro from "@registry/pagination/pagination-item.astro";
-import PaginationLinkAstro from "@registry/pagination/pagination-link.astro";
+import DocSampleShell from '@/components/demos/DocSampleShell.astro'
 
-## Basic
-
-<div class="not-content my-6">
-  <PaginationAstro>
-    <PaginationContentAstro>
-      <PaginationItemAstro>
-        <PaginationLinkAstro href="#">&laquo;</PaginationLinkAstro>
-      </PaginationItemAstro>
-      <PaginationItemAstro>
-        <PaginationLinkAstro href="#">1</PaginationLinkAstro>
-      </PaginationItemAstro>
-      <PaginationItemAstro>
-        <PaginationLinkAstro href="#" isActive>2</PaginationLinkAstro>
-      </PaginationItemAstro>
-      <PaginationItemAstro>
-        <PaginationLinkAstro href="#">3</PaginationLinkAstro>
-      </PaginationItemAstro>
-      <PaginationItemAstro>
-        <PaginationLinkAstro href="#">&raquo;</PaginationLinkAstro>
-      </PaginationItemAstro>
-    </PaginationContentAstro>
-  </PaginationAstro>
-</div>
+<DocSampleShell relatedComponent="pagination" group="basic" title="Basic" />

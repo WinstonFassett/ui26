@@ -3,26 +3,6 @@ title: Accordion
 description: Collapsible sections using native &lt;details&gt;/&lt;summary&gt;. Zero JS, fully accessible, animates on open.
 ---
 
-import AccordionAstro from "@registry/accordion/accordion.astro";
-import AccordionItemAstro from "@registry/accordion/accordion-item.astro";
-import AccordionTriggerAstro from "@registry/accordion/accordion-trigger.astro";
-import AccordionContentAstro from "@registry/accordion/accordion-content.astro";
+import DocSampleShell from '@/components/demos/DocSampleShell.astro'
 
-## Basic
-
-<div class="not-content my-6 max-w-lg">
-  <AccordionAstro>
-    <AccordionItemAstro>
-      <AccordionTriggerAstro>Is it accessible?</AccordionTriggerAstro>
-      <AccordionContentAstro>Yes. It uses native <code>details</code> and <code>summary</code> elements which have built-in keyboard support and ARIA semantics.</AccordionContentAstro>
-    </AccordionItemAstro>
-    <AccordionItemAstro>
-      <AccordionTriggerAstro>Is it styled?</AccordionTriggerAstro>
-      <AccordionContentAstro>Yes. It comes with default styles that match the design system and can be overridden with Tailwind classes.</AccordionContentAstro>
-    </AccordionItemAstro>
-    <AccordionItemAstro open>
-      <AccordionTriggerAstro>Can I open one by default?</AccordionTriggerAstro>
-      <AccordionContentAstro>Yes. Pass the <code>open</code> prop to <code>AccordionItem</code>.</AccordionContentAstro>
-    </AccordionItemAstro>
-  </AccordionAstro>
-</div>
+<DocSampleShell relatedComponent="accordion" group="basic" title="Basic" />
