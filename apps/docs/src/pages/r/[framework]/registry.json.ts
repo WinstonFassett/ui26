@@ -20,7 +20,7 @@ export const GET: APIRoute = ({ params }) => {
   const catalog = {
     $schema: "https://ui.shadcn.com/schema/registry.json",
     name: `ui26-${fw}`,
-    homepage: "https://ui26.dev",
+    homepage: "https://winston-ui26.netlify.app",
     items,
   };
 

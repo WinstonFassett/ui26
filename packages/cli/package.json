@@ -1,5 +1,5 @@
 {
-  "name": "ui26",
+  "name": "@winstonfassett/ui26",
   "version": "0.0.1",
   "description": "Thin delegator over shadcn CLI that picks framework-appropriate ui26 registry URLs.",
   "type": "commonjs",

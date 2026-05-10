@@ -1,6 +1,7 @@
 ---
 import { getSamples } from "@/samples";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
+import { CLI_ADD } from "@/lib/site";
 
 const SHOW = ["ticket-card", "kpi-strip", "sign-in-form", "activity-feed", "command-palette", "ai-message"];
 const featured = getSamples({ kind: "block", featured: true }).filter((b) => SHOW.includes(b.id)).sort((a, b) => SHOW.indexOf(a.id) - SHOW.indexOf(b.id));
@@ -22,7 +23,7 @@ const featured = getSamples({ kind: "block", featured: true }).filter((b) => SHO
         <div class="border-t border-border px-4 py-3">
           <div class="font-mono text-[11px] text-accent">{b.id}</div>
           <p class="text-[12px] text-muted-foreground mt-1 leading-snug">{b.description}</p>
-          <code class="block font-mono text-[11px] text-muted-foreground mt-2 opacity-70">npx ui26 add {b.id}</code>
+          <code class="block font-mono text-[11px] text-muted-foreground mt-2 opacity-70">{CLI_ADD} {b.id}</code>
         </div>
       </a>
     ))}
