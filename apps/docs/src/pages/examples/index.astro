@@ -2,7 +2,6 @@
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
 import { getSamples } from "@/samples";
-import BackToDocs from "@/components/BackToDocs.astro";
 
 const CATEGORY_ORDER = [
   "Cards",
@@ -14,7 +13,7 @@ const CATEGORY_ORDER = [
   "Navigation",
   "Overlays",
   "People",
-  "Editorial",
+  "Design System",
 ];
 
 const ALL = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
@@ -40,8 +39,6 @@ const GROUPED = [...CATEGORY_ORDER, ...extra]
   }}
 >
   <div class="examples-index">
-    <BackToDocs />
-
     <section class="not-content mb-12">
       <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-muted-foreground mb-3">
         ui26 · examples
@@ -86,6 +83,8 @@ const GROUPED = [...CATEGORY_ORDER, ...extra]
   </div>
 
   <style is:global>
+    /* Hide the Starlight splash title panel (auto-injected before slot content) */
+    body:has(.examples-index) .content-panel:first-of-type { display: none !important; }
     body:has(.examples-index) .main-frame .content-panel .sl-container { max-width: 1280px; }
     .ex-card-preview { pointer-events: none; max-height: 280px; }
   </style>

@@ -71,7 +71,7 @@ const sample: Sample = {
   title: "Color palette",
   description: "Semantic color token swatches — background, foreground, card, accent, status tones. Reflects the active theme.",
   componentName: "ColorPalette",
-  category: "Editorial",
+  category: "Design System",
   order: 5,
   span: "full",
   registryDependencies: ["stack", "grid"],
