@@ -87,7 +87,7 @@ const RAIL_REGIONS = await Promise.all([...ALL_BLOCKS, ...ALL_ATOMS].map(async (
   id: s.id,
   label: s.title,
   section: SECTION_LABEL[s.id] ?? (s.kind === "atom" ? (s.relatedComponent ?? "Atoms") : "Blocks"),
-  files: await prerenderFiles(s.spec, s.componentName, s.id, { includeJson: true }),
+  files: await prerenderFiles(s.spec, s.componentName, s.id),
 })));
 
 const typeScale = [

@@ -10,7 +10,7 @@ interface Props {
 
 const { id } = Astro.props;
 const sample = getSample(id)!;
-const files = await prerenderFiles(sample.spec, sample.componentName, sample.id, { includeJson: true });
+const files = await prerenderFiles(sample.spec, sample.componentName, sample.id);
 ---
 
 <section class="not-content my-8">

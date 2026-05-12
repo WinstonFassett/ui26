@@ -2,7 +2,7 @@ import type { Spec } from '@json-render/core'
 import { twMerge } from 'tailwind-merge'
 
 export type { Spec }
-export type Framework = 'react' | 'svelte' | 'astro'
+export type Framework = 'react' | 'svelte' | 'astro' | 'json-render'
 
 // Props that become slot/children content rather than attributes
 const SLOT_PROP: Record<string, string> = {
@@ -180,18 +180,20 @@ export function specToCode(spec: Spec, fw: Framework, componentName = 'Demo'): s
   return `---\n${imports}\n---\n\n${markup}\n`
 }
 
-export const FRAMEWORKS: Framework[] = ['react', 'svelte', 'astro']
+export const FRAMEWORKS: Framework[] = ['react', 'svelte', 'astro', 'json-render']
 
 export const FRAMEWORK_LABELS: Record<Framework, string> = {
   react: 'React',
   svelte: 'Svelte',
   astro: 'Astro',
+  'json-render': 'JSON',
 }
 
 export const FRAMEWORK_EXTS: Record<Framework, string> = {
   react: 'tsx',
   svelte: 'svelte',
   astro: 'astro',
+  'json-render': 'json',
 }
 
 export interface CodeFile {

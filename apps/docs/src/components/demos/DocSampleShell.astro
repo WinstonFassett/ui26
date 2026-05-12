@@ -16,7 +16,7 @@ const samples = getSamples({ kind: "atom", relatedComponent, group });
 const rendered = await Promise.all(
   samples.map(async (s) => ({
     sample: s,
-    files: await prerenderFiles(s.spec, s.componentName, s.id, { includeJson: true }),
+    files: await prerenderFiles(s.spec, s.componentName, s.id),
   }))
 );
 ---

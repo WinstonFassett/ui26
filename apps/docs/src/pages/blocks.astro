@@ -27,7 +27,7 @@ const RAIL_REGIONS = await Promise.all(ALL_BLOCKS.map(async (b) => ({
   id: b.id,
   label: b.title,
   section: b.category ?? "",
-  files: await prerenderFiles(b.spec, b.componentName, b.id, { includeJson: true }),
+  files: await prerenderFiles(b.spec, b.componentName, b.id),
 })));
 ---
 

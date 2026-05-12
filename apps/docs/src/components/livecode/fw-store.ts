@@ -3,12 +3,9 @@ import type { Framework } from "@/lib/spec-to-code";
 
 const KEY = "ui26-framework";
 const listeners = new Set<(fw: Framework) => void>();
-const jsonListeners = new Set<(active: boolean) => void>();
-
-let _jsonActive = false;
 
 function isFramework(v: unknown): v is Framework {
-  return v === "react" || v === "svelte" || v === "astro";
+  return v === "react" || v === "svelte" || v === "astro" || v === "json-render";
 }
 
 export function getFw(): Framework {
@@ -20,8 +17,6 @@ export function getFw(): Framework {
 export function setFw(fw: Framework) {
   if (typeof localStorage !== "undefined") localStorage.setItem(KEY, fw);
   listeners.forEach((l) => l(fw));
-  // switching framework deactivates JSON
-  if (_jsonActive) setJsonActive(false);
 }
 
 export function subscribe(listener: (fw: Framework) => void) {
@@ -41,16 +36,6 @@ export function subscribe(listener: (fw: Framework) => void) {
   };
 }
 
-export function setJsonActive(active: boolean) {
-  _jsonActive = active;
-  jsonListeners.forEach((l) => l(active));
-}
-
-export function subscribeJson(listener: (active: boolean) => void) {
-  jsonListeners.add(listener);
-  return () => { jsonListeners.delete(listener); };
-}
-
 /** SSR-safe hook: reads default 'react' on server, syncs from localStorage on mount, subscribes to changes. */
 export function useFw(): [Framework, (fw: Framework) => void] {
   const [fw, setLocal] = useState<Framework>("react");
@@ -61,15 +46,4 @@ export function useFw(): [Framework, (fw: Framework) => void] {
   }, []);
 
   return [fw, setFw];
-}
-
-export function useJsonActive(): [boolean, (active: boolean) => void] {
-  const [active, setLocal] = useState(false);
-
-  useEffect(() => {
-    setLocal(_jsonActive);
-    return subscribeJson(setLocal);
-  }, []);
-
-  return [active, setJsonActive];
 }

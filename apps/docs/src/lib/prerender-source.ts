@@ -8,9 +8,7 @@ export interface RenderedFile {
   filename: string
 }
 
-export interface RenderedFiles extends Record<Framework, RenderedFile> {
-  json?: RenderedFile
-}
+export type RenderedFiles = Record<Framework, RenderedFile>
 
 const SHIKI_THEMES = { light: 'github-light', dark: 'github-dark-default' } as const
 
@@ -26,7 +24,6 @@ export async function prerenderFiles(
   spec: Spec,
   componentName: string,
   id: string,
-  options: { includeJson?: boolean } = {},
 ): Promise<RenderedFiles> {
   const files = specToFiles(spec, componentName, id)
   const entries = await Promise.all(
@@ -35,9 +32,7 @@ export async function prerenderFiles(
     )
   )
   const result = Object.fromEntries(entries) as RenderedFiles
-  if (options.includeJson) {
-    const jsonCode = JSON.stringify(spec, null, 2)
-    result.json = await renderFile(jsonCode, 'json', 'spec.json')
-  }
+  const jsonCode = JSON.stringify(spec, null, 2)
+  result['json-render'] = await renderFile(jsonCode, 'json', 'spec.json')
   return result
 }
