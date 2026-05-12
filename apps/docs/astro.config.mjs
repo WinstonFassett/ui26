@@ -2,6 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightSidebarTopics from 'starlight-sidebar-topics';
 import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
@@ -18,9 +19,71 @@ export default defineConfig({
     site,
     integrations: [starlight({
         title: 'ui26',
+        plugins: [
+            starlightSidebarTopics(
+                [
+                    {
+                        id: 'docs',
+                        label: 'Docs',
+                        link: '/getting-started/introduction',
+                        items: [
+                            {
+                                label: 'Getting Started',
+                                items: [
+                                    { label: 'Introduction', slug: 'getting-started/introduction' },
+                                    { label: 'Quickstart', slug: 'getting-started/quickstart' },
+                                ],
+                            },
+                            {
+                                label: 'Guides',
+                                items: [
+                                    { label: 'Theming', slug: 'guides/theming' },
+                                    { label: 'JSON Render', slug: 'guides/json-render' },
+                                ],
+                            },
+                            ...(import.meta.env?.DEV ? [
+                                {
+                                    label: 'Dev',
+                                    items: [
+                                        { label: 'Kitchen Sink', link: '/kitchen-sink' },
+                                        { label: 'Ecosystem', link: '/ecosystem' },
+                                        { label: 'Tix App', link: '/tix-app' },
+                                    ],
+                                },
+                            ] : []),
+                        ],
+                    },
+                    {
+                        label: 'Components',
+                        link: '/components/button',
+                        items: [
+                            {
+                                label: 'Components',
+                                autogenerate: { directory: 'components', exclude: ['components/dev/**'] },
+                            },
+                        ],
+                    },
+                    {
+                        id: 'blocks',
+                        label: 'Blocks',
+                        link: '/blocks',
+                        items: [
+                            { label: 'Overview', link: '/blocks' },
+                        ],
+                    },
+                ],
+                {
+                    topics: {
+                        blocks: ['/blocks', '/blocks/**'],
+                        docs: ['/kitchen-sink', '/ecosystem', '/tix-app'],
+                    },
+                },
+            ),
+        ],
         components: {
             ThemeProvider: './src/components/starlight/ThemeProvider.astro',
             ThemeSelect: './src/components/starlight/ThemeSelect.astro',
+            Header: './src/components/starlight/Header.astro',
         },
         head: [
             // Inline critical --sl-* vars so Starlight's chrome doesn't paint
@@ -52,39 +115,6 @@ export default defineConfig({
             { tag: 'link', attrs: { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap' } },
         ],
         social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/WinstonFassett/ui26' }],
-        sidebar: [
-            {
-                label: 'Getting Started',
-                items: [
-                    { label: 'Introduction', slug: 'getting-started/introduction' },
-                    { label: 'Quickstart', slug: 'getting-started/quickstart' },
-                ],
-            },
-            {
-                label: 'Guides',
-                items: [
-                    { label: 'Theming', slug: 'guides/theming' },
-                    { label: 'JSON Render', slug: 'guides/json-render' },
-                ],
-            },
-            {
-                label: 'Components',
-                autogenerate: { directory: 'components', exclude: ['components/dev/**'] },
-            },
-            // { label: 'Playroom', link: '/playroom' },
-            ...(import.meta.env?.DEV ? [
-                {
-                    label: 'Dev',
-                    items: [
-                        { label: 'Kitchen Sink', link: '/kitchen-sink' },
-                        { label: 'Blocks', link: '/blocks' },
-                        { label: 'Ecosystem', link: '/ecosystem' },
-                        { label: 'Tix App', link: '/tix-app' },
-                        { label: 'Playroom', link: '/playroom' },
-                    ],
-                },
-            ] : []),
-        ],
         customCss: ['./src/styles/global.css'],
         }), react(), svelte()],
     vite: {

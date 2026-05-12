@@ -1,0 +1,126 @@
+---
+import config from 'virtual:starlight/user-config';
+
+import LanguageSelect from 'virtual:starlight/components/LanguageSelect';
+import Search from 'virtual:starlight/components/Search';
+import SiteTitle from 'virtual:starlight/components/SiteTitle';
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+
+const shouldRenderSearch =
+    config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
+
+const rawTopics = Astro.locals.starlightSidebarTopics?.topics ?? [];
+
+// The plugin's middleware only runs on Starlight content-collection routes; on
+// custom Astro pages (e.g. /blocks, /kitchen-sink) every topic comes back with
+// isCurrent=false. If nothing's marked current, infer the active topic by
+// URL-prefix matching, keyed off the topic label.
+const fallback = rawTopics.length > 0 && !rawTopics.some((t: any) => t.isCurrent);
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const customTopicPrefixes: Record<string, RegExp> = {
+    Blocks: /^\/blocks(\/|$)/,
+    Docs: /^\/(kitchen-sink|ecosystem|tix-app)(\/|$)/,
+};
+const topics = rawTopics.map((t: any) => {
+    if (t.isCurrent || !fallback) return t;
+    const re = customTopicPrefixes[t.label as string];
+    return re && re.test(pathname) ? { ...t, isCurrent: true } : t;
+});
+---
+
+<div class="header">
+    <div class="title-wrapper sl-flex">
+        <SiteTitle />
+    </div>
+
+    {topics.length > 0 && (
+        <nav class="topic-tabs sl-hidden md:sl-flex" aria-label="Sections">
+            {topics.map((t) => (
+                <a
+                    href={t.link}
+                    class:list={['topic-tab', { 'topic-tab-current': t.isCurrent }]}
+                    data-active={t.isCurrent ? 'true' : 'false'}
+                >
+                    {t.label}
+                </a>
+            ))}
+        </nav>
+    )}
+
+    <div class="sl-flex right-group print:hidden">
+        {shouldRenderSearch && (
+            <div class="search-wrapper">
+                <Search />
+            </div>
+        )}
+        <div class="sl-hidden md:sl-flex social-icons">
+            <SocialIcons />
+        </div>
+        <ThemeSelect />
+        <LanguageSelect />
+    </div>
+</div>
+
+<style>
+    @layer starlight.core {
+        .header {
+            display: flex;
+            gap: var(--sl-nav-gap);
+            align-items: center;
+            height: 100%;
+        }
+
+        .title-wrapper {
+            overflow: clip;
+            padding: 0.25rem;
+            margin: -0.25rem;
+            min-width: 0;
+            flex-shrink: 0;
+        }
+
+        .topic-tabs {
+            gap: 0.25rem;
+            align-items: center;
+            margin-inline-start: 1rem;
+        }
+
+        .topic-tab {
+            color: var(--sl-color-gray-2);
+            font-size: var(--sl-text-sm);
+            font-weight: 500;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            line-height: 1;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .topic-tab:hover {
+            background-color: var(--sl-color-gray-6, var(--sl-color-gray-5));
+            color: var(--sl-color-white);
+        }
+
+        .topic-tab-current {
+            color: var(--sl-color-white);
+            background-color: color-mix(in oklch, var(--sl-color-accent) 12%, transparent);
+        }
+
+        .right-group {
+            margin-inline-start: auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .social-icons {
+            gap: 1rem;
+            align-items: center;
+        }
+        .social-icons::after {
+            content: '';
+            height: 2rem;
+            border-inline-end: 1px solid var(--sl-color-gray-5);
+        }
+
+    }
+</style>

@@ -433,3 +433,22 @@ a.action.secondary {
 .pagination-links a .link-title {  
   font-size: var(--sl-text-xl);
 }
+
+/* Topic switcher lives in the header on desktop; keep it in-sidebar on
+ * mobile where the header tabs are hidden behind the menu toggle. */
+@media (min-width: 50rem) {
+  .sidebar-pane .starlight-sidebar-topics {
+    display: none;
+  }
+}
+
+/* Compact, right-aligned search button (replaces the big centered bar). */
+site-search button[data-open-modal] {
+  min-width: 0 !important;
+  width: auto !important;
+  padding-inline: 0.625rem;
+  gap: 0.5rem;
+}
+site-search button[data-open-modal] > span {
+  display: none !important;
+}
