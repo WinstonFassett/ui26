@@ -1,0 +1,138 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { ExampleViewer } from "@/components/livecode/ExampleViewer";
+import { CopyBtn } from "@/components/livecode/CopyBtn";
+import { getSamples } from "@/samples";
+import { prerenderFiles } from "@/lib/prerender-source";
+import { CLI_ADD } from "@/lib/site";
+import BackToDocs from "@/components/BackToDocs.astro";
+
+export async function getStaticPaths() {
+  const all = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
+  return all.map((b) => ({ params: { id: b.id } }));
+}
+
+const { id } = Astro.params;
+const ALL = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
+const sample = ALL.find((b) => b.id === id);
+if (!sample) {
+  return Astro.redirect("/examples");
+}
+
+const CATEGORY_ORDER = [
+  "Cards", "Forms", "Marketing", "Feedback", "Productivity",
+  "AI", "Navigation", "Overlays", "People", "Editorial",
+];
+const known = new Set(CATEGORY_ORDER);
+const extra = Array.from(new Set(ALL.map((b) => b.category ?? "Other"))).filter((c) => !known.has(c));
+
+const GROUPED = [...CATEGORY_ORDER, ...extra]
+  .map((cat) => ({
+    category: cat,
+    blocks: ALL
+      .filter((b) => (b.category ?? "Other") === cat)
+      .sort((a, b) => (a.order ?? 999) - (b.order ?? 999)),
+  }))
+  .filter((g) => g.blocks.length > 0);
+
+const files = await prerenderFiles(sample.spec, sample.componentName, sample.id);
+const region = {
+  id: sample.id,
+  label: sample.title,
+  section: sample.category ?? "Example",
+  files,
+};
+const cliCmd = `${CLI_ADD} ${sample.id}`;
+---
+
+<StarlightPage
+  frontmatter={{
+    title: sample.title,
+    description: sample.description,
+    template: "splash",
+  }}
+>
+  <div class="examples-viewer">
+    <BackToDocs href="/examples" label="All examples" />
+
+    <div class="ex-layout">
+      <aside class="ex-sidebar not-content">
+        <div class="ex-sidebar-inner">
+          {GROUPED.map((group) => (
+            <div class="mb-6">
+              <div class="font-mono text-[9px] uppercase tracking-[0.14em] text-muted-foreground mb-2">
+                {group.category}
+              </div>
+              <ul class="space-y-0.5">
+                {group.blocks.map((b) => (
+                  <li>
+                    <a
+                      href={`/examples/${b.id}`}
+                      class:list={[
+                        "block px-2 py-1 text-[12.5px] leading-tight transition-colors",
+                        b.id === sample.id
+                          ? "text-foreground bg-muted/60 font-medium"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
+                      ]}
+                    >
+                      {b.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      <main class="ex-main not-content">
+        <header class="mb-6">
+          <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-accent mb-2">
+            {sample.category ?? "Example"} · {sample.id}
+          </div>
+          <h1 class="font-serif font-medium text-[36px] leading-[1.06] tracking-[-0.018em] text-foreground">
+            {sample.title}
+          </h1>
+          <p class="max-w-[640px] mt-3 text-[15px] leading-[1.55] text-muted-foreground">
+            {sample.description}
+          </p>
+
+          <div class="mt-5 flex items-center gap-2 border border-border bg-card px-3 py-2 max-w-[480px]">
+            <code class="flex-1 font-mono text-[11px] text-muted-foreground truncate">{cliCmd}</code>
+            <CopyBtn text={cliCmd} label="Copy" client:load />
+          </div>
+
+          {(sample.registryDependencies ?? []).length > 0 && (
+            <div class="mt-3 font-mono text-[10px] tracking-wider text-muted-foreground">
+              deps: {(sample.registryDependencies ?? []).join(", ")}
+            </div>
+          )}
+        </header>
+
+        <ExampleViewer spec={sample.spec} region={region} client:load />
+      </main>
+    </div>
+  </div>
+
+  <style is:global>
+    body:has(.examples-viewer) .main-frame .content-panel .sl-container { max-width: 1440px; }
+
+    @media (min-width: 1024px) {
+      .ex-layout {
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr);
+        gap: 2.5rem;
+      }
+      .ex-sidebar-inner {
+        position: sticky;
+        top: 5rem;
+        max-height: calc(100vh - 6rem);
+        overflow-y: auto;
+        padding-right: 0.5rem;
+      }
+    }
+    @media (max-width: 1023px) {
+      .ex-sidebar { display: none; }
+    }
+  </style>
+</StarlightPage>

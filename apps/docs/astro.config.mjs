@@ -64,17 +64,17 @@ export default defineConfig({
                         ],
                     },
                     {
-                        id: 'blocks',
-                        label: 'Blocks',
-                        link: '/blocks',
+                        id: 'examples',
+                        label: 'Examples',
+                        link: '/examples',
                         items: [
-                            { label: 'Overview', link: '/blocks' },
+                            { label: 'All Examples', link: '/examples' },
                         ],
                     },
                 ],
                 {
                     topics: {
-                        blocks: ['/blocks', '/blocks/**'],
+                        examples: ['/examples', '/examples/**'],
                         docs: ['/kitchen-sink', '/ecosystem', '/tix-app'],
                     },
                 },
