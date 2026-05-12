@@ -186,7 +186,7 @@ export const FRAMEWORK_LABELS: Record<Framework, string> = {
   react: 'React',
   svelte: 'Svelte',
   astro: 'Astro',
-  'json-render': 'JSON',
+  'json-render': 'JSON Render',
 }
 
 export const FRAMEWORK_EXTS: Record<Framework, string> = {
