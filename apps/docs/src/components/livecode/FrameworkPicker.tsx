@@ -2,10 +2,11 @@
 
 import { cn } from "@/lib/utils";
 import { FRAMEWORKS, FRAMEWORK_LABELS } from "@/lib/spec-to-code";
-import { useFw } from "./fw-store";
+import { useFw, useJsonActive } from "./fw-store";
 
 export function FrameworkPicker({ className }: { className?: string }) {
   const [fw, setFw] = useFw();
+  const [jsonActive, setJsonActive] = useJsonActive();
 
   return (
     <div className={cn("inline-flex items-center border border-border bg-card", className)}>
@@ -13,7 +14,7 @@ export function FrameworkPicker({ className }: { className?: string }) {
         framework
       </span>
       {FRAMEWORKS.map((f) => {
-        const on = fw === f;
+        const on = !jsonActive && fw === f;
         return (
           <button
             key={f}
@@ -30,6 +31,18 @@ export function FrameworkPicker({ className }: { className?: string }) {
           </button>
         );
       })}
+      <button
+        type="button"
+        onClick={() => setJsonActive(!jsonActive)}
+        className={cn(
+          "px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors border-l border-border",
+          jsonActive
+            ? "bg-foreground text-background"
+            : "text-muted-foreground hover:text-foreground"
+        )}
+      >
+        JSON
+      </button>
     </div>
   );
 }

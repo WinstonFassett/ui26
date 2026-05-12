@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { CopyBtn } from "./CopyBtn";
 import { FwTabs } from "./FwTabs";
 import { PlayroomLink } from "./PlayroomLink";
+import { useJsonActive } from "./fw-store";
 
 export interface SourcePaneRegion {
   id: string;
@@ -26,7 +27,9 @@ export function SourcePane({
   onClose?: () => void;
   className?: string;
 }) {
-  const file = region.files[fw];
+  const [jsonActive, setJsonActive] = useJsonActive();
+
+  const file = jsonActive && region.files.json ? region.files.json : region.files[fw];
 
   return (
     <div
@@ -57,7 +60,14 @@ export function SourcePane({
         )}
       </div>
 
-      <FwTabs fw={fw} setFw={setFw} fileLabel={file.filename} />
+      <FwTabs
+        fw={fw}
+        setFw={setFw}
+        fileLabel={file.filename}
+        hasJson={!!region.files.json}
+        jsonActive={jsonActive}
+        onJson={() => setJsonActive(true)}
+      />
 
       <div
         className={cn(SHIKI_CLASSES)}
