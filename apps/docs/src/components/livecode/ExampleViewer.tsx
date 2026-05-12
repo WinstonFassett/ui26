@@ -29,15 +29,23 @@ export function ExampleViewer({
   return (
     <div className="flex flex-col h-full bg-background">
 
-      {/* title card row: breadcrumb+title left, tabs right */}
+      {/* title card + tabs — always visible so user can always switch tabs */}
       <div className="flex items-center justify-between gap-4 px-3.5 py-3 border-b border-border shrink-0">
         <div className="min-w-0">
-          <div className="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
-            {region.section}
-          </div>
-          <div className="text-[13px] font-semibold text-foreground truncate">
-            {title}
-          </div>
+          {tab === "preview" ? (
+            <>
+              <div className="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
+                {region.section}
+              </div>
+              <div className="text-[13px] font-semibold text-foreground truncate">
+                {title}
+              </div>
+            </>
+          ) : (
+            <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+              {region.section} / {title}
+            </div>
+          )}
         </div>
         <div className="flex items-center shrink-0">
           <TabBtn active={tab === "preview"} onClick={() => setTab("preview")}>Preview</TabBtn>
@@ -68,7 +76,7 @@ export function ExampleViewer({
             )}
           </div>
         ) : (
-          <SourcePane region={region} fw={fw} setFw={setFw} className="h-full" />
+          <SourcePane region={region} fw={fw} setFw={setFw} hideHeader className="h-full" />
         )}
       </div>
 
