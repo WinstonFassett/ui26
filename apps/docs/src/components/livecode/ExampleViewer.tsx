@@ -29,7 +29,7 @@ export function ExampleViewer({
   const [fw, setFw] = useFw();
 
   return (
-    <div className="flex flex-col h-full border border-border bg-card">
+    <div className="flex flex-col h-full bg-background">
 
       {/* metadata header */}
       <div className="flex items-start justify-between gap-6 px-5 py-4 border-b border-border flex-shrink-0">

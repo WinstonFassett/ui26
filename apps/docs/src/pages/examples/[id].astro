@@ -101,15 +101,17 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
       </header>
 
       <div class="ex-main-body">
-        <ExampleViewer
-          spec={sample.spec}
-          region={region}
-          title={sample.title}
-          description={sample.description}
-          cliCmd={cliCmd}
-          deps={sample.registryDependencies ?? []}
-          client:load
-        />
+        <div class="ex-viewer-wrap">
+          <ExampleViewer
+            spec={sample.spec}
+            region={region}
+            title={sample.title}
+            description={sample.description}
+            cliCmd={cliCmd}
+            deps={sample.registryDependencies ?? []}
+            client:load
+          />
+        </div>
       </div>
     </main>
 
@@ -173,9 +175,18 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
     .ex-main-body {
       flex: 1;
       overflow: hidden;
-      padding: 24px;
       display: flex;
       flex-direction: column;
+    }
+    .ex-viewer-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .ex-viewer-wrap > * {
+      flex: 1;
+      min-height: 0;
     }
 
     /* Narrow: hide sidebar */
