@@ -4,7 +4,6 @@ import { useState } from "react";
 import { BlockPreview } from "./BlockPreview";
 import { SourcePane, type SourcePaneRegion } from "./SourcePane";
 import { useFw } from "./fw-store";
-import { CopyBtn } from "./CopyBtn";
 import { cn } from "@/lib/utils";
 import type { Spec } from "@/lib/spec-to-code";
 
@@ -26,44 +25,71 @@ export function ExampleViewer({
   deps?: string[];
 }) {
   const [tab, setTab] = useState<Tab>("preview");
+  const [copied, setCopied] = useState(false);
   const [fw, setFw] = useFw();
+
+  const copy = () => {
+    navigator.clipboard?.writeText(cliCmd).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 900);
+  };
 
   return (
     <div className="flex flex-col h-full bg-background">
 
-      {/* metadata header */}
-      <div className="flex items-start justify-between gap-6 px-5 py-4 border-b border-border flex-shrink-0">
-        <div className="min-w-0">
-          <div className="text-[15px] font-semibold text-foreground leading-tight mb-1">{title}</div>
-          {description && (
-            <p className="text-[12.5px] text-muted-foreground leading-snug max-w-[480px]">{description}</p>
-          )}
-          {deps && deps.length > 0 && (
-            <div className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground">
-              deps: {deps.join(", ")}
-            </div>
-          )}
+      {/* single toolbar: tabs | spacer | copy */}
+      <div className="flex items-stretch h-9 border-b border-border flex-shrink-0 min-w-0">
+        <div className="flex items-stretch">
+          <TabBtn active={tab === "preview"} onClick={() => setTab("preview")}>Preview</TabBtn>
+          <TabBtn active={tab === "code"} onClick={() => setTab("code")}>Code</TabBtn>
         </div>
-        <div className="flex items-center gap-1.5 border border-border px-2.5 py-1.5 flex-shrink-0">
-          <code className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">{cliCmd}</code>
-          <CopyBtn text={cliCmd} label="Copy" />
-        </div>
-      </div>
 
-      {/* tab bar */}
-      <div className="flex items-stretch border-b border-border flex-shrink-0">
-        <TabBtn active={tab === "preview"} onClick={() => setTab("preview")}>Preview</TabBtn>
-        <TabBtn active={tab === "code"} onClick={() => setTab("code")}>Code</TabBtn>
-        <span className="flex-1" />
+        <div className="flex-1" />
+
+        <button
+          type="button"
+          onClick={copy}
+          title={cliCmd}
+          className={cn(
+            "flex items-center gap-1.5 px-3 border-l border-border font-mono text-[10px] tracking-wider transition-colors flex-shrink-0",
+            copied
+              ? "text-accent"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {copied ? (
+            <span>✓</span>
+          ) : (
+            <svg width="11" height="11" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
+              <rect x="2.5" y="2.5" width="5.5" height="5.5" />
+              <path d="M1 6V1h5" />
+            </svg>
+          )}
+          <span className="hidden sm:inline">{copied ? "Copied" : "Copy"}</span>
+        </button>
       </div>
 
       {/* content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 min-h-0 overflow-auto">
         {tab === "preview" ? (
-          <div className="p-8 min-h-full flex items-center justify-center">
-            <div className="w-full max-w-[800px]">
-              <BlockPreview spec={spec} />
+          <div className="flex flex-col h-full">
+            <div className="flex-1 p-8 flex items-center justify-center">
+              <div className="w-full max-w-[800px]">
+                <BlockPreview spec={spec} />
+              </div>
             </div>
+            {(description || (deps && deps.length > 0)) && (
+              <div className="flex-shrink-0 px-5 py-2.5 border-t border-border flex items-baseline gap-4">
+                {description && (
+                  <p className="text-[11.5px] text-muted-foreground leading-snug">{description}</p>
+                )}
+                {deps && deps.length > 0 && (
+                  <span className="font-mono text-[10px] text-muted-foreground/60 whitespace-nowrap flex-shrink-0">
+                    {deps.join(" · ")}
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <SourcePane region={region} fw={fw} setFw={setFw} className="h-full" />
@@ -88,8 +114,8 @@ function TabBtn({
       type="button"
       onClick={onClick}
       className={cn(
-        "px-4 py-2 font-mono text-[10px] uppercase tracking-wider",
-        "border-b-[1.5px] -mb-px transition-colors",
+        "px-4 h-full font-mono text-[10px] uppercase tracking-wider",
+        "border-b-[1.5px] transition-colors",
         active
           ? "border-accent text-foreground"
           : "border-transparent text-muted-foreground hover:text-foreground"
