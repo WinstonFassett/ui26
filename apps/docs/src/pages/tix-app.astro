@@ -3,13 +3,8 @@
  * Full-screen overlay of the tix main list view, themed through ui26 tokens.
  * Mirrors http://ui26-tix.localhost:1355/ as a reference surface for testing
  * how well registry components + themes fit a real product layout.
- *
- * Standalone (not StarlightPage) so the viewport matches tix-ui 1:1.
- * Top-right corner carries the theme picker so themes can be swapped live.
  */
-import "../styles/global.css";
-import ThemeProvider from "../components/starlight/ThemeProvider.astro";
-import { ThemePicker } from "../components/starlight/theme-picker";
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import Button from "@registry/button/button.astro";
 import Badge from "@registry/badge/badge.astro";
 
@@ -136,35 +131,8 @@ const priorityBars: Record<Row["priority"], string> = {
 };
 ---
 
-<!doctype html>
-<html lang="en" data-theme="tix">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>tix · ui26 overlay</title>
-    {/* Standalone pages don't get Starlight's preflight. Restore the border-box
-       default + zero-margin body that the rest of the app assumes. */}
-    <style is:global>
-      *, *::before, *::after { box-sizing: border-box; }
-      body { margin: 0; }
-    </style>
-    <script is:inline>
-      // Default this page to the tix theme on first visit; respect user's
-      // choice after they pick something in the theme picker.
-      try {
-        if (!localStorage.getItem('ui26-theme-name')) {
-          localStorage.setItem('ui26-theme-name', 'tix');
-        }
-      } catch (_) {}
-    </script>
-    <ThemeProvider />
-  </head>
-  <body class="font-sans antialiased bg-background text-foreground not-content">
-    <div class="fixed bottom-2 right-2 z-50 rounded-md border border-border bg-card p-1 shadow-sm">
-      <ThemePicker client:load />
-    </div>
-
-    <div class="flex h-svh bg-background text-foreground overflow-hidden">
+<StarlightPage frontmatter={{ title: "Tix App", template: "splash", pagefind: false }}>
+  <div class="tix-app-shell not-content flex bg-background text-foreground overflow-hidden">
       {/* ─────────────── Sidebar */}
       <aside class="shrink-0 flex flex-col bg-background overflow-hidden lg:py-2 border-r border-border" style="width:220px">
         <div class="flex flex-col px-4 py-2" style="min-width:220px">
@@ -311,6 +279,16 @@ const priorityBars: Record<Row["priority"], string> = {
           </div>
         </div>
       </div>
-    </div>
-  </body>
-</html>
+  </div>
+</StarlightPage>
+
+<style is:global>
+  /* Tix App: full-bleed content beneath the site header. Strip the splash
+   * template's container padding + hero so the shell starts flush. */
+  body:has(.tix-app-shell) .content-panel:first-child { display: none; }
+  body:has(.tix-app-shell) .content-panel { padding: 0 !important; border: 0 !important; }
+  body:has(.tix-app-shell) .sl-container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  body:has(.tix-app-shell) .sl-markdown-content { margin-top: 0 !important; }
+  body:has(.tix-app-shell) .sl-markdown-content > :first-child { margin-top: 0 !important; }
+  .tix-app-shell { height: calc(100svh - var(--sl-nav-height, 3.75rem)); }
+</style>
