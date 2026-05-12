@@ -3,7 +3,6 @@ import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { ExampleViewer } from "@/components/livecode/ExampleViewer";
 import { getSamples } from "@/samples";
 import { prerenderFiles } from "@/lib/prerender-source";
-import { CLI_ADD } from "@/lib/site";
 
 export async function getStaticPaths() {
   const all = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
@@ -40,7 +39,6 @@ const region = {
   section: sample.category ?? "Example",
   files,
 };
-const cliCmd = `${CLI_ADD} ${sample.id}`;
 ---
 
 <StarlightPage
@@ -87,23 +85,12 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
     </aside>
 
     <main class="ex-main">
-      <div class="ex-breadcrumb">
-        <span class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          {sample.category ?? "Example"}
-        </span>
-        <span class="font-mono text-[10px] text-muted-foreground/40 mx-1.5">/</span>
-        <span class="font-mono text-[10px] uppercase tracking-widest text-foreground">
-          {sample.title}
-        </span>
-      </div>
-
       <div class="ex-viewer-wrap">
         <ExampleViewer
           spec={sample.spec}
           region={region}
           title={sample.title}
           description={sample.description}
-          cliCmd={cliCmd}
           deps={sample.registryDependencies ?? []}
           client:load
         />
@@ -159,15 +146,7 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
     flex-direction: column;
     overflow: hidden;
   }
-  .ex-breadcrumb {
-    display: flex;
-    align-items: center;
-    padding: 0 24px;
-    height: 36px;
-    border-bottom: 1px solid hsl(var(--border));
-    flex-shrink: 0;
-  }
-  .ex-viewer-wrap {
+.ex-viewer-wrap {
     flex: 1;
     min-height: 0;
     display: flex;
