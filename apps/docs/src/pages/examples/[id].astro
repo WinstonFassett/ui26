@@ -1,7 +1,6 @@
 ---
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import { ExampleViewer } from "@/components/livecode/ExampleViewer";
-import { CopyBtn } from "@/components/livecode/CopyBtn";
 import { getSamples } from "@/samples";
 import { prerenderFiles } from "@/lib/prerender-source";
 import { CLI_ADD } from "@/lib/site";
@@ -49,6 +48,7 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
     title: sample.title,
     description: sample.description,
     template: "splash",
+    hero: {},
   }}
 >
   <div class="ex-shell not-content">
@@ -91,33 +91,25 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
     <!-- main -->
     <main class="ex-main">
       <header class="ex-main-header">
-        <div class="flex-1 min-w-0">
-          <span class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {sample.category ?? "Example"}
-          </span>
-          <span class="font-mono text-[10px] text-muted-foreground/50 mx-1.5">/</span>
-          <span class="font-mono text-[10px] uppercase tracking-widest text-foreground">
-            {sample.title}
-          </span>
-        </div>
-        <div class="flex items-center gap-2 border border-border bg-card px-3 py-1.5">
-          <code class="font-mono text-[11px] text-muted-foreground">{cliCmd}</code>
-          <CopyBtn text={cliCmd} label="Copy" client:load />
-        </div>
-        {(sample.registryDependencies ?? []).length > 0 && (
-          <div class="font-mono text-[10px] tracking-wider text-muted-foreground border-l border-border pl-3">
-            deps: {(sample.registryDependencies ?? []).join(", ")}
-          </div>
-        )}
+        <span class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          {sample.category ?? "Example"}
+        </span>
+        <span class="font-mono text-[10px] text-muted-foreground/40 mx-1.5">/</span>
+        <span class="font-mono text-[10px] uppercase tracking-widest text-foreground">
+          {sample.title}
+        </span>
       </header>
 
       <div class="ex-main-body">
-        {sample.description && (
-          <p class="text-[14px] leading-[1.55] text-muted-foreground mb-5 max-w-[640px]">
-            {sample.description}
-          </p>
-        )}
-        <ExampleViewer spec={sample.spec} region={region} client:load />
+        <ExampleViewer
+          spec={sample.spec}
+          region={region}
+          title={sample.title}
+          description={sample.description}
+          cliCmd={cliCmd}
+          deps={sample.registryDependencies ?? []}
+          client:load
+        />
       </div>
     </main>
 
@@ -126,8 +118,6 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
   <style is:global>
     /* Make the viewer a fixed two-pane shell below the nav */
     body:has(.ex-shell) .main-frame { padding-top: 0 !important; }
-    /* Hide the first content-panel (Starlight splash auto-injects a title panel) */
-    body:has(.ex-shell) .content-panel:first-of-type { display: none !important; }
     body:has(.ex-shell) .content-panel { padding: 0 !important; border: 0 !important; }
     body:has(.ex-shell) .sl-container { max-width: none !important; padding: 0 !important; margin: 0 !important; }
 
@@ -174,16 +164,18 @@ const cliCmd = `${CLI_ADD} ${sample.id}`;
     .ex-main-header {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      padding: 10px 24px;
+      padding: 0 24px;
+      height: 36px;
       border-bottom: 1px solid hsl(var(--border));
       background: hsl(var(--background));
       flex-shrink: 0;
     }
     .ex-main-body {
       flex: 1;
-      overflow-y: auto;
-      padding: 32px 32px 64px;
+      overflow: hidden;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
     }
 
     /* Narrow: hide sidebar */

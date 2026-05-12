@@ -36,6 +36,7 @@ const GROUPED = [...CATEGORY_ORDER, ...extra]
     title: "Examples",
     description: "Composed, installable UI patterns across React, Svelte, Astro, and JSON Render.",
     template: "splash",
+    hero: {},
   }}
 >
   <div class="examples-index">
@@ -83,8 +84,6 @@ const GROUPED = [...CATEGORY_ORDER, ...extra]
   </div>
 
   <style is:global>
-    /* Hide the Starlight splash title panel (auto-injected before slot content) */
-    body:has(.examples-index) .content-panel:first-of-type { display: none !important; }
     body:has(.examples-index) .main-frame .content-panel .sl-container { max-width: 1280px; }
     .ex-card-preview { pointer-events: none; max-height: 280px; }
   </style>
