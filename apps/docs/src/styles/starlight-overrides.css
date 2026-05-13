@@ -15,6 +15,11 @@
   --sl-color-hairline-light: var(--border);
   --sl-color-hairline-shade: var(--border);
 
+  /* --sl-color-white drives ALL heading colors (h1-h6) in Starlight's markdown.css.
+   * Starlight only flips it via [data-theme='light'], which we never set — our
+   * compound data-theme values ("editorial", "shad", "editorial-dark", …) never
+   * match that selector, so without this mapping it stays hsl(0,0%,100%) always. */
+  --sl-color-white: var(--foreground);
   --sl-color-text: var(--foreground);
   --sl-color-text-accent: var(--accent);
   --sl-color-text-invert: var(--primary-foreground);
@@ -107,15 +112,15 @@ site-search button[data-open-modal] {
   background: transparent;
   padding: 4px 10px;
   color: var(--sl-color-gray-2);
-  height: 24px;
-  border-radius: 0;
+  height: 32px;
+  border-radius: var(--radius-md);
 }
 site-search button[data-open-modal]:hover {
   border-color: var(--sl-color-text);
   color: var(--sl-color-text);
 }
 site-search button[data-open-modal] kbd {
-  border-radius: 0;
+  border-radius: calc(var(--radius-md) - 2px);
 }
 
 /* Fix theme selector height for text display */

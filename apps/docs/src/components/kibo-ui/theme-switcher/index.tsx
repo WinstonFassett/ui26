@@ -57,7 +57,20 @@ export const ThemeSwitcher = ({
   }, []);
 
   if (!mounted) {
-    return null;
+    // Render invisible placeholder with identical dimensions to prevent layout jump.
+    return (
+      <div
+        aria-hidden="true"
+        className={cn(
+          "relative isolate flex h-8 rounded-full bg-background p-1 ring-1 ring-border invisible",
+          className
+        )}
+      >
+        {themes.map(({ key }) => (
+          <div key={key} className="h-6 w-6 rounded-full" />
+        ))}
+      </div>
+    );
   }
 
   return (

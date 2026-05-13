@@ -19,6 +19,16 @@ export default defineConfig({
     site,
     integrations: [starlight({
         title: 'ui26',
+        expressiveCode: {
+            // Dual themes so ExpressiveCode generates both light+dark token vars.
+            // themeCssSelector maps each theme to our compound data-theme format
+            // (e.g. "editorial-dark", "shad-dark") rather than Starlight's native
+            // data-theme="light"/"dark", which we never set.
+            themes: ['github-light', 'github-dark'],
+            useDarkModeMediaQuery: false,
+            themeCssSelector: (theme) =>
+                theme.type === 'dark' ? '[data-theme$="dark"]' : ':root',
+        },
         plugins: [
             starlightSidebarTopics(
                 [
