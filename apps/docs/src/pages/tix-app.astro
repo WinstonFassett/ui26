@@ -288,7 +288,9 @@ const priorityBars: Record<Row["priority"], string> = {
   body:has(.tix-app-shell) .content-panel:first-child { display: none; }
   body:has(.tix-app-shell) .content-panel { padding: 0 !important; border: 0 !important; }
   body:has(.tix-app-shell) .sl-container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
-  body:has(.tix-app-shell) .sl-markdown-content { margin-top: 0 !important; }
+  body:has(.tix-app-shell) .sl-markdown-content { margin-top: 0 !important; padding-top: var(--sl-nav-height, 3.75rem) !important; height: 100svh !important; box-sizing: border-box !important; }
   body:has(.tix-app-shell) .sl-markdown-content > :first-child { margin-top: 0 !important; }
-  .tix-app-shell { height: calc(100svh - var(--sl-nav-height, 3.75rem)); }
+  body:has(.tix-app-shell) .sl-markdown-content ~ * { display: none; }
+  body:has(.tix-app-shell) main { padding-bottom: 0 !important; }
+  .tix-app-shell { height: 100%; }
 </style>
