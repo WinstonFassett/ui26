@@ -9,6 +9,10 @@ export function PlayroomLink({
   code?: string;
   className?: string;
 }) {
+  if (!import.meta.env.DEV) {
+    return null;
+  }
+
   const href = code ? `/playroom#${encode(code)}` : "/playroom";
 
   return (
@@ -24,7 +28,7 @@ export function PlayroomLink({
       )}
     >
       Playroom
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
         <path d="M3 1H1v6h6V5M5 1h2v2M5 3l2.4-2.4" />
       </svg>
     </a>

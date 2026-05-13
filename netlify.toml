@@ -1,6 +1,6 @@
 [build]
   base = "."
-  command = "pnpm --filter ./apps/docs build"
+  command = "rm -rf apps/docs/src/pages/playroom && pnpm --filter ./apps/docs build && git checkout apps/docs/src/pages/playroom"
   publish = "apps/docs/dist"
 
 [build.environment]
