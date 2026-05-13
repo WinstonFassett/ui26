@@ -15,11 +15,14 @@
   --sl-color-hairline-light: var(--border);
   --sl-color-hairline-shade: var(--border);
 
-  /* --sl-color-white drives ALL heading colors (h1-h6) in Starlight's markdown.css.
-   * Starlight only flips it via [data-theme='light'], which we never set — our
-   * compound data-theme values ("editorial", "shad", "editorial-dark", …) never
-   * match that selector, so without this mapping it stays hsl(0,0%,100%) always. */
+  /* --sl-color-white / --sl-color-black are Starlight's "foreground" and "background"
+   * primitives used by components (headings, mobile TOC button, mobile menu toggle,
+   * sidebar, search modal, etc). Starlight only flips them via [data-theme='light'],
+   * which we never set — our compound data-theme values ("editorial", "shad",
+   * "editorial-dark", …) never match that selector, so without these mappings they
+   * stay hsl(0,0%,100%) (white) and hsl(224,10%,10%) (near-black) forever. */
   --sl-color-white: var(--foreground);
+  --sl-color-black: var(--background);
   --sl-color-text: var(--foreground);
   --sl-color-text-accent: var(--accent);
   --sl-color-text-invert: var(--primary-foreground);
