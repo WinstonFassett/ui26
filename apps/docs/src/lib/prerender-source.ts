@@ -33,6 +33,6 @@ export async function prerenderFiles(
   )
   const result = Object.fromEntries(entries) as RenderedFiles
   const jsonCode = JSON.stringify(spec, null, 2)
-  result['json-render'] = await renderFile(jsonCode, 'json', 'spec.json')
+  result['json-render'] = await renderFile(jsonCode, 'json', `${id}.json`)
   return result
 }
