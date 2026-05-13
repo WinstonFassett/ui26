@@ -9,6 +9,7 @@ const sample: Sample = {
   relatedComponent: "badge",
   group: "variants",
   featured: true,
+  span: "full",
   spec: {
     root: "row",
     elements: {
