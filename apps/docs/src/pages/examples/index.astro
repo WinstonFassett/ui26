@@ -96,7 +96,7 @@ function computeLone(blocks: typeof GROUPED[0]["blocks"]): boolean[] {
                 ]}
               >
                 <div class:list={["ex-card-preview pointer-events-none overflow-hidden p-6", b.span === "full" && "ex-card-preview--full"]}>
-                  <BlockPreview spec={b.spec} client:only="react" />
+                  <BlockPreview spec={b.spec} client:load />
                 </div>
                 <div class="ex-card-info absolute bottom-0 left-0 right-0 flex flex-col gap-0.5 px-4 py-3 bg-card/90 backdrop-blur-sm border-t border-border translate-y-full group-hover:translate-y-0 transition-transform duration-150">
                   <span class="text-[13px] font-medium text-foreground leading-snug">{b.title}</span>
