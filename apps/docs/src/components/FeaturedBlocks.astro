@@ -52,7 +52,7 @@ const lone = computeLone(featured);
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
     {featured.map((b, i) => (
       <a
-        href={`/blocks/#${b.id}`}
+        href={`/examples/${b.id}`}
         class:list={[
           "ex-card group relative block border border-border bg-card hover:border-accent transition-colors overflow-hidden",
           (b.span === "full" || lone[i]) && "lg:col-span-2",
