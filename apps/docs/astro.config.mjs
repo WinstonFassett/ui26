@@ -19,6 +19,7 @@ export default defineConfig({
     site,
     integrations: [starlight({
         title: 'ui26',
+        favicon: '/favicon.svg',
         expressiveCode: {
             // Dual themes so ExpressiveCode generates both light+dark token vars.
             // themeCssSelector maps each theme to our compound data-theme format
