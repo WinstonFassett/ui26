@@ -10,61 +10,89 @@ ui26 uses the same CSS variable token contract as shadcn/ui — `--background`, 
 These are the semantic color tokens every ui26 theme defines. Toggle the theme picker (top-right) to see them switch live.
 
 <div class="not-content my-8">
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+  <div class="grid grid-cols-6 gap-2.5">
     <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-background border-b border-border" />
-      <div class="px-2.5 py-2">
+      <div class="h-[52px] bg-background border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
         <div class="font-mono text-[11px] text-foreground">background</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--background</div>
+        <div class="font-mono text-[10px] text-text-mute">--background</div>
       </div>
     </div>
     <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-card border-b border-border" />
-      <div class="px-2.5 py-2">
+      <div class="h-[52px] bg-foreground border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">foreground</div>
+        <div class="font-mono text-[10px] text-text-mute">--foreground</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-[52px] bg-card border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
         <div class="font-mono text-[11px] text-foreground">card</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--card</div>
+        <div class="font-mono text-[10px] text-text-mute">--card</div>
       </div>
     </div>
     <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-primary border-b border-border" />
-      <div class="px-2.5 py-2">
-        <div class="font-mono text-[11px] text-primary-foreground">primary</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--primary</div>
-      </div>
-    </div>
-    <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-secondary border-b border-border" />
-      <div class="px-2.5 py-2">
-        <div class="font-mono text-[11px] text-foreground">secondary</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--secondary</div>
-      </div>
-    </div>
-    <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-muted border-b border-border" />
-      <div class="px-2.5 py-2">
+      <div class="h-[52px] bg-muted border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
         <div class="font-mono text-[11px] text-foreground">muted</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--muted</div>
+        <div class="font-mono text-[10px] text-text-mute">--muted</div>
       </div>
     </div>
     <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-accent border-b border-border" />
-      <div class="px-2.5 py-2">
-        <div class="font-mono text-[11px] text-accent-foreground">accent</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--accent</div>
+      <div class="h-[52px] bg-border border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">border</div>
+        <div class="font-mono text-[10px] text-text-mute">--border</div>
       </div>
     </div>
     <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-destructive border-b border-border" />
-      <div class="px-2.5 py-2">
-        <div class="font-mono text-[11px] text-destructive-foreground">destructive</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--destructive</div>
+      <div class="h-[52px] bg-accent border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">accent</div>
+        <div class="font-mono text-[10px] text-text-mute">--accent</div>
       </div>
     </div>
     <div class="border border-border rounded overflow-hidden">
-      <div class="h-13 bg-popover border-b border-border" />
-      <div class="px-2.5 py-2">
-        <div class="font-mono text-[11px] text-foreground">popover</div>
-        <div class="font-mono text-[10px] text-text-mute mt-0.5">--popover</div>
+      <div class="h-[52px] bg-success border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">success</div>
+        <div class="font-mono text-[10px] text-text-mute">--success</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-[52px] bg-warn border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">warn</div>
+        <div class="font-mono text-[10px] text-text-mute">--warn</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-[52px] bg-info border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">info</div>
+        <div class="font-mono text-[10px] text-text-mute">--info</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-[52px] bg-purple border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">purple</div>
+        <div class="font-mono text-[10px] text-text-mute">--purple</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-[52px] bg-destructive border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">destructive</div>
+        <div class="font-mono text-[10px] text-text-mute">--destructive</div>
+      </div>
+    </div>
+    <div class="border border-border rounded overflow-hidden">
+      <div class="h-[52px] bg-ring border-b border-border" />
+      <div class="px-2.5 py-2 gap-0.5">
+        <div class="font-mono text-[11px] text-foreground">ring</div>
+        <div class="font-mono text-[10px] text-text-mute">--ring</div>
       </div>
     </div>
   </div>
