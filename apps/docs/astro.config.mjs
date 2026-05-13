@@ -94,6 +94,7 @@ export default defineConfig({
             ThemeProvider: './src/components/starlight/ThemeProvider.astro',
             ThemeSelect: './src/components/starlight/ThemeSelect.astro',
             Header: './src/components/starlight/Header.astro',
+            PageFrame: './src/components/starlight/PageFrame.astro',
         },
         head: [
             // Inline critical --sl-* vars so Starlight's chrome doesn't paint
