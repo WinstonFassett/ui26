@@ -7,10 +7,9 @@ import { DocCodeBlock } from "./DocCodeBlock";
 interface Props {
   relatedComponent: string;
   group: string;
-  title: string;
 }
 
-const { relatedComponent, group, title } = Astro.props;
+const { relatedComponent, group } = Astro.props;
 
 const samples = getSamples({ kind: "atom", relatedComponent, group });
 const rendered = await Promise.all(
@@ -22,17 +21,14 @@ const rendered = await Promise.all(
 ---
 
 {rendered.map(({ sample, files }) => (
-  <section class="not-content my-8">
-    {title && (
-      <p class="mb-2 font-sans text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {title}
-      </p>
-    )}
-    <div class="border border-border p-6">
-      <BlockPreview spec={sample.spec} client:load />
-    </div>
-    <div class="mt-4">
-      <DocCodeBlock client:load files={files} />
+  <section class="my-8">
+    <div class="not-content">
+      <div class="border border-border p-6">
+        <BlockPreview spec={sample.spec} client:load />
+      </div>
+      <div class="mt-4">
+        <DocCodeBlock client:load files={files} />
+      </div>
     </div>
   </section>
 ))}
