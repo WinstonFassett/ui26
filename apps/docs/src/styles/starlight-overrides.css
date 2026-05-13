@@ -60,7 +60,18 @@ header.header {
   height: var(--sl-nav-height);
   background: var(--sl-color-bg-nav);
   border-bottom: 1px solid var(--sl-color-hairline);
-  padding: 0 16px;
+  /* Use longhands — Starlight's PageFrame sets padding-inline-end on [data-has-sidebar]
+     to carve out space for the mobile menu toggle. A padding shorthand would nuke it. */
+  padding-block: 0;
+  padding-inline-start: 16px;
+}
+
+/* Mobile: strip header to wordmark + search + hamburger.
+   ThemeSelect override already appears in MobileMenuFooter inside the sidebar popup,
+   so we hide only the header instance — not the sidebar one. */
+@media (max-width: 50rem) {
+  header.header { padding-inline-start: 8px; }
+  header.header [data-ui26-theme-slot] { display: none; }
 }
 
 
@@ -88,7 +99,7 @@ header.header .site-title {
 header.header .site-title img,
 header.header .site-title svg { width: 20px; height: 20px; }
 
-/* Fix search styling - keep monospace but match header border and height */
+/* Fix search styling - compact monospace button, matches header border */
 site-search button[data-open-modal] {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -96,10 +107,8 @@ site-search button[data-open-modal] {
   background: transparent;
   padding: 4px 10px;
   color: var(--sl-color-gray-2);
-  min-width: 360px;
   height: 24px;
   border-radius: 0;
-  transition: border-color 0.15s ease-out, color 0.15s ease-out;
 }
 site-search button[data-open-modal]:hover {
   border-color: var(--sl-color-text);
@@ -178,6 +187,16 @@ select[aria-label="Select theme"] {
 .main-frame { padding-top: 0; }
 .content-panel { padding: 48px 56px; border: 0; }
 .content-panel + .content-panel { border-top: 1px solid var(--sl-color-hairline); }
+
+/* Mobile: reduce content padding */
+@media (max-width: 50rem) {
+  .content-panel {
+    padding: 24px 16px;
+  }
+  .right-sidebar-panel {
+    padding: 24px 16px;
+  }
+}
 
 /* Breadcrumbs / rail labels — reusable .eyebrow utility */
 .eyebrow {

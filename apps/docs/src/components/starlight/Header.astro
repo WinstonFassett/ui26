@@ -67,11 +67,13 @@ const topics = rawTopics.map((t: any) => {
         .header {
             display: flex;
             gap: var(--sl-nav-gap);
-            align-items: center;
+            align-items: stretch;
             height: 100%;
         }
 
         .title-wrapper {
+            display: flex;
+            align-items: center;
             overflow: clip;
             padding: 0.25rem;
             margin: -0.25rem;
@@ -80,30 +82,32 @@ const topics = rawTopics.map((t: any) => {
         }
 
         .topic-tabs {
-            gap: 0.25rem;
-            align-items: center;
-            margin-inline-start: 1rem;
+            display: flex;
+            align-items: stretch;
+            gap: 0;
         }
 
         .topic-tab {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0 0.875rem;
             color: var(--sl-color-gray-2);
-            font-size: var(--sl-text-sm);
-            font-weight: 500;
-            padding: 0.375rem 0.75rem;
-            border-radius: 0.375rem;
             text-decoration: none;
-            line-height: 1;
-            transition: background-color 0.15s ease, color 0.15s ease;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px solid transparent;
         }
 
         .topic-tab:hover {
-            background-color: var(--sl-color-gray-6, var(--sl-color-gray-5));
-            color: var(--sl-color-white);
+            color: var(--sl-color-text);
+            background: var(--sl-color-bg-hover);
         }
 
-        .topic-tab-current {
-            color: var(--sl-color-white);
-            background-color: color-mix(in oklch, var(--sl-color-accent) 12%, transparent);
+        .topic-tab[data-active='true'] {
+            color: var(--sl-color-text);
+            border-bottom-color: var(--accent);
         }
 
         .right-group {
@@ -120,6 +124,16 @@ const topics = rawTopics.map((t: any) => {
             content: '';
             height: 2rem;
             border-inline-end: 1px solid var(--sl-color-gray-5);
+        }
+
+        /* Mobile: compact inner spacing */
+        @media (max-width: 50rem) {
+            .header { gap: 0.25rem; }
+            .right-group { gap: 0.25rem; }
+            .title-wrapper {
+                padding: 0.125rem;
+                margin: -0.125rem;
+            }
         }
 
     }
