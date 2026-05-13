@@ -42,9 +42,9 @@ const lone = computeLone(blocks);
 <section class="mb-12 not-content">
   <header class="mb-5 flex items-baseline justify-between border-b border-border pb-2">
     <h2 class="font-serif text-[22px] font-medium tracking-tight">{category}</h2>
-    <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-      {blocks.length} example{blocks.length === 1 ? "" : "s"}
-    </span>
+    <a href={`/examples/`} class="font-mono text-[10px] uppercase tracking-wider text-accent hover:underline">
+      {blocks.length} example{blocks.length === 1 ? "" : "s"} →
+    </a>
   </header>
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
     {blocks.map((b, i) => (
