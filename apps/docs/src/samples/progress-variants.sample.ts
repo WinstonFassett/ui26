@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "ProgressVariants",
   relatedComponent: "progress",
   group: "variants",
+  featured: true,
   spec: {
     root: "col",
     elements: {

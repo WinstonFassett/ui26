@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "NotificationList",
   category: "Productivity",
   order: 10,
+  featured: true,
   registryDependencies: ["card", "stack"],
   spec: {
     root: "card",

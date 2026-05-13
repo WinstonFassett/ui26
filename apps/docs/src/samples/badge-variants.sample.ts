@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "BadgeVariants",
   relatedComponent: "badge",
   group: "variants",
+  featured: true,
   spec: {
     root: "row",
     elements: {

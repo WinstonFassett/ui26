@@ -9,6 +9,7 @@ const sample: Sample = {
   category: "Forms",
   order: 2,
   span: "full",
+  featured: true,
   registryDependencies: ["field", "input", "textarea", "label", "slider"],
   spec: {
     root: "form-grid",
