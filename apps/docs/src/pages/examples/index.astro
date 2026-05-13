@@ -29,6 +29,30 @@ const GROUPED = [...CATEGORY_ORDER, ...extra]
       .sort((a, b) => (a.order ?? 999) - (b.order ?? 999)),
   }))
   .filter((g) => g.blocks.length > 0);
+
+// For each group, compute which cards are alone on their row so we can widen them.
+// Grid is 2 cols. Full items consume 2 cols; auto items consume 1.
+// An auto item is "lone" when it starts a row and no auto item follows in the same row.
+function computeLone(blocks: typeof GROUPED[0]["blocks"]): boolean[] {
+  const lone: boolean[] = new Array(blocks.length).fill(false);
+  let col = 0; // 0-based column cursor (0 or 1 in a 2-col grid)
+  for (let i = 0; i < blocks.length; i++) {
+    const isFull = blocks[i].span === "full";
+    if (isFull) {
+      col = 0; // full always resets to start of next row
+    } else {
+      if (col === 0) {
+        // starts a row — check if next item also auto and fits
+        const nextIsAuto = i + 1 < blocks.length && blocks[i + 1].span !== "full";
+        if (!nextIsAuto) lone[i] = true;
+        else col = 1;
+      } else {
+        col = 0; // second col, next item starts fresh row
+      }
+    }
+  }
+  return lone;
+}
 ---
 
 <StarlightPage
@@ -52,39 +76,45 @@ const GROUPED = [...CATEGORY_ORDER, ...extra]
       </p>
     </section>
 
-    {GROUPED.map((group) => (
-      <section class="mb-12 not-content">
-        <header class="mb-5 flex items-baseline justify-between border-b border-border pb-2">
-          <h2 class="font-serif text-[22px] font-medium tracking-tight">{group.category}</h2>
-          <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-            {group.blocks.length} example{group.blocks.length === 1 ? "" : "s"}
-          </span>
-        </header>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {group.blocks.map((b) => (
-            <a
-              href={`/examples/${b.id}`}
-              class="ex-card group block border border-border bg-card hover:border-accent transition-colors"
-            >
-              <div class="ex-card-preview overflow-hidden p-6 border-b border-border">
-                <BlockPreview spec={b.spec} client:load />
-              </div>
-              <div class="p-4 flex items-baseline gap-3">
-                <span class="font-mono text-[10px] tracking-[0.12em] uppercase text-accent">{b.id}</span>
-                <span class="text-[14px] font-medium text-foreground">{b.title}</span>
-              </div>
-              {b.description && (
-                <p class="px-4 pb-4 text-[12px] text-muted-foreground leading-snug">{b.description}</p>
-              )}
-            </a>
-          ))}
-        </div>
-      </section>
-    ))}
+    {GROUPED.map((group) => {
+      const lone = computeLone(group.blocks);
+      return (
+        <section class="mb-12 not-content">
+          <header class="mb-5 flex items-baseline justify-between border-b border-border pb-2">
+            <h2 class="font-serif text-[22px] font-medium tracking-tight">{group.category}</h2>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              {group.blocks.length} example{group.blocks.length === 1 ? "" : "s"}
+            </span>
+          </header>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            {group.blocks.map((b, i) => (
+              <a
+                href={`/examples/${b.id}`}
+                class:list={[
+                  "ex-card group relative block border border-border bg-card hover:border-accent transition-colors overflow-hidden",
+                  (b.span === "full" || lone[i]) && "lg:col-span-2",
+                ]}
+              >
+                <div class:list={["ex-card-preview pointer-events-none overflow-hidden p-6", b.span === "full" && "ex-card-preview--full"]}>
+                  <BlockPreview spec={b.spec} client:only="react" />
+                </div>
+                <div class="ex-card-info absolute bottom-0 left-0 right-0 flex flex-col gap-0.5 px-4 py-3 bg-card/90 backdrop-blur-sm border-t border-border translate-y-full group-hover:translate-y-0 transition-transform duration-150">
+                  <span class="text-[13px] font-medium text-foreground leading-snug">{b.title}</span>
+                  {b.description && (
+                    <span class="text-[11px] text-muted-foreground leading-snug">{b.description}</span>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      );
+    })}
   </div>
 
   <style is:global>
     body:has(.examples-index) .main-frame .content-panel .sl-container { max-width: 1280px; }
-    .ex-card-preview { pointer-events: none; max-height: 280px; }
+    .ex-card-preview { pointer-events: none; max-height: 360px; }
+    .ex-card-preview--full { max-height: 520px; }
   </style>
 </StarlightPage>

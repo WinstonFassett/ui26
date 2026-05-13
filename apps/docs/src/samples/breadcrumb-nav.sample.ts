@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "BreadcrumbNav",
   category: "Navigation",
   order: 1,
+  span: "full",
   registryDependencies: ["breadcrumb"],
   spec: {
     root: "breadcrumb",

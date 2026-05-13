@@ -10,6 +10,7 @@ const sample: Sample = {
   componentName: "SelectionControls",
   category: "Forms",
   order: 3,
+  span: "full",
   registryDependencies: ["checkbox", "switch", "field", "stack", "grid"],
   spec: {
     root: "col-grid",

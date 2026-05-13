@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "AlertGallery",
   category: "Feedback",
   order: 1,
+  span: "full",
   featured: true,
   registryDependencies: ["alert", "grid"],
   spec: {

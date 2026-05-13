@@ -6,7 +6,7 @@ import type { Spec } from "@/lib/spec-to-code";
 
 export function BlockPreview({ spec }: { spec: Spec }) {
   return (
-    <JSONUIProvider registry={registry}>
+    <JSONUIProvider registry={registry} initialState={spec.state}>
       <Renderer spec={spec} registry={registry} />
     </JSONUIProvider>
   );
