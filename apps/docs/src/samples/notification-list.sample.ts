@@ -9,6 +9,7 @@ const sample: Sample = {
   category: "Productivity",
   order: 10,
   featured: true,
+  // span: "full",
   registryDependencies: ["card", "stack"],
   spec: {
     root: "card",

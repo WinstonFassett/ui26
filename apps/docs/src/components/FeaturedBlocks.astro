@@ -6,12 +6,13 @@ const SHOW = [
   "button-variants",
   "badge-variants",
   // "workspace-form",
-  "progress-card",
+  "sign-in-form",
   "notification-list",
   "kpi-strip",
   "activity-feed",
-  "sign-in-form",
+  "progress-card",
   "ai-message",
+  "ticket-table"
 ];
 const featured = getSamples({ featured: true }).filter((b) => SHOW.includes(b.id)).sort((a, b) => SHOW.indexOf(a.id) - SHOW.indexOf(b.id));
 
