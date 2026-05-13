@@ -75,7 +75,7 @@ export default defineConfig({
                 {
                     topics: {
                         examples: ['/examples', '/examples/**'],
-                        docs: ['/kitchen-sink', '/ecosystem', '/tix-app'],
+                        docs: ['/kitchen-sink', '/ecosystem', '/tix-app', '/components/dev/**', '/guides/**', '/reference/**'],
                     },
                 },
             ),
