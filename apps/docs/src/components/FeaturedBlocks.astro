@@ -1,31 +1,36 @@
 ---
 import { getSamples } from "@/samples";
 import { BlockPreview } from "@/components/livecode/BlockPreview";
-import { CLI_ADD } from "@/lib/site";
 
 const SHOW = ["ticket-card", "kpi-strip", "sign-in-form", "activity-feed", "command-palette", "ai-message"];
 const featured = getSamples({ kind: "block", featured: true }).filter((b) => SHOW.includes(b.id)).sort((a, b) => SHOW.indexOf(a.id) - SHOW.indexOf(b.id));
 ---
 
-<section class="not-content mt-16">
-  <div class="flex items-center gap-3 mb-6">
-    <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-muted-foreground">Featured blocks</div>
-    <div class="flex-1 h-px bg-border" />
-    <a href="/blocks/" class="font-mono text-[10px] tracking-[0.12em] uppercase text-accent hover:underline">All blocks →</a>
-  </div>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<section class="mb-12 not-content">
+  <header class="mb-5 flex items-baseline justify-between border-b border-border pb-2">
+    <h2 class="font-serif text-[22px] font-medium tracking-tight">Featured blocks</h2>
+    <a href="/blocks/" class="font-mono text-[10px] uppercase tracking-wider text-accent hover:underline">All blocks →</a>
+  </header>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
     {featured.map((b) => (
-      <a href={`/blocks/#${b.id}`} class="block border border-border rounded overflow-hidden bg-card hover:border-accent/60 transition-colors no-underline">
-        <div class="p-4">
+      <a
+        href={`/blocks/#${b.id}`}
+        class="ex-card group relative block border border-border bg-card hover:border-accent transition-colors overflow-hidden"
+      >
+        <div class="ex-card-preview pointer-events-none overflow-hidden p-6">
           <BlockPreview spec={b.spec} client:load />
         </div>
-        <div class="border-t border-border px-4 py-3">
-          <div class="font-mono text-[11px] text-accent">{b.id}</div>
-          <p class="text-[12px] text-muted-foreground mt-1 leading-snug">{b.description}</p>
-          <code class="block font-mono text-[11px] text-muted-foreground mt-2 opacity-70">{CLI_ADD} {b.id}</code>
+        <div class="ex-card-info absolute bottom-0 left-0 right-0 flex flex-col gap-0.5 px-4 py-3 bg-card/90 backdrop-blur-sm border-t border-border translate-y-full group-hover:translate-y-0 transition-transform duration-150">
+          <span class="text-[13px] font-medium text-foreground leading-snug">{b.title}</span>
+          {b.description && (
+            <span class="text-[11px] text-muted-foreground leading-snug">{b.description}</span>
+          )}
         </div>
       </a>
     ))}
   </div>
 </section>
+
+<style>
+  .ex-card-preview { pointer-events: none; max-height: 360px; }
+</style>
