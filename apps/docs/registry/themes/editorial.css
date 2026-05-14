@@ -58,10 +58,11 @@
 }
 
 [data-theme="editorial-dark"] {
-  /* Fonts — repeat all three so dark toggle doesn't fall through to :root */
+  /* Repeat vars that don't change but would fall through to :root defaults if omitted */
   --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", serif;
   --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --radius: 0.125rem;
 
   --background: #0e0e0f;
   --foreground: #ececec;
