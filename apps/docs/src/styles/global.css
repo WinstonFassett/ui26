@@ -67,6 +67,7 @@
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display, var(--font-sans));
 
   /* ui26 extends Tailwind's text scale with one step below xs (10px) for
    * eyebrows and other editorial micro-labels. Tailwind's default xs is 12px. */

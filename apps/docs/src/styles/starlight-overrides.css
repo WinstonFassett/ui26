@@ -52,6 +52,17 @@
   --sl-line-height-headings: 1.02;
 }
 
+/* Starlight doesn't expose a serif/display font hook — apply --font-display
+ * to the elements that need it since --sl-font only covers body/sans. */
+.main-frame h1:not(:where(.not-content *)),
+.hero h1:not(:where(.not-content *)) {
+  font-family: var(--font-display);
+}
+header.header .site-title {
+  font-family: var(--font-display);
+  font-style: italic;
+}
+
 /* ---------- .not-content = scoped Tailwind preflight for embeds ----------
  * apps/docs skips global Tailwind preflight (see global.css) because it
  * fights Starlight's prose typography. External components (Kibo, AIE,
