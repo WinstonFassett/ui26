@@ -18,7 +18,7 @@
 
 /* All themes — same source the /r/themes.json registry endpoint serves. */
 @import '../../registry/all-themes.css';
-@import './starlight-overrides.css';
+@import './starlight-ui26.css';
 
 /* Tailwind's `dark:` variant fires for any theme ending in `dark`
  * (`[data-theme="editorial-dark"]`, `[data-theme="tix-dark"]`, etc.).
@@ -110,7 +110,7 @@
 }
 
 /* Kibo typography — placed outside @layer base so its rules sit unlayered
- * alongside Starlight's (starlight-overrides.css) `.sl-markdown-content h3`
+ * alongside Starlight's (starlight-ui26.css) `.sl-markdown-content h3`
  * rules. Inside `@layer base`, typography would lose to any unlayered rule
  * (unlayered always beats layered), so `.typography h3` never won against
  * `.sl-markdown-content h3`. Now specificity decides normally.

@@ -58,4 +58,4 @@ The same `Button` is rendered below three times — once per framework. All thre
 
 - **Shared config:** `apps/docs/registry/Button/Button.tv.ts` — a `tv()` call producing the class string. Colocated with its component.
 - **Wrappers:** `apps/docs/registry/Button/Button.{tsx,svelte,astro}` — thin passthroughs that call `button({variant, size})` with `cn()`.
-- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `apps/docs/registry/tokens.css` via the `@theme inline` mapping in the docs app's `global.css`.
+- **Tokens:** `bg-primary`, `bg-destructive`, etc. resolve to `oklch()` values in `apps/docs/registry/all-themes.css` via the `@theme inline` mapping in the docs app's `global.css`.

@@ -9,7 +9,7 @@ const WIDTHS = [360, 768, 1280] as const;
 type Width = (typeof WIDTHS)[number];
 type Mode = "light" | "dark";
 
-// Playroom's own list — must stay in sync with registry/tokens.css theme blocks.
+// Playroom's own list — must stay in sync with registry/all-themes.css theme blocks.
 const THEMES = [
   { name: "editorial", label: "Editorial" },
   { name: "tix", label: "Tix" },

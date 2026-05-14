@@ -9,7 +9,7 @@ The allowlist of theme names is duplicated in two places:
 1. [`ThemeProvider.astro`](./ThemeProvider.astro) — inline pre-paint script, used to reject unknown `localStorage` values.
 2. [`theme-picker.tsx`](./theme-picker.tsx) — React component, used to render the `<select>` options and to type the `Name` union.
 
-When you add a theme, update **both**. A theme that exists in tokens.css but not in the picker's list is invisible; one in the picker but not the pre-paint script can be stored by the user but gets rejected on reload.
+When you add a theme, update **both**. A theme that exists in all-themes.css but not in the picker's list is invisible; one in the picker but not the pre-paint script can be stored by the user but gets rejected on reload.
 
 ## React component rules
 
@@ -29,9 +29,9 @@ When you add a theme, update **both**. A theme that exists in tokens.css but not
 
 ## Starlight contract
 
-**We own `data-theme`.** Starlight's original toggle wrote `"light"`/`"dark"` to this attribute; our override replaces both the provider (pre-paint + API) and the select (UI), so the attribute now carries the compound key (e.g. `editorial-dark`). Don't revert to Starlight's defaults without also reverting the tokens.css structure.
+**We own `data-theme`.** Starlight's original toggle wrote `"light"`/`"dark"` to this attribute; our override replaces both the provider (pre-paint + API) and the select (UI), so the attribute now carries the compound key (e.g. `editorial-dark`). Don't revert to Starlight's defaults without also reverting the all-themes.css structure.
 
-**The `--sl-*` FOUC inline CSS in `astro.config.mjs`** only covers Editorial chrome vars. It's intentional — tokens.css loads milliseconds later and overrides for the active theme. Don't try to fan it out per theme; the block would be huge and would still miss.
+**The `--sl-*` FOUC inline CSS in `astro.config.mjs`** only covers Editorial chrome vars. It's intentional — all-themes.css loads milliseconds later and overrides for the active theme. Don't try to fan it out per theme; the block would be huge and would still miss.
 
 ## Lucide + React
 

@@ -19,7 +19,7 @@ Then use the `ThemeProvider` + `theme-picker` components to set `data-theme` on 
 
 Starlight only reassigns these two primitives via `[data-theme='light']`. Because our compound theme values never literally equal `"light"` or `"dark"`, those vars stay stuck at their initial values — white and near-black — regardless of what theme is active. Headings, sidebar items, the mobile menu toggle, and the search modal all consume them.
 
-Fix: remap them in your `starlight-overrides.css` on `:root` (or `:where(:root)`) so they follow your theme tokens instead of Starlight's toggle:
+Fix: remap them in your `starlight-ui26.css` on `:root` (or `:where(:root)`) so they follow your theme tokens instead of Starlight's toggle:
 
 ```css
 :where(:root) {
@@ -59,7 +59,7 @@ Same problem applies to all Starlight color vars. Map the full set you care abou
 }
 ```
 
-The full bridge used by the ui26 docs site lives in [`apps/docs/src/styles/starlight-overrides.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-overrides.css) — copy and adapt it.
+The full bridge used by the ui26 docs site lives in [`apps/docs/src/styles/starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) — copy and adapt it.
 
 ## If you have a logo: replace Starlight's light/dark swap
 
@@ -92,9 +92,15 @@ If your theme defines `--font-sans`, `--font-serif`, or `--font-mono` on the lig
 }
 ```
 
+## Required: scoped Tailwind preflight for component demos
+
+`@astrojs/starlight-tailwind` strips Tailwind's global preflight because it conflicts with Starlight's prose typography. This means embedded component demos inside `.not-content` divs lose their baseline resets — anchor tags get underlines, buttons leak UA padding, SVGs misalign.
+
+Fix: add a scoped preflight reset targeting `.not-content` using CSS `@scope`. This gives demos a clean slate without touching Starlight's prose context. The full block is in [`starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) — copy it as-is.
+
 ## Import order matters
 
-Your `starlight-overrides.css` must import **after** the theme CSS so your bridge values override Starlight's defaults, not the other way around.
+Your `starlight-ui26.css` must import **after** the theme CSS so your bridge values override Starlight's defaults, not the other way around.
 
 ## Reference
 
@@ -102,6 +108,6 @@ The ui26 docs site is itself a Starlight integration. The canonical files:
 
 | File | What it does |
 |------|-------------|
-| [`starlight-overrides.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-overrides.css) | Full `--sl-*` bridge + layout/typography overrides |
+| [`starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) | Full `--sl-*` bridge + layout/typography overrides |
 | [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro) | Pre-paint script: reads `localStorage`, sets `data-theme` before first render |
 | [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) | Dropdown + light/dark/auto toggle |

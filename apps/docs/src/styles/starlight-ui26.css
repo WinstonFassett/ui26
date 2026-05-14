@@ -1,6 +1,8 @@
-/* Starlight bridge + overrides.
- * Import AFTER registry/tokens.css. Maps Starlight's `--sl-*` namespace onto
- * our semantic tokens so it follows the active theme, then patches the DOM.
+/* Starlight ↔ ui26 bridge.
+ * Import AFTER registry/all-themes.css. Maps Starlight's --sl-* namespace onto
+ * ui26 semantic tokens so the active theme is reflected throughout Starlight's
+ * chrome, and applies ui26-specific typography/layout overrides where Starlight
+ * exposes no CSS var hook.
  */
 
 /* ---------- Starlight bridge (theme-agnostic) ---------- */
