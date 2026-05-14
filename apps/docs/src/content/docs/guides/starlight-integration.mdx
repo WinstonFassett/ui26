@@ -42,7 +42,7 @@ Same problem applies to all Starlight color vars. Map the full set you care abou
   --sl-color-bg: var(--background);
   --sl-color-bg-sidebar: var(--background);
   --sl-color-bg-nav: var(--background);
-  --sl-color-bg-inline-code: var(--card);
+  --sl-color-bg-inline-code: var(--code, var(--card));
   --sl-color-bg-hover: var(--muted);
   --sl-color-hairline: var(--border);
   --sl-color-hairline-light: var(--border);
@@ -97,6 +97,62 @@ If your theme defines `--font-sans`, `--font-serif`, or `--font-mono` on the lig
 `@astrojs/starlight-tailwind` strips Tailwind's global preflight because it conflicts with Starlight's prose typography. This means embedded component demos inside `.not-content` divs lose their baseline resets — anchor tags get underlines, buttons leak UA padding, SVGs misalign.
 
 Fix: add a scoped preflight reset targeting `.not-content` using CSS `@scope`. This gives demos a clean slate without touching Starlight's prose context. The full block is in [`starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) — copy it as-is.
+
+## Expressive Code: code block backgrounds
+
+Expressive Code (EC) injects its own background color from the `github-light` / `github-dark` theme directly onto `<pre>`. This overrides `--sl-color-bg-inline-code` and makes code blocks appear pure white even on a warm editorial background.
+
+Fix: force the `<pre>` to be transparent so the wrapper element picks up your theme token instead:
+
+```css
+.expressive-code pre {
+  background: transparent !important;
+}
+```
+
+Add this to your `starlight-ui26.css` alongside the `--sl-*` bridge.
+
+### EC theme selector
+
+Wire EC's `themeCssSelector` to match ui26's compound theme values. In `ec.config.mjs`:
+
+```js
+export default {
+  themes: ['github-light', 'github-dark'],
+  useDarkModeMediaQuery: false,
+  themeCssSelector: (theme) =>
+    theme.type === 'dark' ? '[data-theme$="-dark"]' : ':root',
+};
+```
+
+### Twoslash support
+
+EC does not support twoslash out of the box. Install `expressive-code-twoslash` and add it as a plugin:
+
+```js
+import pluginTwoslash from 'expressive-code-twoslash';
+
+export default {
+  // ...
+  plugins: [pluginTwoslash({ includeJsDoc: false })],
+};
+```
+
+`includeJsDoc: false` suppresses `@param`, `@returns`, `@example`, and similar annotations from hover popups — these are noise in doc examples. Type-only hovers are the right default for documentation.
+
+### Porting legacy CodeBlock components
+
+When porting to a new Starlight site, audit for custom `CodeBlock.astro` / `CodeTabs.astro` components that predate EC. These are typically hardcoded to a dark theme (e.g. `material-theme-ocean`) and bypass EC entirely — they won't respond to your theme system.
+
+Replace them with Starlight's `<Code>` component. When doing so, preserve any `twoslash` flags: the old components often had a boolean `twoslash` prop; the EC `<Code>` equivalent is `meta="twoslash"`.
+
+## Theme picker peer deps
+
+The `theme-picker.tsx` component imports `lucide-react` and `motion`. These are not declared as ui26 peer deps but are required at runtime. Install them in your Starlight project:
+
+```bash
+npm install lucide-react motion
+```
 
 ## Import order matters
 
