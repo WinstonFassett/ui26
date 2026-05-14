@@ -7,7 +7,7 @@ export type StackProps = HTMLAttributes<HTMLDivElement> & StackVariants;
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
   ({ className, direction, gap, align, justify, wrap, ...props }, ref) => (
     <div
-      ref={ref}
+      {...(ref && { ref })}
       className={cn(stack({ direction, gap, align, justify, wrap }), className)}
       {...props}
     />
