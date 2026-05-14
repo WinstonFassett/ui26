@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "PaginationBar",
   category: "Navigation",
   order: 2,
+  span: "full",
   registryDependencies: ["pagination"],
   spec: {
     root: "row",

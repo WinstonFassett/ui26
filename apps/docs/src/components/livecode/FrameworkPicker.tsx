@@ -12,24 +12,21 @@ export function FrameworkPicker({ className }: { className?: string }) {
       <span className="px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground border-r border-border">
         framework
       </span>
-      {FRAMEWORKS.map((f) => {
-        const on = fw === f;
-        return (
-          <button
-            key={f}
-            type="button"
-            onClick={() => setFw(f)}
-            className={cn(
-              "px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors",
-              on
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            {FRAMEWORK_LABELS[f]}
-          </button>
-        );
-      })}
+      {FRAMEWORKS.map((f) => (
+        <button
+          key={f}
+          type="button"
+          onClick={() => setFw(f)}
+          className={cn(
+            "px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition-colors",
+            fw === f
+              ? "bg-foreground text-background"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          {FRAMEWORK_LABELS[f]}
+        </button>
+      ))}
     </div>
   );
 }

@@ -47,6 +47,7 @@ import {
   PaginationItem as PaginationItemRoot,
   PaginationLink as PaginationLinkRoot,
 } from "@registry/pagination/pagination.tsx";
+import { RadioGroup as RadioGroupRoot, RadioGroupItem as RadioGroupItemRoot } from "@registry/radio-group/radio-group.tsx";
 import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
@@ -109,6 +110,8 @@ import {
   type PaginationContentProps,
   type PaginationItemProps,
   type PaginationLinkProps,
+  type RadioGroupProps,
+  type RadioGroupItemProps,
 } from "./catalog";
 
 // Catalog uses .nullable() so unset Spec props serialize as JSON `null`.
@@ -348,5 +351,13 @@ export const { registry } = defineRegistry(catalog, {
       const { text, isActive, ...rest } = u(props);
       return <PaginationLinkRoot {...rest} isActive={isActive ?? false}>{text}</PaginationLinkRoot>;
     },
+
+    // ── RadioGroup ───────────────────────────────────────────────────────────
+    RadioGroup: ({ props, children }: BaseComponentProps<RadioGroupProps>) => (
+      <RadioGroupRoot {...u(props)}>{children}</RadioGroupRoot>
+    ),
+    RadioGroupItem: ({ props }: BaseComponentProps<RadioGroupItemProps>) => (
+      <RadioGroupItemRoot {...u(props)} />
+    ),
   },
 });

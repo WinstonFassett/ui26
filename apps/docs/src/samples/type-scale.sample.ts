@@ -55,7 +55,7 @@ const sample: Sample = {
   title: "Type scale",
   description: "Eight-step type scale — display, headings, body, caption, mono, eyebrow. Tailwind named sizes throughout.",
   componentName: "TypeScale",
-  category: "Editorial",
+  category: "Design System",
   order: 1,
   span: "full",
   registryDependencies: ["heading", "stack"],

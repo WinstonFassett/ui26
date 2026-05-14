@@ -2,6 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import starlightSidebarTopics from 'starlight-sidebar-topics';
 import tailwindcss from '@tailwindcss/vite';
 
 import react from '@astrojs/react';
@@ -18,9 +19,82 @@ export default defineConfig({
     site,
     integrations: [starlight({
         title: 'ui26',
+        expressiveCode: {
+            // Dual themes so ExpressiveCode generates both light+dark token vars.
+            // themeCssSelector maps each theme to our compound data-theme format
+            // (e.g. "editorial-dark", "shad-dark") rather than Starlight's native
+            // data-theme="light"/"dark", which we never set.
+            themes: ['github-light', 'github-dark'],
+            useDarkModeMediaQuery: false,
+            themeCssSelector: (theme) =>
+                theme.type === 'dark' ? '[data-theme$="dark"]' : ':root',
+        },
+        plugins: [
+            starlightSidebarTopics(
+                [
+                    {
+                        id: 'docs',
+                        label: 'Docs',
+                        link: '/getting-started/introduction',
+                        items: [
+                            {
+                                label: 'Getting Started',
+                                items: [
+                                    { label: 'Introduction', slug: 'getting-started/introduction' },
+                                    { label: 'Quickstart', slug: 'getting-started/quickstart' },
+                                ],
+                            },
+                            {
+                                label: 'Guides',
+                                items: [
+                                    { label: 'Theming', slug: 'guides/theming' },
+                                    { label: 'JSON Render', slug: 'guides/json-render' },
+                                ],
+                            },
+                            ...(import.meta.env?.DEV ? [
+                                {
+                                    label: 'Dev',
+                                    items: [
+                                        { label: 'Kitchen Sink', link: '/kitchen-sink' },
+                                        { label: 'Ecosystem', link: '/ecosystem' },
+                                        { label: 'Tix App', link: '/tix-app' },
+                                    ],
+                                },
+                            ] : []),
+                        ],
+                    },
+                    {
+                        label: 'Components',
+                        link: '/components/button',
+                        items: [
+                            {
+                                label: 'Components',
+                                autogenerate: { directory: 'components', exclude: ['components/dev/**'] },
+                            },
+                        ],
+                    },
+                    {
+                        id: 'examples',
+                        label: 'Examples',
+                        link: '/examples',
+                        items: [
+                            { label: 'All Examples', link: '/examples' },
+                        ],
+                    },
+                ],
+                {
+                    topics: {
+                        examples: ['/examples', '/examples/**'],
+                        docs: ['/kitchen-sink', '/ecosystem', '/tix-app', '/components/dev/**', '/guides/**', '/reference/**'],
+                    },
+                },
+            ),
+        ],
         components: {
             ThemeProvider: './src/components/starlight/ThemeProvider.astro',
             ThemeSelect: './src/components/starlight/ThemeSelect.astro',
+            Header: './src/components/starlight/Header.astro',
+            PageFrame: './src/components/starlight/PageFrame.astro',
         },
         head: [
             // Inline critical --sl-* vars so Starlight's chrome doesn't paint
@@ -52,33 +126,6 @@ export default defineConfig({
             { tag: 'link', attrs: { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap' } },
         ],
         social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/WinstonFassett/ui26' }],
-        sidebar: [
-            {
-                label: 'Components',
-                autogenerate: { directory: 'components' },
-            },
-            {
-                label: 'Reference',
-                items: [
-                    { label: 'Tokens', slug: 'reference/tokens' },
-                    { label: 'Themes', slug: 'reference/themes' },
-                    { label: 'Blocks', link: '/blocks' },
-                    { label: 'Kitchen Sink', link: '/kitchen-sink' },
-                ],
-            },
-            {
-                label: 'Guides',
-                items: [
-                    { label: 'JSON Render', slug: 'guides/json-render' },
-                ],
-            },
-            {
-                label: 'Tools',
-                items: [
-                    { label: 'Playroom', link: '/playroom' },
-                ],
-            },
-        ],
         customCss: ['./src/styles/global.css'],
         }), react(), svelte()],
     vite: {

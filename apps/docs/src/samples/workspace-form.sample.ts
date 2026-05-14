@@ -8,6 +8,8 @@ const sample: Sample = {
   componentName: "WorkspaceForm",
   category: "Forms",
   order: 2,
+  span: "full",
+  featured: false,
   registryDependencies: ["field", "input", "textarea", "label", "slider"],
   spec: {
     root: "form-grid",

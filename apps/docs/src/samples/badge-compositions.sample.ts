@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "BadgeCompositions",
   category: "Feedback",
   order: 2,
+  span: "full",
   registryDependencies: ["badge", "stack", "grid"],
   spec: {
     root: "grid",

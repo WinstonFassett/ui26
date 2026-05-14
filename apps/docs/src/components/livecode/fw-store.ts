@@ -5,7 +5,7 @@ const KEY = "ui26-framework";
 const listeners = new Set<(fw: Framework) => void>();
 
 function isFramework(v: unknown): v is Framework {
-  return v === "react" || v === "svelte" || v === "astro";
+  return v === "react" || v === "svelte" || v === "astro" || v === "json-render";
 }
 
 export function getFw(): Framework {

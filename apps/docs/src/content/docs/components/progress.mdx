@@ -3,21 +3,12 @@ title: Progress
 description: Progress bar driven by a value/max pair. Variants for default (primary), destructive, and success.
 ---
 
-import ProgressAstro from "@registry/progress/progress.astro";
+import DocSampleShell from '@/components/demos/DocSampleShell.astro'
 
-## Default
+## Values
 
-<div class="not-content my-6 max-w-sm space-y-3">
-  <ProgressAstro value={0} />
-  <ProgressAstro value={33} />
-  <ProgressAstro value={66} />
-  <ProgressAstro value={100} />
-</div>
+<DocSampleShell relatedComponent="progress" group="values" />
 
 ## Variants
 
-<div class="not-content my-6 max-w-sm space-y-3">
-  <ProgressAstro value={60} />
-  <ProgressAstro value={60} variant="destructive" />
-  <ProgressAstro value={60} variant="success" />
-</div>
+<DocSampleShell relatedComponent="progress" group="variants" />

@@ -14,7 +14,7 @@ const sample: Sample = {
     elements: {
       row: {
         type: "Stack",
-        props: { direction: "row", gap: "4", align: "center", className: "px-0.5" },
+        props: { direction: "col", gap: "4", className: "px-0.5" },
         children: ["team-label", "team-avatars", "divider", "sizes-label", "sizes-avatars"],
       },
       "team-label": {
@@ -42,7 +42,7 @@ const sample: Sample = {
       },
       divider: {
         type: "Stack",
-        props: { direction: null, gap: "0", className: "flex-1 h-px bg-border self-center" },
+        props: { direction: null, gap: "0", className: "h-px w-full bg-border" },
         children: [],
       },
       "sizes-label": {

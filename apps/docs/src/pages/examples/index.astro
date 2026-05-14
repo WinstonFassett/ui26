@@ -1,0 +1,64 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { getSamples } from "@/samples";
+import BlockCategorySection from "@/components/BlockCategorySection.astro";
+
+const CATEGORY_ORDER = [
+  "Cards",
+  "Forms",
+  "Marketing",
+  "Feedback",
+  "Productivity",
+  "AI",
+  "Navigation",
+  "Overlays",
+  "People",
+  "Design System",
+];
+
+const ALL = getSamples({ kind: "block" }).filter((b) => b.indexable !== false);
+
+const known = new Set(CATEGORY_ORDER);
+const extra = Array.from(new Set(ALL.map((b) => b.category ?? "Other"))).filter((c) => !known.has(c));
+
+const CATEGORIES = [...CATEGORY_ORDER, ...extra]
+  .map((cat) => ({
+    category: cat,
+    hasBlocks: ALL.filter((b) => (b.category ?? "Other") === cat).length > 0,
+  }))
+  .filter((c) => c.hasBlocks)
+  .map((c) => c.category);
+---
+
+<StarlightPage
+  frontmatter={{
+    title: "Examples",
+    description: "Composed, installable UI patterns across React, Svelte, Astro, and JSON Render.",
+    template: "splash",
+    hero: {},
+  }}
+>
+  <div class="examples-index">
+    <section class="not-content mb-12">
+      <div class="font-mono text-[10px] tracking-[0.12em] uppercase text-muted-foreground mb-3">
+        ui26 · examples
+      </div>
+      <div class="font-serif font-medium text-[48px] leading-[1.04] tracking-[-0.022em] text-foreground">
+        Composed patterns, <span class="italic text-muted-foreground">in every framework</span>.
+      </div>
+      <p class="max-w-[640px] mt-4 text-[15px] leading-[1.55] text-muted-foreground">
+        Browse layouts and compositions built from ui26 primitives. Open any example to see Preview and source in React, Svelte, Astro, or JSON Render.
+      </p>
+    </section>
+
+    {CATEGORIES.map((category) => (
+      <BlockCategorySection category={category} />
+    ))}
+  </div>
+
+  <style is:global>
+    body:has(.examples-index) .main-frame .content-panel .sl-container { max-width: 1280px; }
+    .ex-card-preview { pointer-events: none; max-height: 360px; }
+    .ex-card-preview--full { max-height: 520px; }
+  </style>
+</StarlightPage>

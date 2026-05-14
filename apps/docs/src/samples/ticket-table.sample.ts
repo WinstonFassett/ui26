@@ -10,6 +10,8 @@ const sample: Sample = {
   componentName: "TicketTable",
   category: "Productivity",
   order: 3,
+  span: "full",
+  featured: true,
   registryDependencies: ["card", "badge", "button", "checkbox"],
   spec: {
     root: "container",

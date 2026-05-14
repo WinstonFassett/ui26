@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "ProgressCard",
   category: "Feedback",
   order: 4,
+  featured: true,
   registryDependencies: ["card", "progress"],
   spec: {
     root: "card",

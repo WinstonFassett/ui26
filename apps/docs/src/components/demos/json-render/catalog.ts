@@ -242,6 +242,9 @@ const paginationContentProps  = z.object({ className: z.string().nullable() });
 const paginationItemProps     = z.object({ className: z.string().nullable() });
 const paginationLinkProps     = z.object({ text: z.string(), href: z.string().nullable(), isActive: z.boolean().nullable(), className: z.string().nullable() });
 
+const radioGroupProps     = z.object({ className: z.string().nullable() });
+const radioGroupItemProps = z.object({ name: z.string().nullable(), value: z.string().nullable(), checked: z.boolean().nullable(), disabled: z.boolean().nullable(), className: z.string().nullable() });
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -490,6 +493,9 @@ export const catalog = defineCatalog(schema, {
     PaginationContent: { props: paginationContentProps, slots: ["default"], description: "Flex row of pagination items." },
     PaginationItem: { props: paginationItemProps, slots: ["default"], description: "Wrapper for a single pagination link." },
     PaginationLink: { props: paginationLinkProps, slots: [], description: "Pagination page link.", example: { text: "1", href: "#", isActive: false } },
+    // radio-group family
+    RadioGroup: { props: radioGroupProps, slots: ["default"], description: "Container grouping native radio inputs." },
+    RadioGroupItem: { props: radioGroupItemProps, slots: [], description: "A single native radio input inside a RadioGroup.", example: { value: "option", checked: false } },
   },
   actions: {},
 });
@@ -545,3 +551,5 @@ export type PaginationProps            = z.output<typeof paginationProps>;
 export type PaginationContentProps     = z.output<typeof paginationContentProps>;
 export type PaginationItemProps        = z.output<typeof paginationItemProps>;
 export type PaginationLinkProps        = z.output<typeof paginationLinkProps>;
+export type RadioGroupProps            = z.output<typeof radioGroupProps>;
+export type RadioGroupItemProps        = z.output<typeof radioGroupItemProps>;

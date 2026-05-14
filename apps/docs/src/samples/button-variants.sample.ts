@@ -8,6 +8,7 @@ const sample: Sample = {
   componentName: "ButtonVariants",
   relatedComponent: "button",
   group: "variants",
+  featured: true,
   spec: {
     root: "row",
     elements: {
