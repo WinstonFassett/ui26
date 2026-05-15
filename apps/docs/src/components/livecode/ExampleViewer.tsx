@@ -30,8 +30,8 @@ export function ExampleViewer({
     <div className="flex flex-col h-full bg-background">
 
       {/* title card + tabs — always visible so user can always switch tabs */}
-      <div data-viewer-header className="flex items-center justify-between gap-4 px-3.5 py-3 border-b border-border shrink-0">
-        <div className="min-w-0">
+      <div data-viewer-header className="flex items-end justify-between gap-4 px-3.5 border-b border-border shrink-0">
+        <div className="min-w-0 py-3">
           <div className="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
             {region.section}
           </div>
@@ -39,7 +39,7 @@ export function ExampleViewer({
             {title}
           </div>
         </div>
-        <div className="flex items-center shrink-0">
+        <div className="flex shrink-0">
           <TabBtn active={tab === "preview"} onClick={() => setTab("preview")}>Preview</TabBtn>
           <TabBtn active={tab === "code"} onClick={() => setTab("code")}>Code</TabBtn>
         </div>
@@ -90,7 +90,7 @@ function TabBtn({
       type="button"
       onClick={onClick}
       className={cn(
-        "px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider",
+        "px-4 pt-3 pb-1.5 font-mono text-[10px] uppercase tracking-wider",
         "border-b-[1.5px] transition-colors",
         active
           ? "border-accent text-foreground"
