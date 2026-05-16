@@ -1,0 +1,32 @@
+---
+sidebar:
+  hidden: true
+title: Tooltip
+description: Hover tooltip across React and Svelte with Matchina state machine and delay effects.
+---
+
+import { TooltipDemo } from "@registry/tooltip/tooltip-demo.tsx";
+import TooltipSvelte from "@registry/tooltip/tooltip.svelte";
+
+React and Svelte share one state machine: `tooltip.state.ts` (Matchina). Delay timers (`StartOpenDelay`, `StartCloseDelay`) are declared effects with cleanup — the machine is pure state, the effector owns the `setTimeout`/`clearTimeout`.
+
+## Basic
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <TooltipDemo client:only="react" />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <TooltipSvelte client:load />
+  </div>
+</div>
+
+## Under the hood
+
+- **Machine**: `Closed → OpenDelay → Opening → Open → CloseDelay → Closing → Closed`
+- **Delay effects**: `StartOpenDelay` / `StartCloseDelay` return cleanup functions (`clearTimeout`) — same pattern as `StopPositioner`
+- **Hover re-entry**: `enter` in `CloseDelay` short-circuits back to `Open` without re-running the positioner
+- **Effector**: same Floating UI effector pattern as Popover — `StartPositioner` / `StopPositioner` / `AnimateClose`
