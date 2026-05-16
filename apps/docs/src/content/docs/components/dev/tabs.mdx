@@ -1,0 +1,43 @@
+---
+sidebar:
+  hidden: true
+title: Tabs
+description: Stateful Tabs across React, Svelte, and Astro.
+---
+
+import { TabsDemo } from "@registry/tabs/tabs-demo.tsx";
+import TabsDemo2 from "@registry/tabs/tabs-demo.svelte";
+import TabsAstro from "@registry/tabs/tabs.astro";
+
+React and Svelte share one state backend: `tabs.state.ts` (Matchina atom). Astro is SSR-first — prop-driven, plain HTML, vanilla custom element for switching. No framework runtime, no hydration gap, first tab visible without JS.
+
+## Basic
+
+<div class="not-content grid grid-cols-3 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <TabsDemo client:only="react" />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <TabsDemo2 client:load />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Astro</p>
+    <TabsAstro
+      tabs={[
+        { label: "Account",  content: "Manage your account details." },
+        { label: "Password", content: "Update your password." },
+        { label: "Settings", content: "Configure your settings." },
+      ]}
+    />
+  </div>
+</div>
+
+## Under the hood
+
+- **React:** `useSyncExternalStore` + `createContext` wired to Matchina atom in `tabs.state.ts`.
+- **Svelte:** `setContext`/`getContext` with a thin `{ subscribe }` adapter bridging Matchina `StoreChange<T>` to the Svelte store protocol. SSR-correct with `client:load`.
+- **Astro:** prop-driven, fully SSR'd, vanilla custom element for switching. Same pattern as `CodeTabs.astro`. No framework runtime.

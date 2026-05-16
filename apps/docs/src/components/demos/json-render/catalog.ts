@@ -245,6 +245,11 @@ const paginationLinkProps     = z.object({ text: z.string(), href: z.string().nu
 const radioGroupProps     = z.object({ className: z.string().nullable() });
 const radioGroupItemProps = z.object({ name: z.string().nullable(), value: z.string().nullable(), checked: z.boolean().nullable(), disabled: z.boolean().nullable(), className: z.string().nullable() });
 
+const tabsProps        = z.object({ defaultValue: z.string(), className: z.string().nullable() });
+const tabsListProps    = z.object({ className: z.string().nullable() });
+const tabsTriggerProps = z.object({ value: z.string(), className: z.string().nullable() });
+const tabsContentProps = z.object({ value: z.string(), className: z.string().nullable() });
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -496,6 +501,11 @@ export const catalog = defineCatalog(schema, {
     // radio-group family
     RadioGroup: { props: radioGroupProps, slots: ["default"], description: "Container grouping native radio inputs." },
     RadioGroupItem: { props: radioGroupItemProps, slots: [], description: "A single native radio input inside a RadioGroup.", example: { value: "option", checked: false } },
+    // tabs family
+    Tabs: { props: tabsProps, slots: ["default"], description: "Tabs root. Sets the initial active tab via defaultValue.", example: { defaultValue: "tab1" } },
+    TabsList: { props: tabsListProps, slots: ["default"], description: "Tab trigger row." },
+    TabsTrigger: { props: tabsTriggerProps, slots: ["default"], description: "Individual tab button. value must match a TabsContent.", example: { value: "tab1" } },
+    TabsContent: { props: tabsContentProps, slots: ["default"], description: "Panel shown when its value is active.", example: { value: "tab1" } },
   },
   actions: {},
 });
@@ -553,3 +563,7 @@ export type PaginationItemProps        = z.output<typeof paginationItemProps>;
 export type PaginationLinkProps        = z.output<typeof paginationLinkProps>;
 export type RadioGroupProps            = z.output<typeof radioGroupProps>;
 export type RadioGroupItemProps        = z.output<typeof radioGroupItemProps>;
+export type TabsProps                  = z.output<typeof tabsProps>;
+export type TabsListProps              = z.output<typeof tabsListProps>;
+export type TabsTriggerProps           = z.output<typeof tabsTriggerProps>;
+export type TabsContentProps           = z.output<typeof tabsContentProps>;

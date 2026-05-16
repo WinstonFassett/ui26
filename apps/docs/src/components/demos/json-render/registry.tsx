@@ -48,6 +48,7 @@ import {
   PaginationLink as PaginationLinkRoot,
 } from "@registry/pagination/pagination.tsx";
 import { RadioGroup as RadioGroupRoot, RadioGroupItem as RadioGroupItemRoot } from "@registry/radio-group/radio-group.tsx";
+import { Tabs as TabsRoot, TabsList as TabsListRoot, TabsTrigger as TabsTriggerRoot, TabsContent as TabsContentRoot } from "@registry/tabs/tabs.tsx";
 import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
@@ -62,6 +63,10 @@ import {
 } from "@registry/field/field.tsx";
 import {
   catalog,
+  type TabsProps,
+  type TabsListProps,
+  type TabsTriggerProps,
+  type TabsContentProps,
   type ButtonProps,
   type BadgeProps,
   type StackProps,
@@ -360,6 +365,20 @@ export const { registry } = defineRegistry(catalog, {
     ),
     RadioGroupItem: ({ props }: BaseComponentProps<RadioGroupItemProps>) => (
       <RadioGroupItemRoot {...u(props)} />
+    ),
+
+    // ── Tabs ─────────────────────────────────────────────────────────────────
+    Tabs: ({ props, children }: BaseComponentProps<TabsProps>) => (
+      <TabsRoot {...u(props)} defaultValue={props.defaultValue}>{children}</TabsRoot>
+    ),
+    TabsList: ({ props, children }: BaseComponentProps<TabsListProps>) => (
+      <TabsListRoot {...u(props)}>{children}</TabsListRoot>
+    ),
+    TabsTrigger: ({ props, children }: BaseComponentProps<TabsTriggerProps>) => (
+      <TabsTriggerRoot {...u(props)} value={props.value}>{children}</TabsTriggerRoot>
+    ),
+    TabsContent: ({ props, children }: BaseComponentProps<TabsContentProps>) => (
+      <TabsContentRoot {...u(props)} value={props.value}>{children}</TabsContentRoot>
     ),
   },
 });

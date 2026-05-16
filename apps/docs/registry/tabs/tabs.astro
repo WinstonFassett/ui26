@@ -1,0 +1,97 @@
+---
+/**
+ * Tabs.astro — SSR-first, no framework, no island.
+ * Mirrors CodeTabs.astro. All content server-rendered; vanilla custom
+ * element handles switching. First tab visible in HTML, rest hidden.
+ *
+ * Usage (prop-driven, content as strings):
+ *   <Tabs tabs={[
+ *     { label: "Account", content: "Manage your account." },
+ *     { label: "Password", content: "Update your password." },
+ *   ]} />
+ *
+ * For rich content (code blocks, components), use Starlight's <Tabs>/<TabItem>
+ * from '@astrojs/starlight/components' — it handles arbitrary slot content.
+ */
+import { tabsList, tabsTrigger, tabsContent } from "./tabs.tv";
+import { cn } from "../lib/utils";
+
+interface Tab {
+  label: string;
+  content: string;
+}
+
+interface Props {
+  tabs: Tab[];
+  defaultIndex?: number;
+  class?: string;
+}
+
+const { tabs, defaultIndex = 0, class: className } = Astro.props;
+const id = Math.random().toString(36).slice(2, 8);
+---
+
+<div class={cn("w-full", className)} data-ui26-tabs={id}>
+  <div class={tabsList()} role="tablist">
+    {tabs.map((tab, i) => (
+      <button
+        role="tab"
+        type="button"
+        aria-selected={i === defaultIndex ? "true" : "false"}
+        tabindex={i === defaultIndex ? 0 : -1}
+        data-state={i === defaultIndex ? "active" : "inactive"}
+        data-tab-index={i}
+        class={tabsTrigger()}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+  {tabs.map((tab, i) => (
+    <div
+      role="tabpanel"
+      data-state={i === defaultIndex ? "active" : "inactive"}
+      hidden={i !== defaultIndex}
+      class={tabsContent()}
+    >
+      <p class="text-sm text-muted-foreground">{tab.content}</p>
+    </div>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ui26-tabs]').forEach((root) => {
+    const triggers = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+
+    triggers.forEach((btn, i) => {
+      btn.addEventListener('click', () => switchTab(i));
+      btn.addEventListener('keydown', (e) => {
+        const next =
+          e.key === 'ArrowRight' ? i + 1 :
+          e.key === 'ArrowLeft'  ? i - 1 :
+          e.key === 'Home'       ? 0 :
+          e.key === 'End'        ? triggers.length - 1 :
+          null;
+        if (next === null || !triggers[next]) return;
+        e.preventDefault();
+        switchTab(next);
+        triggers[next].focus();
+      });
+    });
+
+    function switchTab(index: number) {
+      triggers.forEach((btn, i) => {
+        const active = i === index;
+        btn.setAttribute('aria-selected', String(active));
+        btn.setAttribute('tabindex', active ? '0' : '-1');
+        btn.dataset.state = active ? 'active' : 'inactive';
+      });
+      panels.forEach((panel, i) => {
+        const active = i === index;
+        panel.hidden = !active;
+        panel.dataset.state = active ? 'active' : 'inactive';
+      });
+    }
+  });
+</script>
