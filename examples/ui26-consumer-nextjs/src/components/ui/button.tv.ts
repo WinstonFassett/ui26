@@ -2,28 +2,33 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const button = tv({
   base: [
-    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap select-none",
-    "rounded-md text-sm font-medium",
-    "transition-all",
-    "outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/30",
+    "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap select-none",
+    "rounded-lg text-sm font-medium tracking-[-0.005em]",
+    "transition-[background-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
+    "outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "active:translate-y-px",
     "disabled:pointer-events-none disabled:opacity-50",
-    "aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20",
-    "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
+    "aria-invalid:ring-[1.5px] aria-invalid:ring-destructive aria-invalid:ring-offset-2 aria-invalid:ring-offset-background",
+    "[&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5",
   ],
   variants: {
     variant: {
-      default: "bg-primary text-primary-foreground hover:bg-primary/80",
-      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-      outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
-      destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
+      default:
+        "bg-primary text-primary-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-primary/90 hover:shadow-[var(--highlight-inset),var(--shadow-sm)]",
+      secondary:
+        "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 hover:border-border-foreground/20 hover:shadow-[var(--highlight-inset),var(--shadow-xs)]",
+      outline:
+        "border border-border bg-transparent hover:bg-border/5 hover:border-border-foreground/30 hover:text-foreground",
+      ghost:
+        "hover:bg-muted/50 hover:text-foreground",
+      destructive:
+        "bg-destructive text-destructive-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-destructive/90 hover:shadow-[var(--highlight-inset),var(--shadow-sm)] focus-visible:ring-destructive",
     },
     size: {
-      default: "h-9 px-4 py-2",
-      sm: "h-8 rounded-md px-3 text-xs",
-      lg: "h-10 rounded-md px-6",
-      icon: "h-9 w-9",
+      default: "h-8 px-3",
+      sm: "h-7 px-2.5 text-xs",
+      lg: "h-9 px-4",
+      icon: "h-8 w-8",
     },
   },
   defaultVariants: {
