@@ -44,6 +44,8 @@ export function Popover({ children, sideOffset = 4 }: PopoverProps) {
 
     bindPopoverEffects(m, {
       StartPositioner: () => {
+        // Defer one tick — refs attach after first render
+        requestAnimationFrame(() => {
         const trigger = triggerRef.current;
         const floating = floatingRef.current;
         if (!trigger || !floating) { m.send("ready"); return; }
@@ -60,6 +62,7 @@ export function Popover({ children, sideOffset = 4 }: PopoverProps) {
           });
 
         cleanupPositioner = autoUpdate(trigger, floating, update);
+        }); // end rAF
       },
       StopPositioner: () => {
         cleanupPositioner?.();

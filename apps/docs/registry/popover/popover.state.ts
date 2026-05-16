@@ -26,9 +26,9 @@ export function createPopoverMachine() {
     states,
     {
       Closed:  { open:  "Opening" },
-      Opening: { ready: "Open",    close: "Closing" },
-      Open:    { close: "Closing" },
-      Closing: { done:  "Closed",  open:  "Opening" },
+      Opening: { ready: "Open",    close: "Closing", reset: "Closed" },
+      Open:    { close: "Closing", reset: "Closed" },
+      Closing: { done:  "Closed",  open:  "Opening", reset: "Closed" },
     },
     "Closed"
   );

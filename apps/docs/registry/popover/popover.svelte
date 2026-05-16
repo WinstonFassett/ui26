@@ -27,9 +27,12 @@
   machineStore.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
 
   $effect(() => {
-    // Bind effector inside $effect so DOM refs are bound
+    // Reset on HMR rebind — machine may be in a stale state
+    if (machine.getState().key !== "Closed") machine.send("reset" as any);
+
     const unsubEffects = bindPopoverEffects(machine, {
       StartPositioner: () => {
+        requestAnimationFrame(() => {
         const trigger = triggerEl;
         const floating = floatingEl;
         if (!trigger || !floating) { machine.send("ready"); return; }
@@ -46,6 +49,7 @@
           });
 
         cleanupPositioner = autoUpdate(trigger, floating, update);
+        }); // end rAF
       },
       StopPositioner: () => {
         cleanupPositioner?.();
