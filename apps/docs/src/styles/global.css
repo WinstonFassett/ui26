@@ -8,6 +8,7 @@
 @import '@astrojs/starlight-tailwind';
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tw-animate-css';
 
 /* External-dep class scanning — Tailwind v4 doesn't scan node_modules by
  * default. Streamdown (used by AIE reasoning) emits Tailwind classes at

@@ -1,46 +1,47 @@
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogClose, useDialogBodyAttr } from "./dialog";
-
-// ---------------------------------------------------------------------------
-// Co-located: trigger and dialog together
-// ---------------------------------------------------------------------------
+import {
+  Dialog, DialogTrigger, DialogContent,
+  DialogHeader, DialogFooter,
+  DialogTitle, DialogDescription, DialogClose,
+  useDialogBodyAttr,
+} from "./dialog";
 
 export function DialogDemo() {
   return (
     <Dialog>
       <DialogTrigger>Open dialog</DialogTrigger>
       <DialogContent>
-        <DialogTitle>Edit profile</DialogTitle>
-        <DialogDescription className="mt-2">
-          Make changes to your profile here. Click save when done.
-        </DialogDescription>
-        <div className="mt-6 flex justify-end gap-2">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when done.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
           <DialogClose>Cancel</DialogClose>
           <button className="inline-flex h-8 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90">
             Save changes
           </button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-// ---------------------------------------------------------------------------
-// Distant trigger: trigger lives elsewhere, dialog watches body attr
-// ---------------------------------------------------------------------------
-
 function DistantDialogListener() {
   useDialogBodyAttr("profile");
   return (
     <DialogContent>
-      <DialogTitle>Remotely opened</DialogTitle>
-      <DialogDescription className="mt-2">
-        This dialog was opened by a trigger outside the component tree.
-      </DialogDescription>
-      <div className="mt-6 flex justify-end">
+      <DialogHeader>
+        <DialogTitle>Remotely opened</DialogTitle>
+        <DialogDescription>
+          This dialog was opened by a trigger outside the component tree.
+        </DialogDescription>
+      </DialogHeader>
+      <DialogFooter>
         <DialogClose onClick={() => document.body.removeAttribute("data-dialog-open")}>
           Close
         </DialogClose>
-      </div>
+      </DialogFooter>
     </DialogContent>
   );
 }

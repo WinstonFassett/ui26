@@ -8,7 +8,7 @@ description: Modal dialog across React and Svelte with Matchina state machine. P
 import { DialogDemo, DialogDistantDemo } from "@registry/dialog/dialog-demo.tsx";
 import DialogSvelte from "@registry/dialog/dialog.svelte";
 
-React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix for React (focus trap, portal, scroll lock), native `<dialog>` for Svelte (focus trap and scroll lock built in).
+React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix `DialogPrimitive` for React, `bits-ui` `Dialog` for Svelte. Both handle portal, focus trap, scroll lock, and `data-state` animation attributes identically.
 
 ## Co-located trigger
 
@@ -53,5 +53,5 @@ Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `doc
 - **Machine**: `Closed → Opening → Open → Closing → Closed` — same shape as Popover
 - **Effects**: `OpenDialog` (delegate to platform, fire `ready`), `CloseDialog` (no-op — platform owns teardown), `AnimateClose` (wait for CSS animation, then `done`)
 - **React effector**: Radix `DialogPrimitive` handles focus trap, portal, scroll lock — machine just reflects open state via `open` prop
-- **Svelte effector**: native `<dialog>.showModal()` / `.close()` — browser handles focus trap and scroll lock natively
+- **Svelte effector**: `bits-ui` `Dialog` — same Radix primitives ported to Svelte, `data-state` attributes match React exactly
 - **Distant trigger**: `MutationObserver` on `document.body` watching `data-dialog-open` — SSR-safe, zero overhead, no shared bus needed for the 80% case
