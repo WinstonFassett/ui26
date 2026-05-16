@@ -3,6 +3,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const dialogOverlay = tv({
   base: [
     "fixed inset-0 z-50 bg-black/50",
+    "supports-backdrop-filter:backdrop-blur-sm",
     "data-[state=open]:animate-in data-[state=closed]:animate-out",
     "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
     "duration-200",
@@ -16,8 +17,6 @@ export const dialogContent = tv({
     "data-[state=open]:animate-in data-[state=closed]:animate-out",
     "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
     "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-    "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-    "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
     "duration-200",
   ],
 });
