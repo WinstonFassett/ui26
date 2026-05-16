@@ -1,0 +1,57 @@
+---
+sidebar:
+  hidden: true
+title: Dialog
+description: Modal dialog across React and Svelte with Matchina state machine. Proves Layer 2 DOM behavior — focus trap, scroll lock, portal.
+---
+
+import { DialogDemo, DialogDistantDemo } from "@registry/dialog/dialog-demo.tsx";
+import DialogSvelte from "@registry/dialog/dialog.svelte";
+
+React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix for React (focus trap, portal, scroll lock), native `<dialog>` for Svelte (focus trap and scroll lock built in).
+
+## Co-located trigger
+
+Trigger and dialog live together. Machine manages open/close transitions and animation timing.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <DialogDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <DialogSvelte client:load triggerLabel="Open dialog" title="Edit profile" description="Make changes to your profile here." />
+  </div>
+</div>
+
+## Distant trigger
+
+Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `document.body`. Dialog watches via `MutationObserver` and fires machine events.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <DialogDistantDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <div class="flex flex-col gap-3">
+      <button
+        class="inline-flex h-9 w-fit items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted"
+        onclick="document.body.setAttribute('data-dialog-open', 'svelte-profile')"
+      >
+        Distant trigger
+      </button>
+      <DialogSvelte client:load watchId="svelte-profile" title="Remotely opened" description="This dialog was opened by a trigger outside the component tree." />
+    </div>
+  </div>
+</div>
+
+## Under the hood
+
+- **Machine**: `Closed → Opening → Open → Closing → Closed` — same shape as Popover
+- **Effects**: `OpenDialog` (delegate to platform, fire `ready`), `CloseDialog` (no-op — platform owns teardown), `AnimateClose` (wait for CSS animation, then `done`)
+- **React effector**: Radix `DialogPrimitive` handles focus trap, portal, scroll lock — machine just reflects open state via `open` prop
+- **Svelte effector**: native `<dialog>.showModal()` / `.close()` — browser handles focus trap and scroll lock natively
+- **Distant trigger**: `MutationObserver` on `document.body` watching `data-dialog-open` — SSR-safe, zero overhead, no shared bus needed for the 80% case
