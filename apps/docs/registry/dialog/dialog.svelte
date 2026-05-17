@@ -14,6 +14,10 @@
     children?: Snippet;
     /** If set, watches body[data-dialog-open] for this id — distant trigger mode */
     watchId?: string;
+    /** If true, opens immediately on mount */
+    defaultOpen?: boolean;
+    /** If set, called on trigger click before opening — dialog waits for resolution */
+    loadContent?: () => Promise<void>;
   };
 
   let {
@@ -23,6 +27,8 @@
     description,
     children,
     watchId,
+    defaultOpen = false,
+    loadContent,
   }: Props = $props();
 
   const machine = createDialogMachine();
@@ -31,8 +37,21 @@
   let stateKey = $state("Closed");
   machineStore.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
 
+  let loading = $state(false);
+
+  async function handleOpen() {
+    if (loadContent) {
+      loading = true;
+      await loadContent();
+      loading = false;
+    }
+    machine.send("open");
+  }
+
   $effect(() => {
     if (machine.getState().key !== "Closed") machine.send("reset" as any);
+
+    if (defaultOpen) machine.send("open");
 
     // bits-ui Dialog manages portal, focus trap, scroll lock, and data-open/data-closed
     // — machine just coordinates open/closing states
@@ -64,10 +83,11 @@
 {#if !watchId}
   <button
     type="button"
-    class="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted"
-    onclick={() => machine.send("open")}
+    disabled={loading}
+    class="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted disabled:opacity-50"
+    onclick={handleOpen}
   >
-    {triggerLabel}
+    {loading ? "Loading…" : triggerLabel}
   </button>
 {/if}
 

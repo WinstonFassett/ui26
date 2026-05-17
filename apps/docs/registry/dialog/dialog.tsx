@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useContext,
   useMemo,
@@ -30,9 +30,10 @@ function useDialogMachine(): DialogMachine {
 
 export interface DialogProps {
   children: ReactNode;
+  machineRef?: React.RefObject<DialogMachine | null>;
 }
 
-export function Dialog({ children }: DialogProps) {
+export function Dialog({ children, machineRef }: DialogProps) {
   const machine = useMemo(() => {
     const m = createDialogMachine();
 
@@ -47,6 +48,10 @@ export function Dialog({ children }: DialogProps) {
 
     return m;
   }, []);
+
+  useEffect(() => {
+    if (machineRef) machineRef.current = machine;
+  }, [machine, machineRef]);
 
   useMachine(machine);
   const key = machine.getState().key;

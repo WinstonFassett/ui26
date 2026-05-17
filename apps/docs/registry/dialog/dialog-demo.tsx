@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog, DialogTrigger, DialogContent,
   DialogHeader, DialogFooter,
@@ -43,6 +44,49 @@ function DistantDialogListener() {
         </DialogClose>
       </DialogFooter>
     </DialogContent>
+  );
+}
+
+// Simulates fetching content before opening — e.g. a user record, async form data
+export function DialogDynamicDemo() {
+  const [data, setData] = React.useState<{ name: string; email: string } | null>(null);
+  const [loading, setLoading] = React.useState(false);
+  const machineRef = React.useRef<import("./dialog.state").DialogMachine | null>(null);
+
+  async function handleClick() {
+    setLoading(true);
+    setData(null);
+    await new Promise((r) => setTimeout(r, 800));
+    setData({ name: "Ada Lovelace", email: "ada@example.com" });
+    setLoading(false);
+    machineRef.current?.send("open");
+  }
+
+  return (
+    <Dialog machineRef={machineRef}>
+      <button
+        disabled={loading}
+        className="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted disabled:opacity-50"
+        onClick={handleClick}
+      >
+        {loading ? "Loading…" : "Load & open"}
+      </button>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>User record</DialogTitle>
+          <DialogDescription>Fetched before the dialog opened.</DialogDescription>
+        </DialogHeader>
+        {data && (
+          <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+            <dt className="text-muted-foreground">Name</dt><dd>{data.name}</dd>
+            <dt className="text-muted-foreground">Email</dt><dd>{data.email}</dd>
+          </dl>
+        )}
+        <DialogFooter>
+          <DialogClose>Close</DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

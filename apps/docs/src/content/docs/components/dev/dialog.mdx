@@ -5,7 +5,7 @@ title: Dialog
 description: Modal dialog across React and Svelte with Matchina state machine. Proves Layer 2 DOM behavior — focus trap, scroll lock, portal.
 ---
 
-import { DialogDemo, DialogDistantDemo } from "@registry/dialog/dialog-demo.tsx";
+import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-demo.tsx";
 import DialogSvelte from "@registry/dialog/dialog.svelte";
 
 React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix `DialogPrimitive` for React, `bits-ui` `Dialog` for Svelte. Both handle portal, focus trap, scroll lock, and `data-state` animation attributes identically.
@@ -46,6 +46,22 @@ Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `doc
       <DialogSvelte client:load watchId="svelte-profile" title="Remotely opened" description="This dialog was opened by a trigger outside the component tree." />
     </div>
   </div>
+</div>
+
+## Pre-opened (defaultOpen)
+
+Opens immediately on mount — useful for confirmation screens, onboarding gates, or error states that should block interaction.
+
+<div class="not-content my-6">
+  <DialogSvelte client:load defaultOpen triggerLabel="Reopen" title="Welcome" description="This dialog was open before you clicked anything." />
+</div>
+
+## Dynamic content
+
+Trigger calls `loadContent` before opening. Dialog waits for the promise to resolve, shows a loading state on the button, then opens with the fetched data already rendered.
+
+<div class="not-content my-6">
+  <DialogDynamicDemo client:only="react" />
 </div>
 
 ## SSR'd slot content
