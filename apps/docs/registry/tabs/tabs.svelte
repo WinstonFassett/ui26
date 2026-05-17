@@ -14,11 +14,10 @@
 
   const ctx = createTabsState(defaultValue);
 
-  // Svelte store adapter — atom emits StoreChange<T>, Svelte expects (value: T) => void
   const store = {
     subscribe(fn: (value: { activeTab: string }) => void) {
       fn(ctx.state.get());
-      return ctx.state.subscribe((change) => fn(change.to));
+      return ctx.state.subscribe(fn);
     },
   };
 

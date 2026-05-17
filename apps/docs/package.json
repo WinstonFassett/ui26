@@ -40,7 +40,7 @@
     "jotai": "^2.19.1",
     "lucide-react": "^1.8.0",
     "lz-string": "^1.5.0",
-    "matchina": "link:/Users/winston/dev/personal/matchina",
+    "matchina": "^0.1.1",
     "motion": "^12.38.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.5",

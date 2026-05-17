@@ -3,16 +3,14 @@
  *
  * Layer 1: Pure state and behavior intent.
  * No DOM, no renderer, no framework. Testable with plain JS.
- *
- * Uses Matchina `atom` — a createStoreMachine + withSubscribe composite:
- *   atom<T>(initialValue): { get, set, update, subscribe, getState, getChange }
- *
- * The `subscribe` callback receives StoreChange<T> = { type, params, from, to }.
- * This is NOT the raw Svelte store protocol (which expects (value: T) => void).
- * See the Svelte wiring note below for the thin adapter needed.
  */
 
-import { atom, type Atom } from "matchina";
+export type Atom<T> = { get(): T; set(v: T): void; subscribe(fn: (v: T) => void): () => void };
+function atom<T>(initial: T): Atom<T> {
+  let val = initial;
+  const ls = new Set<(v: T) => void>();
+  return { get: () => val, set: (v) => { val = v; ls.forEach(fn => fn(v)); }, subscribe: (fn) => { ls.add(fn); return () => ls.delete(fn); } };
+}
 
 // ---------------------------------------------------------------------------
 // Types
