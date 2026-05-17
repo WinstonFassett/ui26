@@ -48,6 +48,23 @@ Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `doc
   </div>
 </div>
 
+## SSR'd slot content
+
+The Svelte island owns interaction and transitions. The slot content is server-rendered by Astro — no JS needed to paint it. This is the same pattern as the code block previews.
+
+<div class="not-content my-6">
+  <DialogSvelte client:load triggerLabel="Open (SSR content)" title="Server-rendered content">
+    <div class="flex flex-col gap-3">
+      <p class="text-sm text-muted-foreground">This content was rendered on the server. It could be a database query result, markdown, a form — anything Astro can render.</p>
+      <ul class="text-sm text-muted-foreground list-disc list-inside">
+        <li>Item one — SSR'd</li>
+        <li>Item two — SSR'd</li>
+        <li>Item three — SSR'd</li>
+      </ul>
+    </div>
+  </DialogSvelte>
+</div>
+
 ## Under the hood
 
 - **Machine**: `Closed → Opening → Open → Closing → Closed` — same shape as Popover

@@ -2,6 +2,15 @@
 
 Authoring rules for `all-themes.css` and anything else under `apps/docs/registry/`. These are taste/adaptation rules, not user-facing documentation. User docs for the theme system live at [`apps/docs/src/content/docs/reference/themes.mdx`](../src/content/docs/reference/themes.mdx).
 
+## Framework selection principle
+
+**If a registry component needs DOM interaction (show/hide, focus, animation, events), reach for Svelte — not vanilla JS.** Svelte gives us transitions, reactivity, and lifecycle for free, and Astro SSR's Svelte slot content just like any other island. The Astro layer is for structure and routing, not for reimplementing what Svelte already does well.
+
+This means: don't write a `*.astro` component with inline `<script>` blocks to manage interactive state. Write a `*.svelte` component and drop it into the Astro page as an island. The slot content — server-rendered markup, code blocks, static HTML — still comes from Astro and is SSR'd. The Svelte component wraps it and owns the interaction layer.
+
+**The wrong instinct**: build a vanilla JS component because "it's simpler" or "no framework needed."  
+**The right instinct**: Svelte for anything interactive, Astro for static structure and SSR'd content composition.
+
 ## Token-authoring rules
 
 **Don't number tokens.** No `--panel2`, `--surface-1`, `--border-3`. Use semantic names (`--card`, `--muted`, `--border-soft`, `--text-mute`) or existing shadcn vocabulary. Map numbered design-source names (e.g. a Figma palette with `Gray/100..900`) at the call site, not at the token layer.
