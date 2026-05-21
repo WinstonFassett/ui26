@@ -35,7 +35,7 @@ const sample: Sample = {
       },
       "assign-trigger": {
         type: "TooltipTrigger",
-        props: {},
+        props: { asChild: true },
         children: ["assign-btn"],
       },
       "assign-btn": { type: "Button", props: { label: "↑ Assign", variant: "outline" }, children: [] },
@@ -54,7 +54,7 @@ const sample: Sample = {
       },
       "docs-trigger": {
         type: "TooltipTrigger",
-        props: {},
+        props: { asChild: true },
         children: ["docs-btn"],
       },
       "docs-btn": { type: "Button", props: { label: "🕮 Docs", variant: "outline" }, children: [] },
@@ -73,7 +73,7 @@ const sample: Sample = {
       },
       "cmd-trigger": {
         type: "TooltipTrigger",
-        props: {},
+        props: { asChild: true },
         children: ["cmd-btn"],
       },
       "cmd-btn": { type: "Button", props: { label: "⌘K", variant: "outline" }, children: [] },
