@@ -1,12 +1,11 @@
 ---
-sidebar:
-  hidden: true
 title: Popover
 description: Floating popover panel across React and Svelte with Matchina state machine.
 ---
 
 import { PopoverDemo } from "@registry/popover/popover-demo.tsx";
 import PopoverSvelte from "@registry/popover/popover.svelte";
+import PopoverNative from "@registry/popover/popover-native.svelte";
 
 React and Svelte share one state machine: `popover.state.ts` (Matchina). Effects are declared as matchboxes — `StartPositioner`, `StopPositioner`, `AnimateClose` — and each framework implements them as a DOM effector using `@floating-ui/dom`.
 
@@ -24,9 +23,18 @@ React and Svelte share one state machine: `popover.state.ts` (Matchina). Effects
   </div>
 </div>
 
+## Native Popover API (progressive enhancement)
+
+Uses the browser's [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) (`popover="manual"` + `popovertarget`) and CSS anchor positioning where supported, with a Floating UI fallback for older browsers. The Svelte island wires the machine; `toggle` events from the native popover feed back into machine state.
+
+<div class="not-content my-6">
+  <PopoverNative client:load triggerLabel="Open (native)" />
+</div>
+
 ## Under the hood
 
 - **Machine**: `Closed → Opening → Open → Closing → Closed` — four states, four events (`open`, `ready`, `close`, `done`)
 - **Effects**: `Opening` emits `StartPositioner`, `Closing` emits `StopPositioner` + `AnimateClose`
 - **Effector**: each framework binds `@floating-ui/dom` via `bindPopoverEffects` — refs and positioning live in the view, machine stays DOM-free
 - **CSS vars**: position written as `--x` / `--y` on the floating element, read via `style="left: var(--x); top: var(--y)"`
+- **Native variant**: `popover="manual"` gives browser-managed stacking context and top-layer placement; `popovertarget` links trigger declaratively; CSS anchor positioning (`anchor-name` / `position-anchor`) replaces Floating UI where available
