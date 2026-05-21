@@ -250,6 +250,10 @@ const tabsListProps    = z.object({ className: z.string().nullable() });
 const tabsTriggerProps = z.object({ value: z.string(), className: z.string().nullable() });
 const tabsContentProps = z.object({ value: z.string(), className: z.string().nullable() });
 
+const tooltipProps        = z.object({ openDelay: z.number().nullable(), closeDelay: z.number().nullable(), sideOffset: z.number().nullable() });
+const tooltipTriggerProps = z.object({ className: z.string().nullable() });
+const tooltipContentProps = z.object({ className: z.string().nullable() });
+
 // ─── catalog ──────────────────────────────────────────────────────────────
 
 export const catalog = defineCatalog(schema, {
@@ -506,6 +510,10 @@ export const catalog = defineCatalog(schema, {
     TabsList: { props: tabsListProps, slots: ["default"], description: "Tab trigger row." },
     TabsTrigger: { props: tabsTriggerProps, slots: ["default"], description: "Individual tab button. value must match a TabsContent.", example: { value: "tab1" } },
     TabsContent: { props: tabsContentProps, slots: ["default"], description: "Panel shown when its value is active.", example: { value: "tab1" } },
+    // tooltip family
+    Tooltip: { props: tooltipProps, slots: ["default"], description: "Tooltip root. Wraps TooltipTrigger and TooltipContent." },
+    TooltipTrigger: { props: tooltipTriggerProps, slots: ["default"], description: "Element that triggers the tooltip on hover/focus." },
+    TooltipContent: { props: tooltipContentProps, slots: ["default"], description: "Floating tooltip panel." },
   },
   actions: {},
 });
@@ -567,3 +575,6 @@ export type TabsProps                  = z.output<typeof tabsProps>;
 export type TabsListProps              = z.output<typeof tabsListProps>;
 export type TabsTriggerProps           = z.output<typeof tabsTriggerProps>;
 export type TabsContentProps           = z.output<typeof tabsContentProps>;
+export type TooltipProps               = z.output<typeof tooltipProps>;
+export type TooltipTriggerProps        = z.output<typeof tooltipTriggerProps>;
+export type TooltipContentProps        = z.output<typeof tooltipContentProps>;

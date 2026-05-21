@@ -49,6 +49,7 @@ import {
 } from "@registry/pagination/pagination.tsx";
 import { RadioGroup as RadioGroupRoot, RadioGroupItem as RadioGroupItemRoot } from "@registry/radio-group/radio-group.tsx";
 import { Tabs as TabsRoot, TabsList as TabsListRoot, TabsTrigger as TabsTriggerRoot, TabsContent as TabsContentRoot } from "@registry/tabs/tabs.tsx";
+import { Tooltip as TooltipRoot, TooltipTrigger as TooltipTriggerRoot, TooltipContent as TooltipContentRoot } from "@registry/tooltip/tooltip.tsx";
 import {
   Field as FieldRoot,
   FieldContent as FieldContentRoot,
@@ -67,6 +68,9 @@ import {
   type TabsListProps,
   type TabsTriggerProps,
   type TabsContentProps,
+  type TooltipProps,
+  type TooltipTriggerProps,
+  type TooltipContentProps,
   type ButtonProps,
   type BadgeProps,
   type StackProps,
@@ -379,6 +383,17 @@ export const { registry } = defineRegistry(catalog, {
     ),
     TabsContent: ({ props, children }: BaseComponentProps<TabsContentProps>) => (
       <TabsContentRoot {...u(props)} value={props.value}>{children}</TabsContentRoot>
+    ),
+
+    // ── Tooltip ──────────────────────────────────────────────────────────────
+    Tooltip: ({ props, children }: BaseComponentProps<TooltipProps>) => (
+      <TooltipRoot {...u(props)}>{children}</TooltipRoot>
+    ),
+    TooltipTrigger: ({ props, children }: BaseComponentProps<TooltipTriggerProps>) => (
+      <TooltipTriggerRoot {...u(props)}>{children}</TooltipTriggerRoot>
+    ),
+    TooltipContent: ({ props, children }: BaseComponentProps<TooltipContentProps>) => (
+      <TooltipContentRoot {...u(props)}>{children}</TooltipContentRoot>
     ),
   },
 });

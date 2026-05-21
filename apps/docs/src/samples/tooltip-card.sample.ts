@@ -4,11 +4,11 @@ const sample: Sample = {
   id: "tooltip-card",
   kind: "block",
   title: "Tooltip card",
-  description: "Hover state demo — one button with an absolutely-positioned tooltip bubble, two plain buttons alongside.",
+  description: "Hover any button to see a delayed tooltip — Matchina state machine, Floating UI positioning.",
   componentName: "TooltipCard",
   category: "Feedback",
   order: 7,
-  registryDependencies: ["card", "button"],
+  registryDependencies: ["card", "button", "tooltip"],
   spec: {
     root: "card",
     elements: {
@@ -16,7 +16,7 @@ const sample: Sample = {
       header: { type: "CardHeader", props: {}, children: ["label", "title"] },
       label: {
         type: "CardDescription",
-        props: { text: "Tooltip", className: "font-mono text-[10px] tracking-[0.08em] uppercase text-text-mute" },
+        props: { text: "Tooltip", className: "font-mono text-[10px] tracking-[0.08em] uppercase text-muted-foreground" },
         children: [],
       },
       title: { type: "CardTitle", props: { text: "Hover states" }, children: [] },
@@ -24,31 +24,65 @@ const sample: Sample = {
       row: {
         type: "Stack",
         props: { direction: "row", gap: "5", align: "center", className: "py-5" },
-        children: ["relative-container", "docs-btn", "cmd-btn"],
+        children: ["assign-tooltip", "docs-tooltip", "cmd-tooltip"],
       },
 
-      // Button with tooltip above it
-      "relative-container": {
-        type: "Stack",
-        props: { direction: "col", gap: "0", className: "relative" },
-        children: ["assign-btn", "tooltip-bubble"],
+      // Assign button with tooltip
+      "assign-tooltip": {
+        type: "Tooltip",
+        props: {},
+        children: ["assign-trigger", "assign-tip"],
+      },
+      "assign-trigger": {
+        type: "TooltipTrigger",
+        props: {},
+        children: ["assign-btn"],
       },
       "assign-btn": { type: "Button", props: { label: "↑ Assign", variant: "outline" }, children: [] },
-      "tooltip-bubble": {
-        type: "Stack",
-        props: {
-          direction: "row",
-          gap: "0",
-          align: "center",
-          className: "absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 bg-foreground text-background px-2 py-1 whitespace-nowrap",
-        },
-        children: ["tooltip-label", "tooltip-key"],
+      "assign-tip": {
+        type: "TooltipContent",
+        props: {},
+        children: ["assign-tip-text"],
       },
-      "tooltip-label": { type: "Text", props: { content: "Assign ticket", className: "text-[11px]" }, children: [] },
-      "tooltip-key":   { type: "Text", props: { content: "A", className: "text-[11px] ml-1 font-mono text-text-mute" }, children: [] },
+      "assign-tip-text": { type: "Text", props: { content: "Assign ticket  A", className: "text-[11px]" }, children: [] },
 
+      // Docs button with tooltip
+      "docs-tooltip": {
+        type: "Tooltip",
+        props: {},
+        children: ["docs-trigger", "docs-tip"],
+      },
+      "docs-trigger": {
+        type: "TooltipTrigger",
+        props: {},
+        children: ["docs-btn"],
+      },
       "docs-btn": { type: "Button", props: { label: "🕮 Docs", variant: "outline" }, children: [] },
-      "cmd-btn":  { type: "Button", props: { label: "⌘ ⌘K",  variant: "outline" }, children: [] },
+      "docs-tip": {
+        type: "TooltipContent",
+        props: {},
+        children: ["docs-tip-text"],
+      },
+      "docs-tip-text": { type: "Text", props: { content: "Open docs", className: "text-[11px]" }, children: [] },
+
+      // Command palette button with tooltip
+      "cmd-tooltip": {
+        type: "Tooltip",
+        props: {},
+        children: ["cmd-trigger", "cmd-tip"],
+      },
+      "cmd-trigger": {
+        type: "TooltipTrigger",
+        props: {},
+        children: ["cmd-btn"],
+      },
+      "cmd-btn": { type: "Button", props: { label: "⌘K", variant: "outline" }, children: [] },
+      "cmd-tip": {
+        type: "TooltipContent",
+        props: {},
+        children: ["cmd-tip-text"],
+      },
+      "cmd-tip-text": { type: "Text", props: { content: "Command palette  ⌘K", className: "text-[11px]" }, children: [] },
     },
   },
 }

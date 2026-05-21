@@ -206,6 +206,13 @@ export const COMPONENTS: ComponentMeta[] = [
     dependencies: BASE_DEPS,
     registryDependencies: [...BASE_REGISTRY_DEPS, "label", "separator"],
   },
+  {
+    name: "tooltip",
+    title: "Tooltip",
+    description: "Hover tooltip with open/close delay, Floating UI positioning, and Matchina state machine. React (compound) and Svelte (single-file).",
+    dependencies: [...BASE_DEPS, "matchina", "@floating-ui/dom"],
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
 ];
 
 export function filesFor(name: string, fw: Framework): RegistryFile[] {
@@ -232,6 +239,12 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
   if (name === "pagination") return withSubs(PAGINATION_SUBS);
   if (name === "radio-group") return withSubs(RADIO_GROUP_SUBS);
   if (name === "field") return withSubs(FIELD_SUBS);
+
+  if (name === "tooltip") return [
+    { path: `${name}/${name}.${ext}`, type: "registry:ui" },
+    { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
+    { path: `${name}/${name}.state.ts`, type: "registry:ui" },
+  ];
 
   return [
     { path: `${name}/${name}.${ext}`, type: "registry:ui" },
