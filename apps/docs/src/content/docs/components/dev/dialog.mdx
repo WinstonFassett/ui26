@@ -7,6 +7,7 @@ description: Modal dialog across React and Svelte with Matchina state machine. P
 
 import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-demo.tsx";
 import DialogSvelte from "@registry/dialog/dialog.svelte";
+import DialogNative from "@registry/dialog/dialog-native.svelte";
 
 React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix `DialogPrimitive` for React, `bits-ui` `Dialog` for Svelte. Both handle portal, focus trap, scroll lock, and `data-state` animation attributes identically.
 
@@ -50,11 +51,7 @@ Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `doc
 
 ## Pre-opened (defaultOpen)
 
-Opens immediately on mount — useful for confirmation screens, onboarding gates, or error states that should block interaction.
-
-<div class="not-content my-6">
-  <DialogSvelte client:load defaultOpen triggerLabel="Reopen" title="Welcome" description="This dialog was open before you clicked anything." />
-</div>
+Opens immediately on mount — useful for confirmation screens, onboarding gates, or error states that should block interaction. Shown on its own page to avoid blocking this one: [dialog-default-open](/components/dev/dialog-default-open).
 
 ## Dynamic content
 
@@ -79,6 +76,30 @@ The Svelte island owns interaction and transitions. The slot content is server-r
       </ul>
     </div>
   </DialogSvelte>
+</div>
+
+## Native `<dialog>` (progressive enhancement)
+
+Native `<dialog>` element — Astro SSRs the content into slots, Svelte island wires the machine on mount. No bits-ui, no portal. Focus trap, scroll lock, and Escape handling are browser-native. `::backdrop` replaces the overlay div. Machine reads `dialogEl.open` on mount so hydration never stomps open state.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Basic</p>
+    <DialogNative client:load triggerLabel="Open (native)" title="Native dialog" description="Powered by the browser's native &lt;dialog&gt; element." />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">SSR'd slot content</p>
+    <DialogNative client:load triggerLabel="Open (SSR content)" title="Server-rendered content">
+      <div class="flex flex-col gap-3">
+        <p class="text-sm text-muted-foreground">This content was rendered on the server. It's in the HTML source — crawlable — but hidden until the dialog opens.</p>
+        <ul class="text-sm text-muted-foreground list-disc list-inside">
+          <li>Item one — SSR'd</li>
+          <li>Item two — SSR'd</li>
+          <li>Item three — SSR'd</li>
+        </ul>
+      </div>
+    </DialogNative>
+  </div>
 </div>
 
 ## Under the hood
