@@ -1,0 +1,50 @@
+---
+title: Dialog
+description: Modal dialog with focus trap, scroll lock, and portal. React and Svelte.
+---
+
+import DocSingleShell from '@/components/demos/DocSingleShell.astro'
+import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-demo.tsx";
+import DialogSvelte from "@registry/dialog/dialog.svelte";
+
+## Basic
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <DialogDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <DialogSvelte client:load triggerLabel="Open dialog" title="Edit profile" description="Make changes to your profile here." />
+  </div>
+</div>
+
+## Distant trigger
+
+The trigger doesn't have to be inside the dialog. Set `data-dialog-open="{id}"` on `document.body` from anywhere — a nav item, a keyboard shortcut, a server action. The dialog watches via `MutationObserver`.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <DialogDistantDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <DialogSvelte client:load watchId="svelte-distant-docs" title="Remotely opened" description="Opened by a trigger outside the component tree.">
+      <button onclick="document.body.setAttribute('data-dialog-open', 'svelte-distant-docs')" class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm hover:bg-accent">Distant trigger</button>
+    </DialogSvelte>
+  </div>
+</div>
+
+## Dynamic content
+
+Pass a `loadContent` function to fetch data before opening. The trigger shows a loading state while the promise resolves, then the dialog opens with content already rendered.
+
+<div class="not-content my-6">
+  <DialogDynamicDemo client:only="react" />
+</div>
+
+## Confirm dialog
+
+<DocSingleShell id="confirm-dialog" />
