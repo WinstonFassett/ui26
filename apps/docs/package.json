@@ -32,6 +32,7 @@
     "@uiw/codemirror-theme-github": "^4.25.9",
     "@uiw/react-codemirror": "^4.25.9",
     "astro": "^6.0.1",
+    "boneyard": "^0.1.4",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "jotai": "^2.19.1",

@@ -1,0 +1,169 @@
+---
+title: Using ui26 themes in Starlight
+description: How to wire ui26's multi-theme system into a Starlight docs site, and the integration quirks you will hit.
+---
+
+ui26 themes use compound `data-theme` values (`editorial`, `editorial-dark`, `tix-dark`, …). Starlight was built around literal `"light"` / `"dark"` values for that attribute. This guide documents what you have to bridge and why.
+
+## Install the theme CSS
+
+Add the all-themes bundle to your global stylesheet:
+
+```css
+@import './styles/themes/all-themes.css';
+```
+
+Then use the `ThemeProvider` + `theme-picker` components to set `data-theme` on `<html>` at runtime (see [Theme picker UI](/guides/theming#theme-picker-ui)).
+
+## Required: bridge `--sl-color-white` and `--sl-color-black`
+
+Starlight only reassigns these two primitives via `[data-theme='light']`. Because our compound theme values never literally equal `"light"` or `"dark"`, those vars stay stuck at their initial values — white and near-black — regardless of what theme is active. Headings, sidebar items, the mobile menu toggle, and the search modal all consume them.
+
+Fix: remap them in your `starlight-ui26.css` on `:root` (or `:where(:root)`) so they follow your theme tokens instead of Starlight's toggle:
+
+```css
+:where(:root) {
+  --sl-color-white: var(--foreground);
+  --sl-color-black: var(--background);
+  --sl-color-text: var(--foreground);
+  --sl-color-text-accent: var(--accent);
+  /* ... other --sl-color-* you need ... */
+}
+```
+
+Since this is a single bridge on `:root`, it works for all compound theme values without any per-theme rules.
+
+## Required: bridge other `--sl-color-*` vars
+
+Same problem applies to all Starlight color vars. Map the full set you care about — backgrounds, sidebar, nav, hairlines, gray scale — onto your semantic tokens:
+
+```css
+:where(:root) {
+  --sl-color-bg: var(--background);
+  --sl-color-bg-sidebar: var(--background);
+  --sl-color-bg-nav: var(--background);
+  --sl-color-bg-inline-code: var(--code, var(--card));
+  --sl-color-bg-hover: var(--muted);
+  --sl-color-hairline: var(--border);
+  --sl-color-hairline-light: var(--border);
+  --sl-color-hairline-shade: var(--border);
+  --sl-color-gray-1: var(--foreground);
+  --sl-color-gray-2: var(--muted-foreground);
+  --sl-color-gray-3: var(--text-mute);
+  --sl-color-gray-4: var(--border);
+  --sl-color-gray-5: var(--muted);
+  --sl-color-gray-6: var(--card);
+  --sl-font: var(--font-sans);
+  --sl-font-system: var(--font-sans);
+  --sl-font-system-mono: var(--font-mono);
+}
+```
+
+The full bridge used by the ui26 docs site lives in [`apps/docs/src/styles/starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) — copy and adapt it.
+
+## If you have a logo: replace Starlight's light/dark swap
+
+Starlight's built-in logo swap uses `dark:sl-hidden` / `light:sl-hidden` utility classes, which only match literal `"dark"` / `"light"` `data-theme` values. With compound values both logos render simultaneously.
+
+Fix: skip Starlight's logo config and render your own logo in a custom `Header` override using `[data-theme$="-dark"]` to select dark themes:
+
+```css
+/* Show dark logo when theme name ends in "-dark" */
+[data-theme$="-dark"] .logo-light { display: none; }
+:not([data-theme$="-dark"]) .logo-dark  { display: none; }
+```
+
+Or handle it in JS/React by reading `document.documentElement.dataset.theme`.
+
+## Theme-specific fonts: repeat vars in dark blocks
+
+If your theme defines `--font-sans`, `--font-serif`, or `--font-mono` on the light block, **also define them on the dark block**. The dark block only overrides what you declare — it doesn't inherit from the light block. Without this, toggling to dark causes font vars to fall through to `:root` (where they may be undefined or system defaults), causing a visible font switch.
+
+```css
+[data-theme="my-theme"] {
+  --font-serif: "MySerif", ui-serif, Georgia, serif;
+  /* ... */
+}
+
+[data-theme="my-theme-dark"] {
+  /* Must repeat even though the value is the same */
+  --font-serif: "MySerif", ui-serif, Georgia, serif;
+  /* ... dark-specific tokens ... */
+}
+```
+
+## Required: scoped Tailwind preflight for component demos
+
+`@astrojs/starlight-tailwind` strips Tailwind's global preflight because it conflicts with Starlight's prose typography. This means embedded component demos inside `.not-content` divs lose their baseline resets — anchor tags get underlines, buttons leak UA padding, SVGs misalign.
+
+Fix: add a scoped preflight reset targeting `.not-content` using CSS `@scope`. This gives demos a clean slate without touching Starlight's prose context. The full block is in [`starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) — copy it as-is.
+
+## Expressive Code: code block backgrounds
+
+Expressive Code (EC) injects its own background color from the `github-light` / `github-dark` theme directly onto `<pre>`. This overrides `--sl-color-bg-inline-code` and makes code blocks appear pure white even on a warm editorial background.
+
+Fix: force the `<pre>` to be transparent so the wrapper element picks up your theme token instead:
+
+```css
+.expressive-code pre {
+  background: transparent !important;
+}
+```
+
+Add this to your `starlight-ui26.css` alongside the `--sl-*` bridge.
+
+### EC theme selector
+
+Wire EC's `themeCssSelector` to match ui26's compound theme values. In `ec.config.mjs`:
+
+```js
+export default {
+  themes: ['github-light', 'github-dark'],
+  useDarkModeMediaQuery: false,
+  themeCssSelector: (theme) =>
+    theme.type === 'dark' ? '[data-theme$="-dark"]' : ':root',
+};
+```
+
+### Twoslash support
+
+EC does not support twoslash out of the box. Install `expressive-code-twoslash` and add it as a plugin:
+
+```js
+import pluginTwoslash from 'expressive-code-twoslash';
+
+export default {
+  // ...
+  plugins: [pluginTwoslash({ includeJsDoc: false })],
+};
+```
+
+`includeJsDoc: false` suppresses `@param`, `@returns`, `@example`, and similar annotations from hover popups — these are noise in doc examples. Type-only hovers are the right default for documentation.
+
+### Porting legacy CodeBlock components
+
+When porting to a new Starlight site, audit for custom `CodeBlock.astro` / `CodeTabs.astro` components that predate EC. These are typically hardcoded to a dark theme (e.g. `material-theme-ocean`) and bypass EC entirely — they won't respond to your theme system.
+
+Replace them with Starlight's `<Code>` component. When doing so, preserve any `twoslash` flags: the old components often had a boolean `twoslash` prop; the EC `<Code>` equivalent is `meta="twoslash"`.
+
+## Theme picker peer deps
+
+The `theme-picker.tsx` component imports `lucide-react` and `motion`. These are not declared as ui26 peer deps but are required at runtime. Install them in your Starlight project:
+
+```bash
+npm install lucide-react motion
+```
+
+## Import order matters
+
+Your `starlight-ui26.css` must import **after** the theme CSS so your bridge values override Starlight's defaults, not the other way around.
+
+## Reference
+
+The ui26 docs site is itself a Starlight integration. The canonical files:
+
+| File | What it does |
+|------|-------------|
+| [`starlight-ui26.css`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/styles/starlight-ui26.css) | Full `--sl-*` bridge + layout/typography overrides |
+| [`ThemeProvider.astro`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/ThemeProvider.astro) | Pre-paint script: reads `localStorage`, sets `data-theme` before first render |
+| [`theme-picker.tsx`](https://github.com/WinstonFassett/ui26/tree/main/apps/docs/src/components/starlight/theme-picker.tsx) | Dropdown + light/dark/auto toggle |

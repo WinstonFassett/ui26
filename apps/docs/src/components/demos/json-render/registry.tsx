@@ -118,7 +118,9 @@ import {
 // React props expect undefined for unset, so coerce at the registry boundary.
 function u<T extends Record<string, unknown>>(props: T): { [K in keyof T]: Exclude<T[K], null> | undefined } {
   const out: Record<string, unknown> = {};
-  for (const k in props) out[k] = props[k] === null ? undefined : props[k];
+  for (const k in props) {
+    out[k] = props[k] === null ? undefined : props[k];
+  }
   return out as { [K in keyof T]: Exclude<T[K], null> | undefined };
 }
 

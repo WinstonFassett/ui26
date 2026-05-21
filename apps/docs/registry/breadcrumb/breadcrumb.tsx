@@ -12,28 +12,28 @@ import {
 
 export const Breadcrumb = forwardRef<HTMLElement, ComponentPropsWithoutRef<"nav"> & { separator?: React.ReactNode }>(
   ({ className, ...props }, ref) => (
-    <nav ref={ref} aria-label="breadcrumb" className={cn(breadcrumb(), className)} {...props} />
+    <nav {...(ref && { ref })} aria-label="breadcrumb" className={cn(breadcrumb(), className)} {...props} />
   ),
 );
 Breadcrumb.displayName = "Breadcrumb";
 
 export const BreadcrumbList = forwardRef<HTMLOListElement, HTMLAttributes<HTMLOListElement>>(
   ({ className, ...props }, ref) => (
-    <ol ref={ref} className={cn(breadcrumbList(), className)} {...props} />
+    <ol {...(ref && { ref })} className={cn(breadcrumbList(), className)} {...props} />
   ),
 );
 BreadcrumbList.displayName = "BreadcrumbList";
 
 export const BreadcrumbItem = forwardRef<HTMLLIElement, HTMLAttributes<HTMLLIElement>>(
   ({ className, ...props }, ref) => (
-    <li ref={ref} className={cn(breadcrumbItem(), className)} {...props} />
+    <li {...(ref && { ref })} className={cn(breadcrumbItem(), className)} {...props} />
   ),
 );
 BreadcrumbItem.displayName = "BreadcrumbItem";
 
 export const BreadcrumbLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnchorElement>>(
   ({ className, ...props }, ref) => (
-    <a ref={ref} className={cn(breadcrumbLink(), className)} {...props} />
+    <a {...(ref && { ref })} className={cn(breadcrumbLink(), className)} {...props} />
   ),
 );
 BreadcrumbLink.displayName = "BreadcrumbLink";
@@ -41,7 +41,7 @@ BreadcrumbLink.displayName = "BreadcrumbLink";
 export const BreadcrumbPage = forwardRef<HTMLSpanElement, HTMLAttributes<HTMLSpanElement>>(
   ({ className, ...props }, ref) => (
     <span
-      ref={ref}
+      {...(ref && { ref })}
       role="link"
       aria-disabled="true"
       aria-current="page"

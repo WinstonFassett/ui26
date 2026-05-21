@@ -1,6 +1,8 @@
-/* Starlight bridge + overrides.
- * Import AFTER registry/tokens.css. Maps Starlight's `--sl-*` namespace onto
- * our semantic tokens so it follows the active theme, then patches the DOM.
+/* Starlight ↔ ui26 bridge.
+ * Import AFTER registry/all-themes.css. Maps Starlight's --sl-* namespace onto
+ * ui26 semantic tokens so the active theme is reflected throughout Starlight's
+ * chrome, and applies ui26-specific typography/layout overrides where Starlight
+ * exposes no CSS var hook.
  */
 
 /* ---------- Starlight bridge (theme-agnostic) ---------- */
@@ -26,6 +28,8 @@
   --sl-color-text: var(--foreground);
   --sl-color-text-accent: var(--accent);
   --sl-color-text-invert: var(--primary-foreground);
+  --sl-color-accent: var(--accent);
+  --sl-color-accent-high: var(--accent-foreground);
   --sl-color-gray-1: var(--foreground);
   --sl-color-gray-2: var(--muted-foreground);
   --sl-color-gray-3: var(--text-mute);
@@ -95,7 +99,7 @@ header.header a[href*="github"]:hover {
 
 /* Keep distinctive site title styling */
 header.header .site-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 22px;
   font-style: italic;
   font-weight: 500;
@@ -221,7 +225,7 @@ select[aria-label="Select theme"] {
 
 .main-frame h1:not(:where(.not-content *)),
 .hero h1:not(:where(.not-content *)) {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-weight: 500;
   letter-spacing: -0.022em;
   margin: 28px 0 0 0;
@@ -430,7 +434,7 @@ a.action.secondary {
   color: var(--sl-color-gray-2);
 }
 .stat-row .n {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-style: italic;
   font-size: 18px;
   color: var(--sl-color-text);
