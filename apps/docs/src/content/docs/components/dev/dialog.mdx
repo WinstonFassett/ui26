@@ -6,6 +6,7 @@ description: Modal dialog across React and Svelte with Matchina state machine. P
 import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-demo.tsx";
 import DialogSvelte from "@registry/dialog/dialog.svelte";
 import DialogNative from "@registry/dialog/dialog-native.svelte";
+import ButtonAstro from "@registry/button/button.astro";
 
 React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix `DialogPrimitive` for React, `bits-ui` `Dialog` for Svelte. Both handle portal, focus trap, scroll lock, and `data-state` animation attributes identically.
 
@@ -36,12 +37,9 @@ Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `doc
   <div>
     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
     <div class="flex flex-col gap-3">
-      <button
-        class="inline-flex h-9 w-fit items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted"
-        onclick="document.body.setAttribute('data-dialog-open', 'svelte-profile')"
-      >
+      <ButtonAstro variant="secondary" size="lg" onclick="document.body.setAttribute('data-dialog-open', 'svelte-profile')">
         Distant trigger
-      </button>
+      </ButtonAstro>
       <DialogSvelte client:load watchId="svelte-profile" title="Remotely opened" description="This dialog was opened by a trigger outside the component tree." />
     </div>
   </div>

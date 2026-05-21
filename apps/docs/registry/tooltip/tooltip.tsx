@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useMachine } from "matchina/react";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
+import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { tooltipContent } from "./tooltip.tv";
 import { createTooltipMachine, bindTooltipEffects, type TooltipMachine } from "./tooltip.state";
@@ -94,24 +95,34 @@ export function Tooltip({ children, openDelay = 600, closeDelay = 300, sideOffse
   return <Ctx.Provider value={ctx}>{children}</Ctx.Provider>;
 }
 
-export interface TooltipTriggerProps extends HTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
-}
+export type TooltipTriggerProps = HTMLAttributes<HTMLButtonElement> & { children: ReactNode; asChild?: boolean };
 
-export function TooltipTrigger({ children, className, ...props }: TooltipTriggerProps) {
+export function TooltipTrigger({ children, className, asChild = false, ...props }: TooltipTriggerProps) {
   const { machine, triggerRef } = useTooltipCtx();
+
+  const shared = {
+    ref: triggerRef as RefObject<HTMLButtonElement>,
+    "aria-describedby": "tooltip",
+    onMouseEnter: () => machine.send("enter"),
+    onMouseLeave: () => machine.send("leave"),
+    onFocus: () => machine.send("enter"),
+    onBlur: () => machine.send("leave"),
+    ...props,
+  };
+
+  if (asChild) {
+    return (
+      <Slot.Root className={className} {...shared}>
+        {children}
+      </Slot.Root>
+    );
+  }
 
   return (
     <button
-      ref={triggerRef as RefObject<HTMLButtonElement>}
       type="button"
-      aria-describedby="tooltip"
       className={cn("inline-flex", className)}
-      onMouseEnter={() => machine.send("enter")}
-      onMouseLeave={() => machine.send("leave")}
-      onFocus={() => machine.send("enter")}
-      onBlur={() => machine.send("leave")}
-      {...props}
+      {...shared}
     >
       {children}
     </button>

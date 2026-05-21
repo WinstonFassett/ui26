@@ -2,6 +2,7 @@
   import type { Snippet } from "svelte";
   import { Dialog as DialogPrimitive } from "bits-ui";
   import { cn } from "../lib/utils";
+  import { button } from "../button/button.tv";
   import { dialogTitle, dialogDescription } from "./dialog.tv";
   import { createDialogMachine, bindDialogEffects } from "./dialog.state";
   import { withSubscribe } from "matchina";
@@ -84,7 +85,7 @@
   <button
     type="button"
     disabled={loading}
-    class="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted disabled:opacity-50"
+    class={button({ variant: "secondary", size: "lg" })}
     onclick={handleOpen}
   >
     {loading ? "Loading…" : triggerLabel}
@@ -128,7 +129,7 @@
       <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
         <button
           type="button"
-          class="inline-flex h-8 items-center justify-center rounded-md border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
+          class={button({ variant: "secondary" })}
           onclick={() => machine.send("close")}
         >
           Close

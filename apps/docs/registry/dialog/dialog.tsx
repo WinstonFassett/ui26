@@ -9,6 +9,7 @@ import React, {
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { useMachine } from "matchina/react";
 import { cn } from "../lib/utils";
+import { Button } from "../button/button";
 import { dialogOverlay, dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
 import { createDialogMachine, bindDialogEffects, type DialogMachine } from "./dialog.state";
 
@@ -77,16 +78,15 @@ export function Dialog({ children, machineRef }: DialogProps) {
 // Trigger
 // ---------------------------------------------------------------------------
 
-export interface DialogTriggerProps extends HTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
-}
+export type DialogTriggerProps = HTMLAttributes<HTMLButtonElement> & { children: ReactNode; asChild?: boolean };
 
-export function DialogTrigger({ children, className, ...props }: DialogTriggerProps) {
+export function DialogTrigger({ children, className, asChild = false, ...props }: DialogTriggerProps) {
   const machine = useDialogMachine();
 
   return (
     <DialogPrimitive.Trigger
-      className={cn(
+      asChild={asChild}
+      className={asChild ? className : cn(
         "inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted",
         className
       )}
@@ -120,7 +120,8 @@ export function DialogContent({ children, className }: DialogContentProps) {
       >
         {children}
         <button
-          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
+          type="button"
+          className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           onClick={() => machine.send("close")}
           aria-label="Close"
         >
@@ -141,16 +142,14 @@ export function DialogClose({ children, className, ...props }: HTMLAttributes<HT
   const machine = useDialogMachine();
 
   return (
-    <button
-      className={cn(
-        "inline-flex h-8 items-center justify-center rounded-md border border-border bg-background px-3 text-sm font-medium hover:bg-muted",
-        className
-      )}
+    <Button
+      variant="secondary"
+      className={className}
       onClick={() => machine.send("close")}
       {...props}
     >
       {children ?? "Close"}
-    </button>
+    </Button>
   );
 }
 

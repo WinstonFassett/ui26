@@ -7,6 +7,7 @@ import {
   type HTMLAttributes,
   type ComponentPropsWithoutRef,
 } from "react";
+import { Slot } from "radix-ui";
 import { useMachine } from "matchina/react";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
 import { cn } from "../lib/utils";
@@ -113,28 +114,37 @@ function PopoverRefs({ triggerRef, floatingRef, children }: {
 // Trigger
 // ---------------------------------------------------------------------------
 
-export type PopoverTriggerProps = ComponentPropsWithoutRef<"button">;
+export type PopoverTriggerProps = ComponentPropsWithoutRef<"button"> & { asChild?: boolean };
 
-export function PopoverTrigger({ className, children, ...props }: PopoverTriggerProps) {
+export function PopoverTrigger({ className, children, asChild = false, ...props }: PopoverTriggerProps) {
   const machine = usePopoverMachine();
   useMachine(machine);
   const refs = useContext(RefsCtx);
   const stateKey = machine.getState().key;
   const isOpen = stateKey === "Open" || stateKey === "Opening";
 
+  const shared = {
+    ref: (el: HTMLElement | null) => { if (refs) refs.triggerRef.current = el; },
+    "aria-haspopup": "dialog" as const,
+    "aria-expanded": isOpen,
+    "data-state": isOpen ? "open" : "closed",
+    onClick: () => isOpen ? machine.send("close") : machine.send("open"),
+    ...props,
+  };
+
+  if (asChild) {
+    return (
+      <Slot.Root className={className} {...shared}>
+        {children}
+      </Slot.Root>
+    );
+  }
+
   return (
     <button
-      ref={(el) => { if (refs) refs.triggerRef.current = el; }}
       type="button"
-      aria-haspopup="dialog"
-      aria-expanded={isOpen}
-      data-state={isOpen ? "open" : "closed"}
-      className={cn(
-        "inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted",
-        className
-      )}
-      onClick={() => isOpen ? machine.send("close") : machine.send("open")}
-      {...props}
+      className={cn("inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted", className)}
+      {...shared}
     >
       {children}
     </button>

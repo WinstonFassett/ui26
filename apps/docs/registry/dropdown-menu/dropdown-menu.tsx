@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useMachine } from "matchina/react";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
+import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { dropdownContent, dropdownItem, dropdownSeparator, dropdownLabel } from "./dropdown-menu.tv";
 import { createDropdownMachine, bindDropdownEffects, type DropdownMachine } from "./dropdown-menu.state";
@@ -101,34 +102,45 @@ export function DropdownMenu({ children, sideOffset = 4 }: DropdownMenuProps) {
   return <Ctx.Provider value={ctx}>{children}</Ctx.Provider>;
 }
 
-export interface DropdownMenuTriggerProps extends HTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
-}
+export type DropdownMenuTriggerProps = HTMLAttributes<HTMLButtonElement> & { children: ReactNode; asChild?: boolean };
 
-export function DropdownMenuTrigger({ children, className, ...props }: DropdownMenuTriggerProps) {
+export function DropdownMenuTrigger({ children, className, asChild = false, ...props }: DropdownMenuTriggerProps) {
   const { machine, triggerRef } = useDropdownCtx();
   useMachine(machine);
   const key = machine.getState().key;
   const isOpen = key === "Open" || key === "Opening";
 
+  const chevron = (
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+      <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+
+  const shared = {
+    ref: triggerRef as RefObject<HTMLButtonElement>,
+    "aria-haspopup": "menu" as const,
+    "aria-expanded": isOpen,
+    "data-state": isOpen ? "open" : "closed",
+    onClick: () => isOpen ? machine.send("close") : machine.send("open"),
+    ...props,
+  };
+
+  if (asChild) {
+    return (
+      <Slot.Root className={className} {...shared}>
+        {children}
+      </Slot.Root>
+    );
+  }
+
   return (
     <button
-      ref={triggerRef as RefObject<HTMLButtonElement>}
       type="button"
-      aria-haspopup="menu"
-      aria-expanded={isOpen}
-      data-state={isOpen ? "open" : "closed"}
-      className={cn(
-        "inline-flex h-8 items-center justify-center gap-1 rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted",
-        className
-      )}
-      onClick={() => isOpen ? machine.send("close") : machine.send("open")}
-      {...props}
+      className={cn("inline-flex h-8 items-center justify-center gap-1 rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted", className)}
+      {...shared}
     >
       {children}
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
-        <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      {chevron}
     </button>
   );
 }

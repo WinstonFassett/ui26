@@ -219,7 +219,7 @@ export const COMPONENTS: ComponentMeta[] = [
     title: "Tooltip",
     description: "Hover tooltip with open/close delay, Floating UI positioning, and Matchina state machine. React (compound) and Svelte (single-file).",
     dependencies: STATEFUL_DEPS,
-    registryDependencies: BASE_REGISTRY_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
   },
   {
     name: "tooltip-native",
@@ -233,7 +233,7 @@ export const COMPONENTS: ComponentMeta[] = [
     title: "Popover",
     description: "Floating popover panel with Floating UI positioning and Matchina state machine. React and Svelte.",
     dependencies: STATEFUL_DEPS,
-    registryDependencies: BASE_REGISTRY_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
   },
   {
     name: "popover-native",
@@ -247,7 +247,7 @@ export const COMPONENTS: ComponentMeta[] = [
     title: "Dialog",
     description: "Modal dialog with Matchina state machine. React uses Radix DialogPrimitive; Svelte uses bits-ui Dialog. Both support SSR slot content and distant trigger.",
     dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog", "bits-ui"],
-    registryDependencies: BASE_REGISTRY_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
   },
   {
     name: "dialog-native",
@@ -261,7 +261,7 @@ export const COMPONENTS: ComponentMeta[] = [
     title: "Dropdown Menu",
     description: "Dropdown menu reusing the Popover state machine. Floating UI positioning, outside-click dismissal, section/heading support. React and Svelte.",
     dependencies: STATEFUL_DEPS,
-    registryDependencies: [...BASE_REGISTRY_DEPS, "popover"],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "popover", "button"],
   },
 ];
 

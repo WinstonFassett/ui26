@@ -1,3 +1,4 @@
+import { Button } from "../button/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,7 +12,9 @@ export function DropdownMenuDemo() {
   return (
     <div className="relative inline-block">
       <DropdownMenu>
-        <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
+          <Button variant="secondary">Open menu</Button>
+        </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>My account</DropdownMenuLabel>
           <DropdownMenuSeparator />

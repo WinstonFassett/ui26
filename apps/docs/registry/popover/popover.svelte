@@ -2,6 +2,7 @@
   import type { Snippet } from "svelte";
   import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
   import { cn } from "../lib/utils";
+  import { button } from "../button/button.tv";
   import { popoverContent } from "./popover.tv";
   import { createPopoverMachine, bindPopoverEffects } from "./popover.state";
   import { withSubscribe } from "matchina";
@@ -85,7 +86,7 @@
     aria-haspopup="dialog"
     aria-expanded={isOpen}
     data-state={isOpen ? "open" : "closed"}
-    class="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
+    class={button({ variant: "secondary" })}
     onclick={() => isOpen ? machine.send("close") : machine.send("open")}
   >
     {triggerLabel}

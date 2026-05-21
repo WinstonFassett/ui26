@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { cn } from "../lib/utils";
+  import { button } from "../button/button.tv";
   import { dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
   import { createDialogMachine, bindDialogEffects } from "./dialog.state";
   import { withSubscribe } from "matchina";
@@ -109,12 +110,7 @@
 </script>
 
 {#if !watchId}
-  <button
-    type="button"
-    disabled={loading}
-    class="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted disabled:opacity-50"
-    onclick={handleOpen}
-  >
+  <button type="button" disabled={loading} class={button({ variant: "secondary", size: "lg" })} onclick={handleOpen}>
     {loading ? "Loading…" : triggerLabel}
   </button>
 {/if}
@@ -139,11 +135,7 @@
   {/if}
 
   <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-    <button
-      type="button"
-      class="inline-flex h-8 items-center justify-center rounded-md border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
-      onclick={() => machine.send("close")}
-    >
+    <button type="button" class={button({ variant: "secondary" })} onclick={() => machine.send("close")}>
       Close
     </button>
   </div>

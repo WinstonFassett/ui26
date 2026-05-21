@@ -2,6 +2,7 @@
   import type { Snippet } from "svelte";
   import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
   import { cn } from "../lib/utils";
+  import { button } from "../button/button.tv";
   import { popoverContent } from "./popover.tv";
   import { createPopoverMachine, bindPopoverEffects } from "./popover.state";
   import { withSubscribe } from "matchina";
@@ -15,7 +16,6 @@
 
   let { class: className, triggerLabel = "Open popover", children, sideOffset = 4 }: Props = $props();
 
-  // Stable ID for popovertarget wiring
   const uid = Math.random().toString(36).slice(2, 8);
   const popoverId = `popover-${uid}`;
   const anchorName = `--popover-anchor-${uid}`;
@@ -23,9 +23,6 @@
   let triggerEl: HTMLButtonElement | null = $state(null);
   let floatingEl: HTMLDivElement | null = $state(null);
   let cleanupPositioner: (() => void) | null = null;
-
-  // Detect CSS anchor positioning support once
-  const supportsAnchor = typeof CSS !== "undefined" && CSS.supports("anchor-name", "--x");
 
   const machine = createPopoverMachine();
   const machineStore = withSubscribe(machine);
@@ -43,19 +40,13 @@
           const floating = floatingEl;
           if (!trigger || !floating) { machine.send("ready"); return; }
 
-          if (supportsAnchor) {
-            // CSS anchor positioning handles layout — no JS needed
-            machine.send("ready");
-            return;
-          }
-
           const update = () =>
             computePosition(trigger, floating, {
               placement: "bottom",
               middleware: [offset(sideOffset), flip(), shift({ padding: 8 })],
             }).then(({ x, y, placement }) => {
-              floating.style.setProperty("--x", `${x}px`);
-              floating.style.setProperty("--y", `${y}px`);
+              floating.style.left = `${x}px`;
+              floating.style.top = `${y}px`;
               floating.dataset.side = placement.split("-")[0];
               if (machine.getState().key === "Opening") machine.send("ready");
             });
@@ -80,7 +71,17 @@
       },
     });
 
-    // Sync native popover events back to machine
+    // Click-outside close
+    function onPointerDown(e: PointerEvent) {
+      if (machine.getState().key !== "Open") return;
+      const target = e.target as Node;
+      if (!triggerEl?.contains(target) && !floatingEl?.contains(target)) {
+        machine.send("close");
+      }
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+
+    // Sync native popover toggle events back to machine (covers Escape + popovertarget clicks)
     function onToggle(e: ToggleEvent) {
       if (e.newState === "open" && machine.getState().key === "Closed") machine.send("open");
       if (e.newState === "closed" && machine.getState().key !== "Closed") machine.send("close");
@@ -90,6 +91,7 @@
     return () => {
       unsubEffects?.();
       cleanupPositioner?.();
+      document.removeEventListener("pointerdown", onPointerDown);
       floatingEl?.removeEventListener("toggle", onToggle as EventListener);
     };
   });
@@ -110,7 +112,12 @@
   const isClosing = $derived(stateKey === "Closing");
 </script>
 
-<div class="relative inline-block">
+<!--
+  No-JS: popovertarget wires the button to the popover natively.
+         CSS anchor positioning places it below the trigger.
+  With JS: machine drives state, floating-ui positions it, click-outside listener added.
+-->
+<div style="position: relative;">
   <button
     bind:this={triggerEl}
     id={`${popoverId}-trigger`}
@@ -120,10 +127,11 @@
     aria-haspopup="dialog"
     aria-expanded={isOpen}
     data-state={isOpen ? "open" : "closed"}
-    style={supportsAnchor ? `anchor-name: ${anchorName};` : undefined}
-    class="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
+    style={`anchor-name: ${anchorName};`}
+    class={button({ variant: "secondary" })}
     onclick={() => {
-      // native popovertarget handles DOM toggle; machine follows via toggle event
+      // With JS: machine drives open/close; native popovertarget toggle is a no-op
+      // (toggle event fires → machine receives "open"/"close" via onToggle listener)
     }}
   >
     {triggerLabel}
@@ -137,14 +145,8 @@
     role="dialog"
     data-state={isClosing ? "closed" : "open"}
     hidden={!isOpen && !isClosing}
-    class={cn(
-      supportsAnchor ? "fixed m-0" : "absolute",
-      popoverContent(),
-      className
-    )}
-    style={supportsAnchor
-      ? `position-anchor: ${anchorName}; inset-area: block-end span-inline-end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`
-      : "left: var(--x); top: var(--y);"}
+    class={cn("fixed m-0", popoverContent(), className)}
+    style={`position-anchor: ${anchorName}; top: anchor(bottom); left: anchor(left); margin-top: ${sideOffset}px;`}
   >
     {#if children}
       {@render children()}

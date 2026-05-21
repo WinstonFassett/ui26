@@ -1,10 +1,13 @@
+import { Button } from "../button/button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./tooltip";
 
 export function TooltipDemo() {
   return (
     <div className="relative inline-block">
       <Tooltip>
-        <TooltipTrigger>Hover me</TooltipTrigger>
+        <TooltipTrigger asChild>
+          <Button variant="secondary">Hover me</Button>
+        </TooltipTrigger>
         <TooltipContent>This is a tooltip.</TooltipContent>
       </Tooltip>
     </div>

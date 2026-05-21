@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../button/button";
 import {
   Dialog, DialogTrigger, DialogContent,
   DialogHeader, DialogFooter,
@@ -9,7 +10,7 @@ import {
 export function DialogDemo() {
   return (
     <Dialog>
-      <DialogTrigger>Open dialog</DialogTrigger>
+      <DialogTrigger asChild><Button variant="secondary">Open dialog</Button></DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
@@ -19,9 +20,7 @@ export function DialogDemo() {
         </DialogHeader>
         <DialogFooter>
           <DialogClose>Cancel</DialogClose>
-          <button className="inline-flex h-8 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-            Save changes
-          </button>
+          <Button>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -64,13 +63,9 @@ export function DialogDynamicDemo() {
 
   return (
     <Dialog machineRef={machineRef}>
-      <button
-        disabled={loading}
-        className="inline-flex h-9 items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted disabled:opacity-50"
-        onClick={handleClick}
-      >
+      <Button variant="secondary" size="lg" disabled={loading} onClick={handleClick}>
         {loading ? "Loading…" : "Load & open"}
-      </button>
+      </Button>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>User record</DialogTitle>
@@ -93,12 +88,13 @@ export function DialogDynamicDemo() {
 export function DialogDistantDemo() {
   return (
     <div className="flex flex-col gap-3">
-      <button
-        className="inline-flex h-9 w-fit items-center justify-center rounded-md border border-border bg-background px-4 text-sm font-medium hover:bg-muted"
+      <Button
+        variant="secondary"
+        size="lg"
         onClick={() => document.body.setAttribute("data-dialog-open", "profile")}
       >
         Distant trigger
-      </button>
+      </Button>
       <Dialog>
         <DistantDialogListener />
       </Dialog>

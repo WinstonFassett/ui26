@@ -2,6 +2,7 @@
   import type { Snippet } from "svelte";
   import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
   import { cn } from "../lib/utils";
+  import { button } from "../button/button.tv";
   import { tooltipContent } from "./tooltip.tv";
   import { createTooltipMachine, bindTooltipEffects } from "./tooltip.state";
   import { withSubscribe } from "matchina";
@@ -124,7 +125,7 @@
     type="button"
     aria-describedby={tooltipId}
     style={supportsAnchor ? `anchor-name: ${anchorName};` : undefined}
-    class="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-3 text-sm font-medium hover:bg-muted"
+    class={button({ variant: "secondary" })}
     onmouseenter={() => machine.send("enter")}
     onmouseleave={() => machine.send("leave")}
     onfocus={() => machine.send("enter")}
