@@ -13,14 +13,14 @@ const shouldRenderSearch =
 const rawTopics = Astro.locals.starlightSidebarTopics?.topics ?? [];
 
 // The plugin's middleware only runs on Starlight content-collection routes; on
-// custom Astro pages (e.g. /blocks, /kitchen-sink) every topic comes back with
+// custom Astro pages (e.g. /blocks, /ecosystem) every topic comes back with
 // isCurrent=false. If nothing's marked current, infer the active topic by
 // URL-prefix matching, keyed off the topic label.
 const fallback = rawTopics.length > 0 && !rawTopics.some((t: any) => t.isCurrent);
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 const customTopicPrefixes: Record<string, RegExp> = {
     Examples: /^\/examples(\/|$)/,
-    Docs: /^\/(kitchen-sink|ecosystem|tix-app)(\/|$)/,
+    Docs: /^\/(ecosystem|tix-app)(\/|$)/,
 };
 const topics = rawTopics.map((t: any) => {
     if (t.isCurrent || !fallback) return t;

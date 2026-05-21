@@ -56,7 +56,6 @@ export default defineConfig({
                                 {
                                     label: 'Dev',
                                     items: [
-                                        { label: 'Kitchen Sink', link: '/kitchen-sink' },
                                         { label: 'Ecosystem', link: '/ecosystem' },
                                         { label: 'Tix App', link: '/tix-app' },
                                     ],
@@ -102,7 +101,7 @@ export default defineConfig({
                         examples: ['/examples', '/examples/**'],
                         'component-dev': ['/components-dev/**'],
                         components: ['/components/**'],
-                        docs: ['/kitchen-sink', '/ecosystem', '/tix-app', '/guides/**', '/reference/**'],
+                        docs: ['/ecosystem', '/tix-app', '/guides/**', '/reference/**'],
                     },
                 },
             ),
