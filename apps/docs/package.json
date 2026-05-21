@@ -32,6 +32,7 @@
     "@types/react-dom": "^19.2.3",
     "@uiw/codemirror-theme-github": "^4.25.9",
     "@uiw/react-codemirror": "^4.25.9",
+    "@xstate/fsm": "^2.1.0",
     "astro": "^6.0.1",
     "bits-ui": "^2.18.1",
     "boneyard": "^0.1.4",
