@@ -5,7 +5,6 @@
   import { button } from "../button/button.tv";
   import { dialogTitle, dialogDescription } from "./dialog.tv";
   import { createDialogMachine, bindDialogEffects } from "./dialog-state.matchina";
-  import { withSubscribe } from "matchina";
 
   type Props = {
     class?: string;
@@ -33,10 +32,8 @@
   }: Props = $props();
 
   const machine = createDialogMachine();
-  const machineStore = withSubscribe(machine);
-
   let stateKey = $state("Closed");
-  machineStore.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
+  machine.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
 
   let loading = $state(false);
 

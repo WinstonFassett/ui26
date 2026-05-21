@@ -18,14 +18,19 @@ export type DialogEffectorHandlers = {
   AnimateClose: () => void;
 };
 
+type KeyedState = { key: DialogStateKey };
+type ChangeEvent = { type: string; from: KeyedState; to: KeyedState };
+
 export function createDialogMachine() {
   let key: DialogStateKey = "Closed";
   let handlers: DialogEffectorHandlers | null = null;
-  const listeners = new Set<(key: DialogStateKey) => void>();
+  const listeners = new Set<(ev: ChangeEvent) => void>();
 
   function enter(next: DialogStateKey) {
+    const from: KeyedState = { key };
     key = next;
-    listeners.forEach((fn) => fn(key));
+    const ev: ChangeEvent = { type: next, from, to: { key } };
+    listeners.forEach((fn) => fn(ev));
     if (next === "Opening") handlers?.OpenDialog();
     if (next === "Closing") { handlers?.CloseDialog(); handlers?.AnimateClose(); }
   }
@@ -36,7 +41,7 @@ export function createDialogMachine() {
       const next = TRANSITIONS[key]?.[event];
       if (next) enter(next);
     },
-    subscribe(fn: (key: DialogStateKey) => void) {
+    subscribe(fn: (ev: ChangeEvent) => void) {
       listeners.add(fn);
       return () => listeners.delete(fn);
     },

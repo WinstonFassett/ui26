@@ -35,7 +35,7 @@
   const machine = createDialogMachine();
 
   let stateKey = $state("Closed");
-  machine.subscribe((key) => { stateKey = key; });
+  machine.subscribe((ev) => { if (ev?.to?.key) stateKey = ev.to.key; });
 
   let loading = $state(false);
 

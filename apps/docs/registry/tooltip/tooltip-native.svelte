@@ -5,7 +5,6 @@
   import { button } from "../button/button.tv";
   import { tooltipContent } from "./tooltip.tv";
   import { createTooltipMachine, bindTooltipEffects } from "./tooltip.state";
-  import { withSubscribe } from "matchina";
 
   type Props = {
     class?: string;
@@ -38,10 +37,9 @@
   const supportsAnchor = typeof CSS !== "undefined" && CSS.supports("anchor-name", "--x");
 
   const machine = createTooltipMachine(openDelay, closeDelay);
-  const machineStore = withSubscribe(machine);
 
   let stateKey = $state("Closed");
-  machineStore.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
+  machine.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
 
   $effect(() => {
     if (machine.getState().key !== "Closed") machine.send("reset" as any);

@@ -5,7 +5,6 @@
   import { button } from "../button/button.tv";
   import { popoverContent } from "./popover.tv";
   import { createPopoverMachine, bindPopoverEffects } from "./popover.state";
-  import { withSubscribe } from "matchina";
 
   type Props = {
     class?: string;
@@ -21,11 +20,10 @@
   let cleanupPositioner: (() => void) | null = null;
 
   const machine = createPopoverMachine();
-  const machineStore = withSubscribe(machine);
 
   // Svelte store protocol: subscribe emits the change event, we read key from it
   let stateKey = $state("Closed");
-  machineStore.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
+  machine.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
 
   $effect(() => {
     // Reset on HMR rebind — machine may be in a stale state
