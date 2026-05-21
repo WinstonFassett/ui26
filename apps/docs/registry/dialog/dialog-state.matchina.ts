@@ -1,4 +1,4 @@
-import { defineStates, defineEffects, createMachine, bindEffects } from "matchina";
+import { defineStates, defineEffects, createMachine, bindEffects, withSubscribe } from "matchina";
 
 export const dialogEffects = defineEffects({
   OpenDialog:   undefined,
@@ -14,7 +14,7 @@ export function createDialogMachine() {
     Closing: () => ({ effects: [dialogEffects.CloseDialog(), dialogEffects.AnimateClose()] }),
   });
 
-  return createMachine(
+  return withSubscribe(createMachine(
     states,
     {
       Closed:  { open:  "Opening", reset: "Closed" },
@@ -23,7 +23,7 @@ export function createDialogMachine() {
       Closing: { done:  "Closed",  open:  "Opening", reset: "Closed" },
     },
     "Closed"
-  );
+  ));
 }
 
 export type DialogMachine = ReturnType<typeof createDialogMachine>;

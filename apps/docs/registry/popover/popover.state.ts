@@ -1,4 +1,4 @@
-import { defineStates, defineEffects, createMachine, bindEffects } from "matchina";
+import { defineStates, defineEffects, createMachine, bindEffects, withSubscribe } from "matchina";
 
 // ---------------------------------------------------------------------------
 // Effects — the contract between machine and effector
@@ -22,7 +22,7 @@ export function createPopoverMachine() {
     Closing: () => ({ effects: [popoverEffects.StopPositioner(), popoverEffects.AnimateClose()] }),
   });
 
-  return createMachine(
+  return withSubscribe(createMachine(
     states,
     {
       Closed:  { open:  "Opening" },
@@ -31,7 +31,7 @@ export function createPopoverMachine() {
       Closing: { done:  "Closed",  open:  "Opening", reset: "Closed" },
     },
     "Closed"
-  );
+  ));
 }
 
 export type PopoverMachine = ReturnType<typeof createPopoverMachine>;

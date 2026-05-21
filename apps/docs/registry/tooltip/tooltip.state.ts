@@ -1,4 +1,4 @@
-import { defineStates, defineEffects, createMachine, bindEffects } from "matchina";
+import { defineStates, defineEffects, createMachine, bindEffects, withSubscribe } from "matchina";
 
 export const tooltipEffects = defineEffects({
   StartOpenDelay:  undefined,
@@ -18,7 +18,7 @@ export function createTooltipMachine(openDelay = 600, closeDelay = 300) {
     Closing:     () => ({ effects: [tooltipEffects.StopPositioner(), tooltipEffects.AnimateClose()] }),
   });
 
-  return createMachine(
+  return withSubscribe(createMachine(
     states,
     {
       Closed:     { enter: "OpenDelay",  reset: "Closed" },
@@ -29,7 +29,7 @@ export function createTooltipMachine(openDelay = 600, closeDelay = 300) {
       Closing:    { done:  "Closed",     enter: "OpenDelay", reset: "Closed" },
     },
     "Closed"
-  );
+  ));
 }
 
 export type TooltipMachine = ReturnType<typeof createTooltipMachine>;
