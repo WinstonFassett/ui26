@@ -139,6 +139,7 @@ export function TooltipContent({ children, className }: TooltipContentProps) {
   const key = useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
     () => machine.getState().key,
+    () => machine.getState().key,
   );
   const isVisible = key === "Open" || key === "Opening" || key === "CloseDelay";
   const isClosing = key === "Closing";

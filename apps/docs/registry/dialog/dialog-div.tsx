@@ -101,6 +101,7 @@ export function DialogContent({ children, className }: DialogContentProps) {
   const key = useSyncExternalStore(
     (cb) => machine.subscribe!(() => cb()),
     () => machine.getState().key,
+    () => machine.getState().key,
   );
   const isOpen = key === "Open" || key === "Opening";
   const isClosing = key === "Closing";

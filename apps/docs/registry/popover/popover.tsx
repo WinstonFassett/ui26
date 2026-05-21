@@ -30,6 +30,7 @@ function usePopoverStore(machine: PopoverMachine) {
   return useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
     () => machine.getState().key,
+    () => machine.getState().key,
   );
 }
 

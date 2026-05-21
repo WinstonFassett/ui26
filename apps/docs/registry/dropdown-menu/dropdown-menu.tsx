@@ -109,6 +109,7 @@ export function DropdownMenuTrigger({ children, className, asChild = false, ...p
   const key = useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
     () => machine.getState().key,
+    () => machine.getState().key,
   );
   const isOpen = key === "Open" || key === "Opening";
 
@@ -156,6 +157,7 @@ export function DropdownMenuContent({ children, className }: DropdownMenuContent
   const { machine, floatingRef } = useDropdownCtx();
   const key = useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
+    () => machine.getState().key,
     () => machine.getState().key,
   );
   const isOpen = key === "Open" || key === "Opening";
