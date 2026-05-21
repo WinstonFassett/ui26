@@ -50,6 +50,7 @@ const STATEFUL_DEPS = [...BASE_DEPS, "matchina", "@floating-ui/dom"];
 const JS_ONLY_COMPONENTS = new Set([
   "dialog", "popover", "tooltip", "dropdown-menu",
   "dialog-native", "popover-native", "tooltip-native",
+  "dialog-bits-ui", "dialog-vanilla",
 ]);
 
 export const COMPONENTS: ComponentMeta[] = [
@@ -245,15 +246,29 @@ export const COMPONENTS: ComponentMeta[] = [
   {
     name: "dialog",
     title: "Dialog",
-    description: "Modal dialog with Matchina state machine. React uses Radix DialogPrimitive; Svelte uses bits-ui Dialog. Both support SSR slot content and distant trigger.",
-    dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog", "bits-ui"],
+    description: "Modal dialog with Radix (React) and vanilla DOM behaviors (Svelte). Machine owns state, effects, and ARIA.",
+    dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog"],
     registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
   },
   {
     name: "dialog-native",
     title: "Dialog (Native)",
     description: "Modal dialog using the native <dialog> element — browser-native focus trap, scroll lock, and ::backdrop. Svelte only.",
-    dependencies: [...BASE_DEPS, "matchina"],
+    dependencies: [...BASE_DEPS],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dialog-bits-ui",
+    title: "Dialog (bits-ui)",
+    description: "Modal dialog using bits-ui for focus trap, scroll lock, and portal. Svelte only.",
+    dependencies: [...BASE_DEPS, "bits-ui"],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dialog-vanilla",
+    title: "Dialog (Vanilla)",
+    description: "Modal dialog with fully owned DOM behaviors — focus trap, scroll lock, aria-hidden — via dom-behaviors.ts. No external primitive deps. Svelte only.",
+    dependencies: [...BASE_DEPS],
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
   {
@@ -267,7 +282,8 @@ export const COMPONENTS: ComponentMeta[] = [
 
 export function supportsFramework(name: string, fw: Framework): boolean {
   if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
-  if (fw === "react" && (name === "tooltip-native" || name === "popover-native" || name === "dialog-native")) return false;
+  const svelteOnly = ["tooltip-native", "popover-native", "dialog-native", "dialog-bits-ui", "dialog-vanilla"];
+  if (fw === "react" && svelteOnly.includes(name)) return false;
   return true;
 }
 
@@ -300,9 +316,12 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
 
   // Stateful components: ship state machine alongside component file
   if (JS_ONLY_COMPONENTS.has(name)) {
-    // Native variants: only the .svelte file — state + tv come via registryDependency on base
-    if (name.endsWith("-native")) {
-      return [{ path: `${name.split("-native")[0]}/${name}.svelte`, type: "registry:ui" }];
+    // Variant suffixes: only the .svelte file — state + tv come via registryDependency on base
+    for (const suffix of ["-native", "-bits-ui", "-vanilla"]) {
+      if (name.endsWith(suffix)) {
+        const base = name.slice(0, -suffix.length);
+        return [{ path: `${base}/${name}.svelte`, type: "registry:ui" }];
+      }
     }
     return [
       { path: `${name}/${name}.${ext}`, type: "registry:ui" },
