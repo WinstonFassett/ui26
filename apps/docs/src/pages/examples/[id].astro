@@ -1,6 +1,6 @@
 ---
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
-import { ExampleViewer } from "@/components/livecode/ExampleViewer";
+import ExampleViewer from "@/components/livecode/ExampleViewer.astro";
 import { getSamples } from "@/samples";
 import { prerenderFiles } from "@/lib/prerender-source";
 
@@ -93,7 +93,6 @@ const region = {
           title={sample.title}
           description={sample.description}
           deps={sample.registryDependencies ?? []}
-          client:load
         />
       </div>
     </main>

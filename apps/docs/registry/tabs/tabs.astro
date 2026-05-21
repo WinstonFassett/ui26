@@ -1,97 +1,130 @@
 ---
 /**
- * Tabs.astro — SSR-first, no framework, no island.
- * Mirrors CodeTabs.astro. All content server-rendered; vanilla custom
- * element handles switching. First tab visible in HTML, rest hidden.
+ * Tabs.astro — composition-based, progressively enhanced.
  *
- * Usage (prop-driven, content as strings):
- *   <Tabs tabs={[
- *     { label: "Account", content: "Manage your account." },
- *     { label: "Password", content: "Update your password." },
- *   ]} />
+ * Reads <TabItem label="..."> children, generates radio/label tablist
+ * sized to the actual child count, emits per-instance CSS for no-JS switching.
  *
- * For rich content (code blocks, components), use Starlight's <Tabs>/<TabItem>
- * from '@astrojs/starlight/components' — it handles arbitrary slot content.
+ * Usage:
+ *   <Tabs>
+ *     <TabItem label="Preview">...</TabItem>
+ *     <TabItem label="Code">...</TabItem>
+ *   </Tabs>
  */
-import { tabsList, tabsTrigger, tabsContent } from "./tabs.tv";
+import { tabsList, tabsTrigger } from "./tabs.tv";
 import { cn } from "../lib/utils";
-
-interface Tab {
-  label: string;
-  content: string;
-}
+import "./tabs.css";
 
 interface Props {
-  tabs: Tab[];
   defaultIndex?: number;
   class?: string;
+  id?: string;
 }
 
-const { tabs, defaultIndex = 0, class: className } = Astro.props;
-const id = Math.random().toString(36).slice(2, 8);
+const { defaultIndex = 0, class: className, id: providedId } = Astro.props;
+const uid = providedId ?? `tabs-${Math.random().toString(36).slice(2, 8)}`;
+
+const panelsHtml = await Astro.slots.render("default");
+const labels = [...panelsHtml.matchAll(/data-ui26-tab-item[^>]*data-label="([^"]+)"/g)].map((m) => m[1]);
+
+// Inject id + data-panel-index into each TabItem div in render order.
+let idx = 0;
+const enhancedPanels = panelsHtml.replace(/data-ui26-tab-item/g, () => {
+  const i = idx++;
+  return `data-ui26-tab-item data-panel-index="${i}" aria-labelledby="${uid}-label-${i}"`;
+});
+
+const instanceCss = labels
+  .map((_, i) =>
+    `ui26-tabs:has(> #${uid}-${i}:checked) > .ui26-tab-panel[data-panel-index="${i}"]{display:block}` +
+    `ui26-tabs:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{background:var(--background);color:var(--foreground);box-shadow:var(--shadow-sm,0 1px 2px 0 rgb(0 0 0 / 0.05))}`
+  )
+  .join("");
 ---
 
-<div class={cn("w-full", className)} data-ui26-tabs={id}>
-  <div class={tabsList()} role="tablist">
-    {tabs.map((tab, i) => (
-      <button
+<ui26-tabs class={cn("ui26-tabs w-full block", className)} data-default={defaultIndex}>
+  {labels.map((_, i) => (
+    <input
+      type="radio"
+      class="sr-only"
+      name={uid}
+      id={`${uid}-${i}`}
+      checked={i === defaultIndex || undefined}
+    />
+  ))}
+
+  <div class={cn(tabsList(), "tablist")} role="tablist">
+    {labels.map((label, i) => (
+      <label
+        for={`${uid}-${i}`}
+        id={`${uid}-label-${i}`}
         role="tab"
-        type="button"
+        data-tab-index={i}
         aria-selected={i === defaultIndex ? "true" : "false"}
         tabindex={i === defaultIndex ? 0 : -1}
-        data-state={i === defaultIndex ? "active" : "inactive"}
-        data-tab-index={i}
-        class={tabsTrigger()}
+        class={cn(tabsTrigger(), "ui26-tab-label")}
       >
-        {tab.label}
-      </button>
+        {label}
+      </label>
     ))}
   </div>
-  {tabs.map((tab, i) => (
-    <div
-      role="tabpanel"
-      data-state={i === defaultIndex ? "active" : "inactive"}
-      hidden={i !== defaultIndex}
-      class={tabsContent()}
-    >
-      <p class="text-sm text-muted-foreground">{tab.content}</p>
-    </div>
-  ))}
-</div>
+
+  <Fragment set:html={enhancedPanels} />
+</ui26-tabs>
+
+<style is:inline set:html={instanceCss}></style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-ui26-tabs]').forEach((root) => {
-    const triggers = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
-    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+  class Ui26Tabs extends HTMLElement {
+    connectedCallback() {
+      const inputs = [...this.children].filter(
+        (c): c is HTMLInputElement => c.tagName === "INPUT" && (c as HTMLInputElement).type === "radio"
+      );
+      const tablist = this.querySelector(":scope > .tablist");
+      const labels = tablist ? [...tablist.querySelectorAll<HTMLElement>(":scope > [data-tab-index]")] : [];
+      const panels = [...this.querySelectorAll<HTMLElement>(":scope > [role='tabpanel']")];
 
-    triggers.forEach((btn, i) => {
-      btn.addEventListener('click', () => switchTab(i));
-      btn.addEventListener('keydown', (e) => {
-        const next =
-          e.key === 'ArrowRight' ? i + 1 :
-          e.key === 'ArrowLeft'  ? i - 1 :
-          e.key === 'Home'       ? 0 :
-          e.key === 'End'        ? triggers.length - 1 :
-          null;
-        if (next === null || !triggers[next]) return;
-        e.preventDefault();
-        switchTab(next);
-        triggers[next].focus();
-      });
-    });
+      const sync = () => {
+        const activeIdx = inputs.findIndex((r) => r.checked);
+        labels.forEach((l, i) => {
+          const active = i === activeIdx;
+          l.setAttribute("aria-selected", String(active));
+          l.setAttribute("tabindex", active ? "0" : "-1");
+          l.dataset.state = active ? "active" : "inactive";
+        });
+        panels.forEach((p, i) => {
+          p.dataset.state = i === activeIdx ? "active" : "inactive";
+        });
+      };
 
-    function switchTab(index: number) {
-      triggers.forEach((btn, i) => {
-        const active = i === index;
-        btn.setAttribute('aria-selected', String(active));
-        btn.setAttribute('tabindex', active ? '0' : '-1');
-        btn.dataset.state = active ? 'active' : 'inactive';
+      inputs.forEach((input, i) => {
+        input.addEventListener("change", () => {
+          sync();
+          labels[i]?.focus();
+        });
       });
-      panels.forEach((panel, i) => {
-        const active = i === index;
-        panel.hidden = !active;
-        panel.dataset.state = active ? 'active' : 'inactive';
+
+      labels.forEach((label, i) => {
+        label.addEventListener("keydown", (e) => {
+          const next =
+            e.key === "ArrowRight" ? i + 1 :
+            e.key === "ArrowLeft"  ? i - 1 :
+            e.key === "Home"       ? 0 :
+            e.key === "End"        ? inputs.length - 1 :
+            null;
+          if (next === null || !inputs[next]) return;
+          e.preventDefault();
+          inputs[next].checked = true;
+          sync();
+          labels[next]?.focus();
+        });
       });
+
+      sync();
     }
-  });
+  }
+
+  if (!customElements.get("ui26-tabs")) {
+    customElements.define("ui26-tabs", Ui26Tabs);
+  }
 </script>

@@ -1,0 +1,27 @@
+ui26-fwtabs .ui26-fw-panel { display: none; }
+
+ui26-fwtabs:has(> input[value="react"]:checked) .ui26-fw-panel[data-fw-panel="react"],
+ui26-fwtabs:has(> input[value="svelte"]:checked) .ui26-fw-panel[data-fw-panel="svelte"],
+ui26-fwtabs:has(> input[value="astro"]:checked) .ui26-fw-panel[data-fw-panel="astro"],
+ui26-fwtabs:has(> input[value="json-render"]:checked) .ui26-fw-panel[data-fw-panel="json-render"] {
+  display: block;
+}
+
+ui26-fwtabs:has(> input[value="react"]:checked) .ui26-fw-label[data-fw="react"],
+ui26-fwtabs:has(> input[value="svelte"]:checked) .ui26-fw-label[data-fw="svelte"],
+ui26-fwtabs:has(> input[value="astro"]:checked) .ui26-fw-label[data-fw="astro"],
+ui26-fwtabs:has(> input[value="json-render"]:checked) .ui26-fw-label[data-fw="json-render"] {
+  border-color: hsl(var(--accent));
+  color: hsl(var(--foreground));
+}
+
+ui26-fwtabs:has(> input[value="react"]:checked) .ui26-fw-filename[data-fw-filename="react"],
+ui26-fwtabs:has(> input[value="svelte"]:checked) .ui26-fw-filename[data-fw-filename="svelte"],
+ui26-fwtabs:has(> input[value="astro"]:checked) .ui26-fw-filename[data-fw-filename="astro"],
+ui26-fwtabs:has(> input[value="json-render"]:checked) .ui26-fw-filename[data-fw-filename="json-render"],
+ui26-fwtabs:has(> input[value="react"]:checked) .ui26-fw-label-bottom[data-fw-label="react"],
+ui26-fwtabs:has(> input[value="svelte"]:checked) .ui26-fw-label-bottom[data-fw-label="svelte"],
+ui26-fwtabs:has(> input[value="astro"]:checked) .ui26-fw-label-bottom[data-fw-label="astro"],
+ui26-fwtabs:has(> input[value="json-render"]:checked) .ui26-fw-label-bottom[data-fw-label="json-render"] {
+  display: inline;
+}

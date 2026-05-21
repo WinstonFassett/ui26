@@ -1,0 +1,61 @@
+---
+import Tabs from "@registry/tabs/tabs.astro";
+import TabItem from "@registry/tabs/TabItem.astro";
+import { BlockPreview } from "./BlockPreview";
+import SourcePane from "./SourcePane.astro";
+import type { SourcePaneRegion } from "./SourcePane.astro";
+import type { Spec } from "@/lib/spec-to-code";
+
+interface Props {
+  spec: Spec;
+  region: SourcePaneRegion;
+  title: string;
+  description?: string;
+  deps?: string[];
+}
+
+const { spec, region, title, description, deps } = Astro.props;
+---
+
+<div class="flex flex-col h-full bg-background">
+
+  <div class="flex items-end justify-between gap-4 px-3.5 border-b border-border shrink-0">
+    <div class="min-w-0 py-3">
+      <div class="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
+        {region.section}
+      </div>
+      <div class="text-[13px] font-semibold text-foreground truncate">
+        {title}
+      </div>
+    </div>
+  </div>
+
+  <Tabs class="flex flex-col flex-1 min-h-0">
+
+    <TabItem label="Preview" class="flex flex-col h-full">
+      <div class="flex-1 p-8 flex items-center justify-center">
+        <div class="w-full max-w-200">
+          <BlockPreview spec={spec} client:load />
+        </div>
+      </div>
+      {(description || (deps && deps.length > 0)) && (
+        <div class="shrink-0 px-5 py-2.5 border-t border-border flex items-baseline gap-4">
+          {description && (
+            <p class="text-[11.5px] text-muted-foreground leading-snug">{description}</p>
+          )}
+          {deps && deps.length > 0 && (
+            <span class="font-mono text-[10px] text-muted-foreground/60 whitespace-nowrap shrink-0">
+              {deps.join(" · ")}
+            </span>
+          )}
+        </div>
+      )}
+    </TabItem>
+
+    <TabItem label="Code" class="h-full">
+      <SourcePane region={region} hideHeader className="h-full" />
+    </TabItem>
+
+  </Tabs>
+
+</div>

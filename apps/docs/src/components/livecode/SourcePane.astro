@@ -1,0 +1,144 @@
+---
+import { cn } from "@/lib/utils";
+import "./source-pane.css";
+import { SHIKI_CLASSES } from "@/lib/shiki-classes";
+import { FRAMEWORKS, FRAMEWORK_LABELS } from "@/lib/spec-to-code";
+import { CopyBtn } from "./CopyBtn";
+import { PlayroomLink } from "./PlayroomLink";
+import type { RenderedFiles } from "@/lib/prerender-source";
+
+export interface SourcePaneRegion {
+  id: string;
+  label: string;
+  section: string;
+  files: RenderedFiles;
+}
+
+interface Props {
+  region: SourcePaneRegion;
+  hideHeader?: boolean;
+  class?: string;
+  className?: string;
+}
+
+const { region, hideHeader, class: cls, className } = Astro.props;
+const uid = `fwtabs-${region.id}`;
+---
+
+<div class={cn("flex flex-col bg-card border border-border h-full", cls, className)}>
+
+  {!hideHeader && (
+    <div class="flex items-center gap-2 px-3.5 py-3 border-b border-border">
+      <div class="flex-1 min-w-0">
+        <div class="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
+          {region.section}
+        </div>
+        <div class="text-[13px] font-semibold text-foreground truncate">
+          {region.label}
+        </div>
+      </div>
+      <CopyBtn text={region.files.react.code} client:load />
+    </div>
+  )}
+
+  <!-- Framework picker: radio-based, same progressive enhancement pattern as tabs -->
+  <ui26-fwtabs data-uid={uid} class="flex flex-col flex-1 min-h-0">
+    {FRAMEWORKS.map((f, i) => (
+      <input
+        type="radio"
+        class="sr-only"
+        name={uid}
+        id={`${uid}-${f}`}
+        value={f}
+        checked={f === "react" || undefined}
+      />
+    ))}
+
+    <div class="flex items-stretch border-b border-border">
+      {FRAMEWORKS.map((f) => (
+        <label
+          for={`${uid}-${f}`}
+          data-fw={f}
+          class="px-3 py-2 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] -mb-px transition-colors cursor-pointer border-transparent text-muted-foreground hover:text-foreground ui26-fw-label"
+        >
+          {FRAMEWORK_LABELS[f]}
+        </label>
+      ))}
+      <span class="flex-1" />
+      {FRAMEWORKS.map((f) => (
+        <span
+          data-fw-filename={f}
+          class="hidden self-center px-3 font-mono text-[10px] tracking-wider lowercase text-muted-foreground ui26-fw-filename"
+        >
+          {region.files[f]?.filename}
+        </span>
+      ))}
+    </div>
+
+    <!-- All four code blocks SSR'd; CSS shows the active one -->
+    <div class="flex-1 overflow-auto">
+      {FRAMEWORKS.map((f) => (
+        <div
+          data-fw-panel={f}
+          class={cn(SHIKI_CLASSES, "ui26-fw-panel hidden")}
+          set:html={region.files[f]?.html ?? ""}
+        />
+      ))}
+    </div>
+
+    <div class="flex items-center justify-between px-3.5 py-2 border-t border-border bg-card shrink-0">
+      {FRAMEWORKS.map((f) => (
+        <span data-fw-label={f} class="font-mono text-[9px] uppercase tracking-wider text-muted-foreground ui26-fw-label-bottom hidden">
+          ui26/{f}
+        </span>
+      ))}
+      <div class="ml-auto flex items-center gap-2">
+        {hideHeader && <CopyBtn text={region.files.react.code} client:load />}
+        <PlayroomLink code={region.files.react.code} client:load />
+      </div>
+    </div>
+  </ui26-fwtabs>
+
+</div>
+
+
+<script>
+  const KEY = "ui26-framework";
+  type Fw = "react" | "svelte" | "astro" | "json-render";
+
+  function isFw(v: unknown): v is Fw {
+    return v === "react" || v === "svelte" || v === "astro" || v === "json-render";
+  }
+
+  class Ui26FwTabs extends HTMLElement {
+    connectedCallback() {
+      const inputs = [...this.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
+
+      // Restore from localStorage
+      const stored = localStorage.getItem(KEY);
+      if (isFw(stored)) {
+        const target = inputs.find(i => i.value === stored);
+        if (target) target.checked = true;
+      }
+
+      // Persist on change + sync CopyBtn text
+      inputs.forEach(input => {
+        input.addEventListener("change", () => {
+          if (isFw(input.value)) localStorage.setItem(KEY, input.value);
+        });
+      });
+
+      // Sync across tabs/windows
+      window.addEventListener("storage", (e) => {
+        if (e.key === KEY && isFw(e.newValue)) {
+          const target = inputs.find(i => i.value === e.newValue);
+          if (target) target.checked = true;
+        }
+      });
+    }
+  }
+
+  if (!customElements.get("ui26-fwtabs")) {
+    customElements.define("ui26-fwtabs", Ui26FwTabs);
+  }
+</script>
