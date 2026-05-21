@@ -4,7 +4,7 @@
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
   import { dialogTitle, dialogDescription } from "./dialog.tv";
-  import { createDialogMachine, bindDialogEffects } from "./dialog.state";
+  import { createDialogMachine, bindDialogEffects } from "./dialog-state.matchina";
   import { withSubscribe } from "matchina";
 
   type Props = {

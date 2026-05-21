@@ -11,7 +11,7 @@ import { useMachine } from "matchina/react";
 import { cn } from "../lib/utils";
 import { Button } from "../button/button";
 import { dialogOverlay, dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
-import { createDialogMachine, bindDialogEffects, type DialogMachine } from "./dialog.state";
+import { createDialogMachine, bindDialogEffects, type DialogMachine } from "./dialog-state.matchina";
 
 // ---------------------------------------------------------------------------
 // Context

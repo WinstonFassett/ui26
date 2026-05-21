@@ -50,7 +50,7 @@ function DistantDialogListener() {
 export function DialogDynamicDemo() {
   const [data, setData] = React.useState<{ name: string; email: string } | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const machineRef = React.useRef<import("./dialog.state").DialogMachine | null>(null);
+  const machineRef = React.useRef<import("./dialog-state.matchina").DialogMachine | null>(null);
 
   async function handleClick() {
     setLoading(true);

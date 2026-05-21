@@ -3,8 +3,7 @@
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
   import { dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
-  import { createDialogMachine, bindDialogEffects } from "./dialog.state";
-  import { withSubscribe } from "matchina";
+  import { createDialogMachine, bindDialogEffects } from "./dialog-state.vanilla";
 
   type Props = {
     class?: string;
@@ -34,10 +33,9 @@
   let dialogEl: HTMLDialogElement | null = $state(null);
 
   const machine = createDialogMachine();
-  const machineStore = withSubscribe(machine);
 
   let stateKey = $state("Closed");
-  machineStore.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
+  machine.subscribe((key) => { stateKey = key; });
 
   let loading = $state(false);
 
