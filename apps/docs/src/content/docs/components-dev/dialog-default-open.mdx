@@ -1,12 +1,12 @@
 ---
 topic: component-dev
 title: Dialog — defaultOpen
-description: Native dialog open on mount with SSR'd slot content — content is in the HTML source before JS hydrates.
+description: Native dialog open by default — open attribute in SSR HTML, visible before JS runs.
 ---
 
 import DialogNative from "@registry/dialog/dialog-native.svelte";
 
-Content is server-rendered by Astro into the slot — it's in the HTML source before JS hydrates. The Svelte island opens the dialog on mount without stomping the existing DOM.
+The `open` attribute is set in the SSR'd HTML — the dialog is visible before JS loads. When Svelte hydrates it reads `dialogEl.open` and calls `showModal()` without stomping the existing DOM.
 
 <div class="not-content my-6">
   <DialogNative client:load defaultOpen triggerLabel="Reopen" title="Server-rendered content">

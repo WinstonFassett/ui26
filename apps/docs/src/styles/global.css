@@ -21,6 +21,35 @@
 @import '../../registry/all-themes.css';
 @import './starlight-ui26.css';
 
+/* Starlight sets data-theme="dark" (no prefix) before our ThemeProvider JS runs.
+ * Map it to editorial-dark vars so no-JS rendering looks correct. */
+[data-theme="dark"] {
+  --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: var(--font-serif);
+  --radius: 0.125rem;
+  --background: #0e0e0f;
+  --foreground: #ececec;
+  --card: #141416;
+  --card-foreground: #ececec;
+  --popover: #141416;
+  --popover-foreground: #ececec;
+  --primary: #8fb9d6;
+  --primary-foreground: #15130f;
+  --secondary: #262628;
+  --secondary-foreground: #ececec;
+  --muted: #1a1a1c;
+  --muted-foreground: #8a8a90;
+  --accent: #8fb9d6;
+  --accent-foreground: #15130f;
+  --destructive: #b54a4a;
+  --destructive-foreground: #0e0e0f;
+  --border: #262628;
+  --border-soft: #1e1e20;
+  --input: #262628;
+  --ring: #8fb9d6;
+}
+
 /* Tailwind's `dark:` variant fires for any theme ending in `dark`
  * (`[data-theme="editorial-dark"]`, `[data-theme="tix-dark"]`, etc.).
  * Themes are compound keys — see registry/all-themes.css.

@@ -57,10 +57,12 @@
   $effect(() => {
     if (!dialogEl) return;
 
-    // Read existing DOM state — don't stomp if already open (e.g. SSR defaultOpen)
-    const initiallyOpen = dialogEl.open || defaultOpen;
-    if (initiallyOpen) {
-      dialogEl.showModal();
+    if (defaultOpen) {
+      // SSR may have set the open attribute (non-modal); promote to modal
+      if (!dialogEl.matches(":modal")) {
+        if (dialogEl.open) dialogEl.close();
+        dialogEl.showModal();
+      }
       machine.send("open");
       machine.send("ready");
     }
@@ -123,6 +125,7 @@
 
 <dialog
   bind:this={dialogEl}
+  open={defaultOpen || undefined}
   aria-labelledby={titleId}
   aria-describedby={description ? descId : undefined}
   data-state={isClosing ? "closed" : isOpen ? "open" : "closed"}
