@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import "./source-pane.css";
 import { SHIKI_CLASSES } from "@/lib/shiki-classes";
 import { FRAMEWORKS, FRAMEWORK_LABELS } from "@/lib/spec-to-code";
-import { CopyBtn } from "./CopyBtn";
 import { PlayroomLink } from "./PlayroomLink";
 import type { RenderedFiles } from "@/lib/prerender-source";
 
@@ -37,7 +36,10 @@ const uid = `fwtabs-${region.id}`;
           {region.label}
         </div>
       </div>
-      <CopyBtn text={region.files.react.code} client:load />
+      <button type="button" class="ui26-copy inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider border transition-colors bg-foreground text-background border-foreground hover:bg-foreground/90" style="display:none">
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="2.5" width="5.5" height="5.5" /><path d="M1 6V1h5" /></svg>
+        <span class="ui26-copy-label">Copy</span>
+      </button>
     </div>
   )}
 
@@ -80,6 +82,7 @@ const uid = `fwtabs-${region.id}`;
       {FRAMEWORKS.map((f) => (
         <div
           data-fw-panel={f}
+          data-code={region.files[f]?.code ?? ""}
           class={cn(SHIKI_CLASSES, "ui26-fw-panel hidden")}
           set:html={region.files[f]?.html ?? ""}
         />
@@ -93,8 +96,13 @@ const uid = `fwtabs-${region.id}`;
         </span>
       ))}
       <div class="ml-auto flex items-center gap-2">
-        {hideHeader && <CopyBtn text={region.files.react.code} client:load />}
-        <PlayroomLink code={region.files.react.code} client:load />
+        {hideHeader && (
+          <button type="button" class="ui26-copy inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider border transition-colors bg-foreground text-background border-foreground hover:bg-foreground/90" style="display:none">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="2.5" width="5.5" height="5.5" /><path d="M1 6V1h5" /></svg>
+            <span class="ui26-copy-label">Copy</span>
+          </button>
+        )}
+        {import.meta.env.DEV && <PlayroomLink code={region.files.react.code} client:load />}
       </div>
     </div>
   </ui26-fwtabs>
@@ -112,7 +120,37 @@ const uid = `fwtabs-${region.id}`;
 
   class Ui26FwTabs extends HTMLElement {
     connectedCallback() {
-      const inputs = [...this.querySelectorAll<HTMLInputElement>('input[type="radio"]')];
+      const inputs = [...this.children].filter(
+        (c): c is HTMLInputElement => c.tagName === "INPUT" && (c as HTMLInputElement).type === "radio"
+      );
+      const root = this.closest("div") ?? this.parentElement ?? this;
+      const copyBtns = [...root.querySelectorAll<HTMLButtonElement>(".ui26-copy")];
+
+      const activeCode = () => {
+        const checked = inputs.find(i => i.checked);
+        const fw = checked?.value;
+        const panel = this.querySelector<HTMLElement>(`[data-fw-panel="${fw}"]`);
+        return panel?.dataset.code ?? "";
+      };
+
+      copyBtns.forEach(btn => {
+        btn.style.display = "";
+        btn.addEventListener("click", () => {
+          navigator.clipboard?.writeText(activeCode()).catch(() => {});
+          const label = btn.querySelector<HTMLElement>(".ui26-copy-label");
+          if (label) {
+            const orig = label.textContent;
+            label.textContent = "Copied";
+            btn.classList.add("bg-accent", "text-accent-foreground", "border-accent");
+            btn.classList.remove("bg-foreground", "text-background", "border-foreground");
+            setTimeout(() => {
+              label.textContent = orig;
+              btn.classList.remove("bg-accent", "text-accent-foreground", "border-accent");
+              btn.classList.add("bg-foreground", "text-background", "border-foreground");
+            }, 900);
+          }
+        });
+      });
 
       // Restore from localStorage
       const stored = localStorage.getItem(KEY);
@@ -121,7 +159,7 @@ const uid = `fwtabs-${region.id}`;
         if (target) target.checked = true;
       }
 
-      // Persist on change + sync CopyBtn text
+      // Persist on change
       inputs.forEach(input => {
         input.addEventListener("change", () => {
           if (isFw(input.value)) localStorage.setItem(KEY, input.value);
