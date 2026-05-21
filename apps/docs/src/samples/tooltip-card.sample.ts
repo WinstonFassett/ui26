@@ -27,7 +27,7 @@ const sample: Sample = {
         children: ["assign-tooltip", "docs-tooltip", "cmd-tooltip"],
       },
 
-      // Assign button with tooltip
+      // Assign button
       "assign-tooltip": {
         type: "Tooltip",
         props: {},
@@ -46,7 +46,7 @@ const sample: Sample = {
       },
       "assign-tip-text": { type: "Text", props: { content: "Assign ticket  A", className: "text-[11px]" }, children: [] },
 
-      // Docs button with tooltip
+      // Docs button
       "docs-tooltip": {
         type: "Tooltip",
         props: {},
@@ -65,7 +65,7 @@ const sample: Sample = {
       },
       "docs-tip-text": { type: "Text", props: { content: "Open docs", className: "text-[11px]" }, children: [] },
 
-      // Command palette button with tooltip
+      // Command palette button
       "cmd-tooltip": {
         type: "Tooltip",
         props: {},

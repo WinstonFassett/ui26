@@ -43,6 +43,14 @@ const FIELD_SUBS = [
 
 const BASE_DEPS = ["tailwind-variants"];
 const BASE_REGISTRY_DEPS = ["utils"];
+const STATEFUL_DEPS = [...BASE_DEPS, "matchina", "@floating-ui/dom"];
+
+// These components require JS — no meaningful Astro-only variant exists.
+// filesFor() returns [] for astro; getStaticPaths skips those routes.
+const JS_ONLY_COMPONENTS = new Set([
+  "dialog", "popover", "tooltip", "dropdown-menu",
+  "dialog-native", "popover-native", "tooltip-native",
+]);
 
 export const COMPONENTS: ComponentMeta[] = [
   {
@@ -210,12 +218,62 @@ export const COMPONENTS: ComponentMeta[] = [
     name: "tooltip",
     title: "Tooltip",
     description: "Hover tooltip with open/close delay, Floating UI positioning, and Matchina state machine. React (compound) and Svelte (single-file).",
-    dependencies: [...BASE_DEPS, "matchina", "@floating-ui/dom"],
+    dependencies: STATEFUL_DEPS,
     registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "tooltip-native",
+    title: "Tooltip (Native)",
+    description: "Tooltip using the Popover API (popover=hint) and CSS anchor positioning, with Floating UI fallback. Svelte only.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "tooltip"],
+  },
+  {
+    name: "popover",
+    title: "Popover",
+    description: "Floating popover panel with Floating UI positioning and Matchina state machine. React and Svelte.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "popover-native",
+    title: "Popover (Native)",
+    description: "Popover using the Popover API and CSS anchor positioning, with Floating UI fallback. Svelte only.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "popover"],
+  },
+  {
+    name: "dialog",
+    title: "Dialog",
+    description: "Modal dialog with Matchina state machine. React uses Radix DialogPrimitive; Svelte uses bits-ui Dialog. Both support SSR slot content and distant trigger.",
+    dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog", "bits-ui"],
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "dialog-native",
+    title: "Dialog (Native)",
+    description: "Modal dialog using the native <dialog> element — browser-native focus trap, scroll lock, and ::backdrop. Svelte only.",
+    dependencies: [...BASE_DEPS, "matchina"],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dropdown-menu",
+    title: "Dropdown Menu",
+    description: "Dropdown menu reusing the Popover state machine. Floating UI positioning, outside-click dismissal, section/heading support. React and Svelte.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "popover"],
   },
 ];
 
+export function supportsFramework(name: string, fw: Framework): boolean {
+  if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
+  if (fw === "react" && (name === "tooltip-native" || name === "popover-native" || name === "dialog-native")) return false;
+  return true;
+}
+
 export function filesFor(name: string, fw: Framework): RegistryFile[] {
+  if (!supportsFramework(name, fw)) return [];
+
   const ext = EXT[fw];
 
   function withSubs(subs: readonly string[]): RegistryFile[] {
@@ -240,11 +298,18 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
   if (name === "radio-group") return withSubs(RADIO_GROUP_SUBS);
   if (name === "field") return withSubs(FIELD_SUBS);
 
-  if (name === "tooltip") return [
-    { path: `${name}/${name}.${ext}`, type: "registry:ui" },
-    { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
-    { path: `${name}/${name}.state.ts`, type: "registry:ui" },
-  ];
+  // Stateful components: ship state machine alongside component file
+  if (JS_ONLY_COMPONENTS.has(name)) {
+    // Native variants: only the .svelte file — state + tv come via registryDependency on base
+    if (name.endsWith("-native")) {
+      return [{ path: `${name.split("-native")[0]}/${name}.svelte`, type: "registry:ui" }];
+    }
+    return [
+      { path: `${name}/${name}.${ext}`, type: "registry:ui" },
+      { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
+      { path: `${name}/${name}.state.ts`, type: "registry:ui" },
+    ];
+  }
 
   return [
     { path: `${name}/${name}.${ext}`, type: "registry:ui" },
