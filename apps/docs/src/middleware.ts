@@ -6,9 +6,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const html = await response.text();
     // Inject default data-theme="editorial-dark" on <html> for no-JS rendering
     // The ThemeProvider inline script will overwrite this immediately on JS load
+    // Always overwrite Starlight's bare data-theme="dark" with our compound default
     const patched = html.replace(/<html([^>]*)>/, (_, attrs) => {
-      if (attrs.includes("data-theme")) return `<html${attrs}>`;
-      return `<html${attrs} data-theme="editorial-dark">`;  // matches ThemeProvider default (editorial + dark)
+      const cleaned = attrs.replace(/\s*data-theme="[^"]*"/, "");
+      return `<html${cleaned} data-theme="editorial-dark">`;
     });
     return new Response(patched, {
       status: response.status,
