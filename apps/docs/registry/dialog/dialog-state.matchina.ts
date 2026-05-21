@@ -3,16 +3,43 @@ import { defineStates, defineEffects, createMachine, bindEffects, withSubscribe 
 export type SlotPropsMap = Record<string, Record<string, string | boolean | number>>;
 
 export const dialogEffects = defineEffects({
-  OpenDialog:   undefined,
-  CloseDialog:  undefined,
-  AnimateClose: undefined,
-  SlotProps:    (props: SlotPropsMap) => props,
+  OpenDialog:      undefined,
+  CloseDialog:     undefined,
+  AnimateClose:    undefined,
+  SlotProps:       (props: SlotPropsMap) => props,
+  SaveFocus:       undefined,
+  RestoreFocus:    undefined,
+  HideBackground:  undefined,
+  ShowBackground:  undefined,
+  LockScroll:      undefined,
+  UnlockScroll:    undefined,
+  TrapFocus:       undefined,
+  ReleaseFocus:    undefined,
 });
 
-const closed  = () => ({ effects: [dialogEffects.SlotProps({ trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } })] });
-const opening = () => ({ effects: [dialogEffects.OpenDialog(), dialogEffects.SlotProps({ trigger: { "aria-expanded": true }, panel: { "data-state": "open" } })] });
-const open    = () => ({ effects: [dialogEffects.SlotProps({ trigger: { "aria-expanded": true }, panel: { "data-state": "open" } })] });
-const closing = () => ({ effects: [dialogEffects.CloseDialog(), dialogEffects.AnimateClose(), dialogEffects.SlotProps({ trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } })] });
+const closed  = () => ({ effects: [
+  dialogEffects.SlotProps({ trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } }),
+  dialogEffects.RestoreFocus(),
+] });
+const opening = () => ({ effects: [
+  dialogEffects.SaveFocus(),
+  dialogEffects.LockScroll(),
+  dialogEffects.HideBackground(),
+  dialogEffects.TrapFocus(),
+  dialogEffects.OpenDialog(),
+  dialogEffects.SlotProps({ trigger: { "aria-expanded": true }, panel: { "data-state": "open" } }),
+] });
+const open    = () => ({ effects: [
+  dialogEffects.SlotProps({ trigger: { "aria-expanded": true }, panel: { "data-state": "open" } }),
+] });
+const closing = () => ({ effects: [
+  dialogEffects.ReleaseFocus(),
+  dialogEffects.UnlockScroll(),
+  dialogEffects.ShowBackground(),
+  dialogEffects.CloseDialog(),
+  dialogEffects.AnimateClose(),
+  dialogEffects.SlotProps({ trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } }),
+] });
 
 export function createDialogMachine() {
   const states = defineStates({ Closed: closed, Opening: opening, Open: open, Closing: closing });
@@ -37,9 +64,17 @@ export type DialogSlotRefs = {
 };
 
 export type DialogEffectorHandlers = {
-  OpenDialog:   () => void;
-  CloseDialog:  () => void;
-  AnimateClose: () => void;
+  OpenDialog:      () => void;
+  CloseDialog:     () => void;
+  AnimateClose:    () => void;
+  SaveFocus?:      () => void;
+  RestoreFocus?:   () => void;
+  HideBackground?: () => void;
+  ShowBackground?: () => void;
+  LockScroll?:     () => void;
+  UnlockScroll?:   () => void;
+  TrapFocus?:      () => void;
+  ReleaseFocus?:   () => void;
 };
 
 export function bindDialogEffects(
@@ -60,5 +95,13 @@ export function bindDialogEffects(
         }
       }
     },
+    SaveFocus:      handlers.SaveFocus      ?? (() => {}),
+    RestoreFocus:   handlers.RestoreFocus   ?? (() => {}),
+    HideBackground: handlers.HideBackground ?? (() => {}),
+    ShowBackground: handlers.ShowBackground ?? (() => {}),
+    LockScroll:     handlers.LockScroll     ?? (() => {}),
+    UnlockScroll:   handlers.UnlockScroll   ?? (() => {}),
+    TrapFocus:      handlers.TrapFocus      ?? (() => {}),
+    ReleaseFocus:   handlers.ReleaseFocus   ?? (() => {}),
   });
 }

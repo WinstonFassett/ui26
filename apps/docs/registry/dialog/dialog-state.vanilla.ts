@@ -20,9 +20,17 @@ export type DialogSlotRefs = {
 };
 
 export type DialogEffectorHandlers = {
-  OpenDialog:   () => void;
-  CloseDialog:  () => void;
-  AnimateClose: () => void;
+  OpenDialog:    () => void;
+  CloseDialog:   () => void;
+  AnimateClose:  () => void;
+  SaveFocus?:    () => void;
+  RestoreFocus?: () => void;
+  HideBackground?:  () => void;
+  ShowBackground?:  () => void;
+  LockScroll?:   () => void;
+  UnlockScroll?: () => void;
+  TrapFocus?:    () => void;
+  ReleaseFocus?: () => void;
 };
 
 type KeyedState = { key: DialogStateKey };
@@ -58,8 +66,23 @@ export function createDialogMachine() {
     const ev: ChangeEvent = { type: next, from, to: { key } };
     listeners.forEach((fn) => fn(ev));
     if (slotRefs) applySlotProps(slotRefs, SLOT_PROPS[next]);
-    if (next === "Opening") handlers?.OpenDialog();
-    if (next === "Closing") { handlers?.CloseDialog(); handlers?.AnimateClose(); }
+    if (next === "Opening") {
+      handlers?.SaveFocus?.();
+      handlers?.LockScroll?.();
+      handlers?.HideBackground?.();
+      handlers?.TrapFocus?.();
+      handlers?.OpenDialog();
+    }
+    if (next === "Closing") {
+      handlers?.ReleaseFocus?.();
+      handlers?.UnlockScroll?.();
+      handlers?.ShowBackground?.();
+      handlers?.CloseDialog();
+      handlers?.AnimateClose();
+    }
+    if (next === "Closed") {
+      handlers?.RestoreFocus?.();
+    }
   }
 
   return {

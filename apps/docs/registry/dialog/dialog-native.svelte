@@ -4,6 +4,7 @@
   import { button } from "../button/button.tv";
   import { dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
   import { createDialogMachine, bindDialogEffects } from "./dialog-state.vanilla";
+  import { createFocusSaver } from "../lib/behaviors";
 
   type Props = {
     class?: string;
@@ -33,6 +34,10 @@
   let triggerEl: HTMLButtonElement | null = $state(null);
   let dialogEl: HTMLDialogElement | null = $state(null);
 
+  const titleId = `dialog-title-${Math.random().toString(36).slice(2)}`;
+  const descId  = `dialog-desc-${Math.random().toString(36).slice(2)}`;
+
+  const focusSaver = createFocusSaver();
   const machine = createDialogMachine();
 
   let stateKey = $state("Closed");
@@ -61,6 +66,8 @@
     }
 
     const unsubEffects = bindDialogEffects(machine, {
+      SaveFocus:   () => focusSaver.activate(),
+      RestoreFocus: () => focusSaver.deactivate(),
       OpenDialog: () => {
         dialogEl?.showModal();
         requestAnimationFrame(() => machine.send("ready"));
@@ -109,21 +116,23 @@
 </script>
 
 {#if !watchId}
-  <button bind:this={triggerEl} type="button" disabled={loading} class={button({ variant: "secondary", size: "lg" })} onclick={handleOpen}>
+  <button bind:this={triggerEl} type="button" disabled={loading} aria-haspopup="dialog" aria-controls={titleId} class={button({ variant: "secondary", size: "lg" })} onclick={handleOpen}>
     {loading ? "Loading…" : triggerLabel}
   </button>
 {/if}
 
 <dialog
   bind:this={dialogEl}
+  aria-labelledby={titleId}
+  aria-describedby={description ? descId : undefined}
   data-state={isClosing ? "closed" : isOpen ? "open" : "closed"}
   class={cn(dialogContent(), "not-open:hidden backdrop:bg-black/50 backdrop:supports-backdrop-filter:backdrop-blur-sm", className)}
   onkeydown={(e) => { if (e.key === "Escape") { e.preventDefault(); machine.send("close"); } }}
 >
   <div class="flex flex-col gap-2 pr-8">
-    <h2 class={dialogTitle()}>{title}</h2>
+    <h2 id={titleId} class={dialogTitle()}>{title}</h2>
     {#if description}
-      <p class={dialogDescription()}>{description}</p>
+      <p id={descId} class={dialogDescription()}>{description}</p>
     {/if}
   </div>
 
