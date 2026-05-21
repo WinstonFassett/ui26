@@ -50,7 +50,7 @@ const STATEFUL_DEPS = [...BASE_DEPS, "matchina", "@floating-ui/dom"];
 const JS_ONLY_COMPONENTS = new Set([
   "dialog", "popover", "tooltip", "dropdown-menu",
   "dialog-native", "popover-native", "tooltip-native",
-  "dialog-bits-ui", "dialog-machine-ui",
+  "dialog-div-bits-ui", "dialog-div",
 ]);
 
 export const COMPONENTS: ComponentMeta[] = [
@@ -258,14 +258,14 @@ export const COMPONENTS: ComponentMeta[] = [
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
   {
-    name: "dialog-bits-ui",
+    name: "dialog-div-bits-ui",
     title: "Dialog (bits-ui)",
     description: "Modal dialog using bits-ui for focus trap, scroll lock, and portal. Svelte only.",
     dependencies: [...BASE_DEPS, "bits-ui"],
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
   {
-    name: "dialog-machine-ui",
+    name: "dialog-div",
     title: "Dialog (Vanilla)",
     description: "Modal dialog with fully owned DOM behaviors — focus trap, scroll lock, aria-hidden — via dom-behaviors.ts. No external primitive deps. Svelte only.",
     dependencies: [...BASE_DEPS],
@@ -282,7 +282,7 @@ export const COMPONENTS: ComponentMeta[] = [
 
 export function supportsFramework(name: string, fw: Framework): boolean {
   if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
-  const svelteOnly = ["tooltip-native", "popover-native", "dialog-native", "dialog-bits-ui", "dialog-machine-ui"];
+  const svelteOnly = ["tooltip-native", "popover-native", "dialog-native", "dialog-div-bits-ui", "dialog-div"];
   if (fw === "react" && svelteOnly.includes(name)) return false;
   return true;
 }
@@ -317,7 +317,7 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
   // Stateful components: ship state machine alongside component file
   if (JS_ONLY_COMPONENTS.has(name)) {
     // Variant suffixes: only the .svelte file — state + tv come via registryDependency on base
-    for (const suffix of ["-native", "-bits-ui", "-vanilla"]) {
+    for (const suffix of ["-native", "-div-bits-ui", "-div"]) {
       if (name.endsWith(suffix)) {
         const base = name.slice(0, -suffix.length);
         return [{ path: `${base}/${name}.svelte`, type: "registry:ui" }];
