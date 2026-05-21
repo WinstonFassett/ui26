@@ -29,7 +29,7 @@ function usePopoverMachine(): PopoverMachine {
 function usePopoverStore(machine: PopoverMachine) {
   return useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
-    () => machine.getState(),
+    () => machine.getState().key,
   );
 }
 
@@ -92,7 +92,7 @@ export function Popover({ children, sideOffset = 4 }: PopoverProps) {
     return m;
   }, []);
 
-  usePopoverStore(machine);
+  usePopoverStore(machine); // subscribe for re-renders
 
   return (
     <Ctx.Provider value={machine}>
@@ -126,7 +126,7 @@ export type PopoverTriggerProps = ComponentPropsWithoutRef<"button"> & { asChild
 export function PopoverTrigger({ className, children, asChild = false, ...props }: PopoverTriggerProps) {
   const machine = usePopoverMachine();
   const refs = useContext(RefsCtx);
-  const { key: stateKey } = usePopoverStore(machine);
+  const stateKey = usePopoverStore(machine); // subscribe for re-renders
   const isOpen = stateKey === "Open" || stateKey === "Opening";
 
   const shared = {
@@ -166,7 +166,7 @@ export type PopoverContentProps = HTMLAttributes<HTMLDivElement>;
 export function PopoverContent({ className, children, ...props }: PopoverContentProps) {
   const machine = usePopoverMachine();
   const refs = useContext(RefsCtx);
-  const { key: stateKey } = usePopoverStore(machine);
+  const stateKey = usePopoverStore(machine); // subscribe for re-renders
   const isOpen = stateKey === "Open" || stateKey === "Opening";
   const isClosing = stateKey === "Closing";
 

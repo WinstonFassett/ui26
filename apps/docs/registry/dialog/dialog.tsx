@@ -54,7 +54,7 @@ export function Dialog({ children, machineRef }: DialogProps) {
     if (machineRef) machineRef.current = machine;
   }, [machine, machineRef]);
 
-  const { key } = useSyncExternalStore((cb) => machine.subscribe!(() => cb()), () => machine.getState());
+  const key = useSyncExternalStore((cb) => machine.subscribe!(() => cb()), () => machine.getState().key);
   // Pass open=true during Closing so Radix stays mounted for exit animation
   const isOpen = key === "Open" || key === "Opening";
   const isClosing = key === "Closing";

@@ -106,9 +106,9 @@ export type DropdownMenuTriggerProps = HTMLAttributes<HTMLButtonElement> & { chi
 
 export function DropdownMenuTrigger({ children, className, asChild = false, ...props }: DropdownMenuTriggerProps) {
   const { machine, triggerRef } = useDropdownCtx();
-  const { key } = useSyncExternalStore(
+  const key = useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
-    () => machine.getState(),
+    () => machine.getState().key,
   );
   const isOpen = key === "Open" || key === "Opening";
 
@@ -154,9 +154,9 @@ export interface DropdownMenuContentProps {
 
 export function DropdownMenuContent({ children, className }: DropdownMenuContentProps) {
   const { machine, floatingRef } = useDropdownCtx();
-  const { key } = useSyncExternalStore(
+  const key = useSyncExternalStore(
     (cb) => machine.subscribe(() => cb()),
-    () => machine.getState(),
+    () => machine.getState().key,
   );
   const isOpen = key === "Open" || key === "Opening";
   const isClosing = key === "Closing";
