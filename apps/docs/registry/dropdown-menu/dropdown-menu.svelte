@@ -4,7 +4,7 @@
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
   import { dropdownContent, dropdownItem, dropdownSeparator, dropdownLabel } from "./dropdown-menu.tv";
-  import { createDropdownMachine, bindDropdownEffects } from "./dropdown-menu.state";
+  import { createDropdownMachine, bindDropdownEffects } from "./dropdown-menu-state.vanilla";
 
   type Item = { label: string; onSelect?: () => void; disabled?: boolean };
   type Section = { heading?: string; items: Item[] };

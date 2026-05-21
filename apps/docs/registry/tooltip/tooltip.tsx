@@ -3,16 +3,16 @@ import {
   useContext,
   useRef,
   useMemo,
+  useSyncExternalStore,
   type ReactNode,
   type HTMLAttributes,
   type RefObject,
 } from "react";
-import { useMachine } from "matchina/react";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
 import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { tooltipContent } from "./tooltip.tv";
-import { createTooltipMachine, bindTooltipEffects, type TooltipMachine } from "./tooltip.state";
+import { createTooltipMachine, bindTooltipEffects, type TooltipMachine } from "./tooltip-state.vanilla";
 
 interface TooltipCtx {
   machine: TooltipMachine;
@@ -136,9 +136,10 @@ export interface TooltipContentProps {
 
 export function TooltipContent({ children, className }: TooltipContentProps) {
   const { machine, floatingRef } = useTooltipCtx();
-  useMachine(machine);
-
-  const key = machine.getState().key;
+  const { key } = useSyncExternalStore(
+    (cb) => machine.subscribe(() => cb()),
+    () => machine.getState(),
+  );
   const isVisible = key === "Open" || key === "Opening" || key === "CloseDelay";
   const isClosing = key === "Closing";
 

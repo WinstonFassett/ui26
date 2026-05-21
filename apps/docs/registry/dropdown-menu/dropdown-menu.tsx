@@ -4,16 +4,16 @@ import {
   useRef,
   useMemo,
   useEffect,
+  useSyncExternalStore,
   type ReactNode,
   type HTMLAttributes,
   type RefObject,
 } from "react";
-import { useMachine } from "matchina/react";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
 import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { dropdownContent, dropdownItem, dropdownSeparator, dropdownLabel } from "./dropdown-menu.tv";
-import { createDropdownMachine, bindDropdownEffects, type DropdownMachine } from "./dropdown-menu.state";
+import { createDropdownMachine, bindDropdownEffects, type DropdownMachine } from "./dropdown-menu-state.vanilla";
 
 interface DropdownCtx {
   machine: DropdownMachine;
@@ -106,8 +106,10 @@ export type DropdownMenuTriggerProps = HTMLAttributes<HTMLButtonElement> & { chi
 
 export function DropdownMenuTrigger({ children, className, asChild = false, ...props }: DropdownMenuTriggerProps) {
   const { machine, triggerRef } = useDropdownCtx();
-  useMachine(machine);
-  const key = machine.getState().key;
+  const { key } = useSyncExternalStore(
+    (cb) => machine.subscribe(() => cb()),
+    () => machine.getState(),
+  );
   const isOpen = key === "Open" || key === "Opening";
 
   const chevron = (
@@ -152,9 +154,10 @@ export interface DropdownMenuContentProps {
 
 export function DropdownMenuContent({ children, className }: DropdownMenuContentProps) {
   const { machine, floatingRef } = useDropdownCtx();
-  useMachine(machine);
-
-  const key = machine.getState().key;
+  const { key } = useSyncExternalStore(
+    (cb) => machine.subscribe(() => cb()),
+    () => machine.getState(),
+  );
   const isOpen = key === "Open" || key === "Opening";
   const isClosing = key === "Closing";
 

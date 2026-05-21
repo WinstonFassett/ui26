@@ -4,7 +4,7 @@
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
   import { popoverContent } from "./popover.tv";
-  import { createPopoverMachine, bindPopoverEffects } from "./popover.state";
+  import { createPopoverMachine, bindPopoverEffects } from "./popover-state.vanilla";
 
   type Props = {
     class?: string;

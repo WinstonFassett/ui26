@@ -3,16 +3,16 @@ import {
   useContext,
   useRef,
   useMemo,
+  useSyncExternalStore,
   type ReactNode,
   type HTMLAttributes,
   type ComponentPropsWithoutRef,
 } from "react";
 import { Slot } from "radix-ui";
-import { useMachine } from "matchina/react";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
 import { cn } from "../lib/utils";
 import { popoverContent } from "./popover.tv";
-import { createPopoverMachine, bindPopoverEffects, type PopoverMachine } from "./popover.state";
+import { createPopoverMachine, bindPopoverEffects, type PopoverMachine } from "./popover-state.vanilla";
 
 // ---------------------------------------------------------------------------
 // Context
@@ -24,6 +24,13 @@ function usePopoverMachine(): PopoverMachine {
   const m = useContext(Ctx);
   if (!m) throw new Error("Popover components must be inside <Popover>");
   return m;
+}
+
+function usePopoverStore(machine: PopoverMachine) {
+  return useSyncExternalStore(
+    (cb) => machine.subscribe(() => cb()),
+    () => machine.getState(),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -85,7 +92,7 @@ export function Popover({ children, sideOffset = 4 }: PopoverProps) {
     return m;
   }, []);
 
-  useMachine(machine);
+  usePopoverStore(machine);
 
   return (
     <Ctx.Provider value={machine}>
@@ -118,9 +125,8 @@ export type PopoverTriggerProps = ComponentPropsWithoutRef<"button"> & { asChild
 
 export function PopoverTrigger({ className, children, asChild = false, ...props }: PopoverTriggerProps) {
   const machine = usePopoverMachine();
-  useMachine(machine);
   const refs = useContext(RefsCtx);
-  const stateKey = machine.getState().key;
+  const { key: stateKey } = usePopoverStore(machine);
   const isOpen = stateKey === "Open" || stateKey === "Opening";
 
   const shared = {
@@ -159,9 +165,8 @@ export type PopoverContentProps = HTMLAttributes<HTMLDivElement>;
 
 export function PopoverContent({ className, children, ...props }: PopoverContentProps) {
   const machine = usePopoverMachine();
-  useMachine(machine);
   const refs = useContext(RefsCtx);
-  const stateKey = machine.getState().key;
+  const { key: stateKey } = usePopoverStore(machine);
   const isOpen = stateKey === "Open" || stateKey === "Opening";
   const isClosing = stateKey === "Closing";
 

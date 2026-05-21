@@ -30,6 +30,7 @@
     loadContent,
   }: Props = $props();
 
+  let triggerEl: HTMLButtonElement | null = $state(null);
   let dialogEl: HTMLDialogElement | null = $state(null);
 
   const machine = createDialogMachine();
@@ -78,7 +79,7 @@
         };
         el.addEventListener("animationend", onEnd);
       },
-    });
+    }, { trigger: triggerEl, panel: dialogEl });
 
     // Native close event — Escape key or programmatic close
     function onNativeClose() {
@@ -108,7 +109,7 @@
 </script>
 
 {#if !watchId}
-  <button type="button" disabled={loading} class={button({ variant: "secondary", size: "lg" })} onclick={handleOpen}>
+  <button bind:this={triggerEl} type="button" disabled={loading} class={button({ variant: "secondary", size: "lg" })} onclick={handleOpen}>
     {loading ? "Loading…" : triggerLabel}
   </button>
 {/if}

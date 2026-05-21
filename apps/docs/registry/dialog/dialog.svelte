@@ -31,6 +31,9 @@
     loadContent,
   }: Props = $props();
 
+  let triggerEl: HTMLButtonElement | null = $state(null);
+  let panelEl: HTMLElement | null = $state(null);
+
   const machine = createDialogMachine();
   let stateKey = $state("Closed");
   machine.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
@@ -57,7 +60,7 @@
       OpenDialog:   () => { requestAnimationFrame(() => machine.send("ready")); },
       CloseDialog:  () => {},
       AnimateClose: () => { setTimeout(() => machine.send("done"), 200); },
-    });
+    }, { trigger: triggerEl, panel: panelEl });
 
     let observer: MutationObserver | null = null;
     if (watchId) {
@@ -80,6 +83,7 @@
 
 {#if !watchId}
   <button
+    bind:this={triggerEl}
     type="button"
     disabled={loading}
     class={button({ variant: "secondary", size: "lg" })}
