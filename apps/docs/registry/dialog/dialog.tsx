@@ -3,11 +3,11 @@ import React, {
   useContext,
   useMemo,
   useEffect,
+  useSyncExternalStore,
   type ReactNode,
   type HTMLAttributes,
 } from "react";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { useMachine } from "matchina/react";
 import { cn } from "../lib/utils";
 import { Button } from "../button/button";
 import { dialogOverlay, dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
@@ -54,8 +54,7 @@ export function Dialog({ children, machineRef }: DialogProps) {
     if (machineRef) machineRef.current = machine;
   }, [machine, machineRef]);
 
-  useMachine(machine);
-  const key = machine.getState().key;
+  const { key } = useSyncExternalStore((cb) => machine.subscribe!(() => cb()), () => machine.getState());
   // Pass open=true during Closing so Radix stays mounted for exit animation
   const isOpen = key === "Open" || key === "Opening";
   const isClosing = key === "Closing";
