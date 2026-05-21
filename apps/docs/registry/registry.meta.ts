@@ -49,8 +49,9 @@ const STATEFUL_DEPS = [...BASE_DEPS, "matchina", "@floating-ui/dom"];
 // filesFor() returns [] for astro; getStaticPaths skips those routes.
 const JS_ONLY_COMPONENTS = new Set([
   "dialog", "popover", "tooltip", "dropdown-menu",
-  "dialog-native", "popover-native", "tooltip-native",
-  "dialog-div-bits-ui", "dialog-div",
+  "dialog-native", "dialog-div", "dialog-div-radix",
+  "popover-native", "tooltip-native",
+  "dialog-div-bits-ui",
 ]);
 
 export const COMPONENTS: ComponentMeta[] = [
@@ -246,14 +247,21 @@ export const COMPONENTS: ComponentMeta[] = [
   {
     name: "dialog",
     title: "Dialog",
-    description: "Modal dialog with Radix (React) and vanilla DOM behaviors (Svelte). Machine owns state, effects, and ARIA.",
-    dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog"],
+    description: "Base dialog — shared state machine, TV styles, and dom-behaviors. Required by all dialog variants.",
+    dependencies: [...STATEFUL_DEPS],
     registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
   },
   {
     name: "dialog-native",
     title: "Dialog (Native)",
-    description: "Modal dialog using the native <dialog> element — browser-native focus trap, scroll lock, and ::backdrop. Svelte only.",
+    description: "Modal dialog using the native <dialog> element — browser-native focus trap, scroll lock, and ::backdrop.",
+    dependencies: [...BASE_DEPS],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dialog-div",
+    title: "Dialog (Vanilla)",
+    description: "Modal dialog with fully owned DOM behaviors — focus trap, scroll lock, aria-hidden — via dom-behaviors.ts. No external primitive deps.",
     dependencies: [...BASE_DEPS],
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
@@ -265,10 +273,10 @@ export const COMPONENTS: ComponentMeta[] = [
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
   {
-    name: "dialog-div",
-    title: "Dialog (Vanilla)",
-    description: "Modal dialog with fully owned DOM behaviors — focus trap, scroll lock, aria-hidden — via dom-behaviors.ts. No external primitive deps. Svelte only.",
-    dependencies: [...BASE_DEPS],
+    name: "dialog-div-radix",
+    title: "Dialog (Radix)",
+    description: "Modal dialog using Radix UI for focus trap, scroll lock, and portal. React only.",
+    dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog"],
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
   {
@@ -282,8 +290,10 @@ export const COMPONENTS: ComponentMeta[] = [
 
 export function supportsFramework(name: string, fw: Framework): boolean {
   if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
-  const svelteOnly = ["tooltip-native", "popover-native", "dialog-native", "dialog-div-bits-ui", "dialog-div"];
+  const svelteOnly = ["tooltip-native", "popover-native", "dialog-div-bits-ui"];
   if (fw === "react" && svelteOnly.includes(name)) return false;
+  const reactOnly = ["dialog-div-radix"];
+  if (fw === "svelte" && reactOnly.includes(name)) return false;
   return true;
 }
 
@@ -316,12 +326,22 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
 
   // Stateful components: ship state machine alongside component file
   if (JS_ONLY_COMPONENTS.has(name)) {
-    // Variant suffixes: only the .svelte file — state + tv come via registryDependency on base
-    for (const suffix of ["-native", "-div-bits-ui", "-div"]) {
+    // Variant suffixes: only the framework-appropriate component file
+    // State + tv come via registryDependency on base
+    const variantSuffixes = ["-native", "-div-bits-ui", "-div", "-div-radix"];
+    for (const suffix of variantSuffixes) {
       if (name.endsWith(suffix)) {
         const base = name.slice(0, -suffix.length);
-        return [{ path: `${base}/${name}.svelte`, type: "registry:ui" }];
+        return [{ path: `${base}/${name}.${ext}`, type: "registry:ui" }];
       }
+    }
+    // dialog base is shared-only — no single component file (variants are separate entries)
+    if (name === "dialog") {
+      return [
+        { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
+        { path: `${name}/${name}-state.vanilla.ts`, type: "registry:ui" },
+        { path: `lib/dom-behaviors.ts`, type: "registry:lib" },
+      ];
     }
     return [
       { path: `${name}/${name}.${ext}`, type: "registry:ui" },

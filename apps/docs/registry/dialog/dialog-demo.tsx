@@ -5,7 +5,7 @@ import {
   DialogHeader, DialogFooter,
   DialogTitle, DialogDescription, DialogClose,
   useDialogBodyAttr,
-} from "./dialog";
+} from "./dialog-div-radix";
 
 export function DialogDemo() {
   return (
