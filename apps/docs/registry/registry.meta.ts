@@ -50,7 +50,7 @@ const STATEFUL_DEPS = [...BASE_DEPS, "matchina", "@floating-ui/dom"];
 const JS_ONLY_COMPONENTS = new Set([
   "dialog", "popover", "tooltip", "dropdown-menu",
   "dialog-native", "popover-native", "tooltip-native",
-  "dialog-bits-ui", "dialog-vanilla",
+  "dialog-bits-ui", "dialog-machine-ui",
 ]);
 
 export const COMPONENTS: ComponentMeta[] = [
@@ -265,7 +265,7 @@ export const COMPONENTS: ComponentMeta[] = [
     registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
   },
   {
-    name: "dialog-vanilla",
+    name: "dialog-machine-ui",
     title: "Dialog (Vanilla)",
     description: "Modal dialog with fully owned DOM behaviors — focus trap, scroll lock, aria-hidden — via dom-behaviors.ts. No external primitive deps. Svelte only.",
     dependencies: [...BASE_DEPS],
@@ -282,7 +282,7 @@ export const COMPONENTS: ComponentMeta[] = [
 
 export function supportsFramework(name: string, fw: Framework): boolean {
   if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
-  const svelteOnly = ["tooltip-native", "popover-native", "dialog-native", "dialog-bits-ui", "dialog-vanilla"];
+  const svelteOnly = ["tooltip-native", "popover-native", "dialog-native", "dialog-bits-ui", "dialog-machine-ui"];
   if (fw === "react" && svelteOnly.includes(name)) return false;
   return true;
 }
