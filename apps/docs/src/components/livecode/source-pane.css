@@ -15,6 +15,15 @@ ui26-fwtabs:has(> input[value="json-render"]:checked) .ui26-fw-label[data-fw="js
   color: hsl(var(--foreground));
 }
 
+/* Focus ring on label when its radio receives keyboard focus */
+ui26-fwtabs:has(> input[value="react"]:focus-visible) .ui26-fw-label[data-fw="react"],
+ui26-fwtabs:has(> input[value="svelte"]:focus-visible) .ui26-fw-label[data-fw="svelte"],
+ui26-fwtabs:has(> input[value="astro"]:focus-visible) .ui26-fw-label[data-fw="astro"],
+ui26-fwtabs:has(> input[value="json-render"]:focus-visible) .ui26-fw-label[data-fw="json-render"] {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
 ui26-fwtabs:has(> input[value="react"]:checked) .ui26-fw-filename[data-fw-filename="react"],
 ui26-fwtabs:has(> input[value="svelte"]:checked) .ui26-fw-filename[data-fw-filename="svelte"],
 ui26-fwtabs:has(> input[value="astro"]:checked) .ui26-fw-filename[data-fw-filename="astro"],
