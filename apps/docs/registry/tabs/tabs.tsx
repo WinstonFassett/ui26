@@ -1,9 +1,12 @@
+"use client";
+
 import {
   createContext,
   useContext,
   useSyncExternalStore,
   type HTMLAttributes,
   type ComponentPropsWithoutRef,
+  type ReactNode,
 } from "react";
 import { cn } from "../lib/utils";
 import { tabsList, tabsTrigger, tabsContent } from "./tabs.tv";
@@ -41,6 +44,7 @@ function useTabsState(ctx: TabsContext | null): TabsState {
 export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
   /** The tab value that should be active on mount. */
   defaultValue: string;
+  children?: ReactNode;
 }
 
 export function Tabs({ defaultValue, className, children, ...props }: TabsProps) {
@@ -59,7 +63,7 @@ export function Tabs({ defaultValue, className, children, ...props }: TabsProps)
 
 // ---------------------------------------------------------------------------
 
-export type TabsListProps = HTMLAttributes<HTMLDivElement>;
+export interface TabsListProps extends HTMLAttributes<HTMLDivElement> { children?: ReactNode; }
 
 export function TabsList({ className, ...props }: TabsListProps) {
   return (
@@ -76,6 +80,7 @@ export function TabsList({ className, ...props }: TabsListProps) {
 export interface TabsTriggerProps extends ComponentPropsWithoutRef<"button"> {
   /** Must match a TabsContent value. */
   value: string;
+  children?: ReactNode;
 }
 
 export function TabsTrigger({ value, className, children, ...props }: TabsTriggerProps) {
@@ -103,6 +108,7 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
 export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
   /** Must match a TabsTrigger value. */
   value: string;
+  children?: ReactNode;
 }
 
 export function TabsContent({ value, className, children, ...props }: TabsContentProps) {

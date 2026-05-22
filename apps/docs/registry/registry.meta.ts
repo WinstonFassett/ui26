@@ -286,14 +286,28 @@ export const COMPONENTS: ComponentMeta[] = [
     dependencies: STATEFUL_DEPS,
     registryDependencies: [...BASE_REGISTRY_DEPS, "popover", "button"],
   },
+  {
+    name: "tabs",
+    title: "Tabs",
+    description: "State-driven tabs with vanilla state layer (useSyncExternalStore). Idiomatic React/Svelte; progressive radio-shell variant in Astro. Requires client JS.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "tabs-progressive",
+    title: "Tabs (Progressive)",
+    description: "No-JS tabs shell using radio inputs and :has(:checked) CSS. RSC-renderable, uncontrolled, works without JavaScript. React only.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
 ];
 
 export function supportsFramework(name: string, fw: Framework): boolean {
   if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
   const svelteOnly = ["tooltip-native", "popover-native", "dialog-div-bits-ui"];
   if (fw === "react" && svelteOnly.includes(name)) return false;
-  const reactOnly = ["dialog-div-radix"];
-  if (fw === "svelte" && reactOnly.includes(name)) return false;
+  const reactOnly = ["dialog-div-radix", "tabs-progressive"];
+  if (fw !== "react" && reactOnly.includes(name)) return false;
   return true;
 }
 
@@ -314,6 +328,35 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
     }
     return files;
   }
+
+  if (name === "tabs") {
+    if (fw === "react") return [
+      { path: "tabs/tabs.tsx", type: "registry:ui" },
+      { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+      { path: "tabs/tabs.state.ts", type: "registry:ui" },
+    ];
+    if (fw === "svelte") return [
+      { path: "tabs/tabs.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-content.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-list.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-trigger.svelte", type: "registry:ui" },
+      { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+      { path: "tabs/tabs.state.ts", type: "registry:ui" },
+    ];
+    if (fw === "astro") return [
+      { path: "tabs/tabs.astro", type: "registry:ui" },
+      { path: "tabs/TabItem.astro", type: "registry:ui" },
+      { path: "tabs/tabs.client.ts", type: "registry:ui" },
+      { path: "tabs/tabs.css", type: "registry:file" },
+      { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+    ];
+  }
+
+  if (name === "tabs-progressive") return [
+    { path: "tabs/tabs-progressive.tsx", type: "registry:ui" },
+    { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+    { path: "tabs/tabs.css", type: "registry:file" },
+  ];
 
   if (name === "card") return withSubs(CARD_SUBS);
   if (name === "alert") return withSubs(ALERT_SUBS);
