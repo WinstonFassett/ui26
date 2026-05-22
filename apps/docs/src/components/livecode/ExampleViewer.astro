@@ -1,6 +1,6 @@
 ---
-import Tabs from "@registry/tabs/tabs.astro";
-import TabItem from "@registry/tabs/TabItem.astro";
+import HashTabs from "@registry/tabs/HashTabs.astro";
+import HashTabItem from "@registry/tabs/HashTabItem.astro";
 import { BlockPreview } from "./BlockPreview";
 import SourcePane from "./SourcePane.astro";
 import type { SourcePaneRegion } from "./SourcePane.astro";
@@ -15,6 +15,7 @@ interface Props {
 }
 
 const { spec, region, title, description, deps } = Astro.props;
+const base = `ex-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
 ---
 
 <div class="flex flex-col h-full bg-background">
@@ -30,13 +31,14 @@ const { spec, region, title, description, deps } = Astro.props;
     </div>
   </div>
 
-  <Tabs
+  <HashTabs
+    base={base}
     variant="underline"
     class="ex-viewer-tabs flex flex-col flex-1 min-h-0"
     listClass="ex-viewer-tablist"
   >
 
-    <TabItem label="Preview" class="flex flex-col h-full">
+    <HashTabItem hash="preview" label="Preview" base={base} class="flex flex-col h-full">
       <div class="flex-1 p-8 flex items-center justify-center">
         <div class="w-full max-w-200">
           <BlockPreview spec={spec} client:load />
@@ -54,13 +56,13 @@ const { spec, region, title, description, deps } = Astro.props;
           )}
         </div>
       )}
-    </TabItem>
+    </HashTabItem>
 
-    <TabItem label="Code" class="h-full">
+    <HashTabItem hash="code" label="Code" base={base} class="h-full">
       <SourcePane region={region} hideHeader className="h-full" />
-    </TabItem>
+    </HashTabItem>
 
-  </Tabs>
+  </HashTabs>
 
 </div>
 
