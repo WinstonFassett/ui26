@@ -48,7 +48,7 @@ const uid = `fwtabs-${region.id}`;
     {FRAMEWORKS.map((f, i) => (
       <input
         type="radio"
-        class="sr-only"
+        class="absolute opacity-0 w-px h-px pointer-events-none"
         name={uid}
         id={`${uid}-${f}`}
         value={f}
