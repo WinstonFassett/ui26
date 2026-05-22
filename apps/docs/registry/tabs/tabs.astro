@@ -44,7 +44,7 @@ const instanceCss = labels
   .map((_, i) =>
     `ui26-tabs:has(> #${uid}-${i}:checked) > .ui26-tab-panel[data-panel-index="${i}"]{display:block}` +
     `ui26-tabs:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{${activeStyle}}` +
-    `ui26-tabs:has(> #${uid}-${i}:focus) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{outline:2px solid var(--ring);outline-offset:2px}`
+    `ui26-tabs:has(> #${uid}-${i}:focus-visible) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{outline:2px solid var(--ring);outline-offset:2px}`
   )
   .join("");
 ---
