@@ -61,7 +61,8 @@ const uid = `fwtabs-${region.id}`;
         <label
           for={`${uid}-${f}`}
           data-fw={f}
-          class="px-3 py-2 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] -mb-px transition-colors cursor-pointer border-transparent text-muted-foreground hover:text-foreground ui26-fw-label"
+          tabindex="0"
+          class="px-3 py-2 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] -mb-px transition-colors cursor-pointer border-transparent text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ui26-fw-label"
         >
           {FRAMEWORK_LABELS[f]}
         </label>
