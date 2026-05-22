@@ -19,7 +19,7 @@ const { spec, region, title, description, deps } = Astro.props;
 
 <div class="flex flex-col h-full bg-background">
 
-  <div class="flex items-end justify-between gap-4 px-3.5 border-b border-border shrink-0">
+  <div class="ex-header relative flex items-end justify-between gap-4 px-3.5 border-b border-border shrink-0">
     <div class="min-w-0 py-3">
       <div class="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
         {region.section}
@@ -30,7 +30,11 @@ const { spec, region, title, description, deps } = Astro.props;
     </div>
   </div>
 
-  <Tabs class="flex flex-col flex-1 min-h-0">
+  <Tabs
+    variant="underline"
+    class="ex-viewer-tabs flex flex-col flex-1 min-h-0"
+    listClass="ex-viewer-tablist"
+  >
 
     <TabItem label="Preview" class="flex flex-col h-full">
       <div class="flex-1 p-8 flex items-center justify-center">
@@ -59,3 +63,15 @@ const { spec, region, title, description, deps } = Astro.props;
   </Tabs>
 
 </div>
+
+<style is:inline>
+  /* Lift the underline tablist up onto the header bar, right-aligned, sharing the header's bottom border. */
+  .ex-viewer-tabs { position: relative; }
+  .ex-viewer-tabs > .ex-viewer-tablist {
+    position: absolute;
+    right: 14px;
+    top: 0;
+    transform: translateY(-100%);
+    border-bottom: 0;
+  }
+</style>
