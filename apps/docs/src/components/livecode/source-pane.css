@@ -7,11 +7,11 @@ ui26-fwtabs:has(> input[value="json-render"]:checked) .ui26-fw-panel[data-fw-pan
   display: block;
 }
 
-/* Focus ring on label when its radio is focused via keyboard */
-ui26-fwtabs:has(> input[value="react"]:focus-visible) .ui26-fw-label[data-fw="react"],
-ui26-fwtabs:has(> input[value="svelte"]:focus-visible) .ui26-fw-label[data-fw="svelte"],
-ui26-fwtabs:has(> input[value="astro"]:focus-visible) .ui26-fw-label[data-fw="astro"],
-ui26-fwtabs:has(> input[value="json-render"]:focus-visible) .ui26-fw-label[data-fw="json-render"] {
+/* Focus ring on label when its radio is focused */
+ui26-fwtabs:has(> input[value="react"]:focus) label[data-fw="react"],
+ui26-fwtabs:has(> input[value="svelte"]:focus) label[data-fw="svelte"],
+ui26-fwtabs:has(> input[value="astro"]:focus) label[data-fw="astro"],
+ui26-fwtabs:has(> input[value="json-render"]:focus) label[data-fw="json-render"] {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
