@@ -61,8 +61,7 @@ const uid = `fwtabs-${region.id}`;
         <label
           for={`${uid}-${f}`}
           data-fw={f}
-          tabindex="0"
-          class="px-3 py-2 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] -mb-px transition-colors cursor-pointer border-transparent text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background ui26-fw-label"
+          class="px-3 py-2 font-mono text-[10px] uppercase tracking-wider border-b-[1.5px] -mb-px transition-colors cursor-pointer border-transparent text-muted-foreground hover:text-foreground ui26-fw-label"
         >
           {FRAMEWORK_LABELS[f]}
         </label>
@@ -167,23 +166,6 @@ const uid = `fwtabs-${region.id}`;
         });
       });
 
-      // Arrow key nav on labels (APG pattern)
-      const labels = [...this.querySelectorAll<HTMLElement>(".ui26-fw-label")];
-      labels.forEach((label, i) => {
-        label.addEventListener("keydown", (e) => {
-          const next =
-            e.key === "ArrowRight" ? i + 1 :
-            e.key === "ArrowLeft"  ? i - 1 :
-            e.key === "Home"       ? 0 :
-            e.key === "End"        ? labels.length - 1 :
-            null;
-          if (next === null || !inputs[next]) return;
-          e.preventDefault();
-          inputs[next].checked = true;
-          inputs[next].dispatchEvent(new Event("change"));
-          labels[next]?.focus();
-        });
-      });
 
       // Sync across tabs/windows
       window.addEventListener("storage", (e) => {
