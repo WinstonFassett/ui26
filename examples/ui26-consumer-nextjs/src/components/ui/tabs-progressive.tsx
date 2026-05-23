@@ -76,19 +76,22 @@ export function TabsProgressive({
       ? "border-color:var(--accent);color:var(--foreground)"
       : "background:var(--background);color:var(--foreground);box-shadow:var(--shadow-sm,0 1px 2px 0 rgb(0 0 0 / 0.05))";
 
-  const instanceCss = labels
-    .map(
-      (_, i) =>
-        `ui26-tabs:has(> #${uid}-${i}:checked) > .ui26-tab-panel[data-panel-index="${i}"]{display:block}` +
-        `ui26-tabs:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{${activeStyle}}`
-    )
-    .join("");
+  const instanceCss =
+    `ui26-tabs#${uid} > .ui26-tab-panel{display:none}` +
+    `ui26-tabs#${uid} .ui26-tab-label{cursor:pointer;user-select:none}` +
+    labels
+      .map(
+        (_, i) =>
+          `ui26-tabs#${uid}:has(> #${uid}-${i}:checked) > .ui26-tab-panel[data-panel-index="${i}"]{display:block}` +
+          `ui26-tabs#${uid}:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{${activeStyle}}`
+      )
+      .join("");
 
   return (
     <ui26-tabs
       className={cn("ui26-tabs w-full block", className)}
       data-default={defaultIndex}
-      id={providedId}
+      id={uid}
       {...props}
     >
       {labels.map((_, i) => (
