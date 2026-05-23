@@ -331,17 +331,17 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
 
   if (name === "tabs") {
     if (fw === "react") return [
-      { path: "tabs/tabs.tsx", type: "registry:ui" },
+      { path: "tabs/tabs-machine-ui.tsx", type: "registry:ui" },
       { path: "tabs/tabs.tv.ts", type: "registry:ui" },
-      { path: "tabs/tabs.state.ts", type: "registry:ui" },
+      { path: "tabs/tabs-machine.vanilla.ts", type: "registry:ui" },
     ];
     if (fw === "svelte") return [
-      { path: "tabs/tabs.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-machine-ui.svelte", type: "registry:ui" },
       { path: "tabs/tabs-content.svelte", type: "registry:ui" },
       { path: "tabs/tabs-list.svelte", type: "registry:ui" },
       { path: "tabs/tabs-trigger.svelte", type: "registry:ui" },
       { path: "tabs/tabs.tv.ts", type: "registry:ui" },
-      { path: "tabs/tabs.state.ts", type: "registry:ui" },
+      { path: "tabs/tabs-machine.vanilla.ts", type: "registry:ui" },
     ];
     if (fw === "astro") return [
       { path: "tabs/tabs.astro", type: "registry:ui" },

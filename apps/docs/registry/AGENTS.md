@@ -36,3 +36,67 @@ Every `[data-theme="<name>"]` block must define the full semantic surface (see [
 ## Transitional aliases
 
 Don't leave `[data-theme="dark"]`-style Starlight-compat aliases in all-themes.css. We own the attribute via the ThemeProvider override ([`apps/docs/src/components/starlight/ThemeProvider.astro`](../src/components/starlight/ThemeProvider.astro)) — any code writing bare `dark`/`light` is a bug to fix, not a case to paper over.
+
+## Sibling-file naming for stateful components
+
+Stateful components (Tabs, Dialog, Popover, Tooltip, Combobox, …) ship as **families of sibling files**, not one canonical impl. Naming follows two axes — **machine backend** and **view** — plus a third orthogonal sibling for the no-JS story.
+
+### Machine backend axis
+
+The state machine (or store, if the component has no transition graph). All backends export the same surface so views are swappable.
+
+| Filename | Backend |
+|---|---|
+| `<name>-machine.vanilla.ts` | hand-rolled, zero dep |
+| `<name>-machine.matchina.ts` | matchina-backed |
+| `<name>-machine.xstate-fsm.ts` | @xstate/fsm-backed |
+
+"Machine" is used uniformly even when the component is just a store (e.g. Tabs is `activeTab: string` with no transitions) — the name reflects the **shared contract**, not the internal complexity. The matchina sibling is the canonical shape; the vanilla one shadows it.
+
+What every machine file exports:
+
+- A factory `create<Name>Machine(initial?, options?)`. `initial` is positional, mirroring matchina's `createMachine(states, transitions, initial)`. Default to the "rest" state (Closed / first value).
+- `SLOT_PROPS: Record<StateKey, SlotPropsMap>` — ARIA/data-attribute table indexed by state key.
+- `getSlotProps(state, slot)` — convenience reader. Single source of ARIA truth for both SSR (view reads at render) and runtime (machine applies on transition).
+
+### View axis
+
+Framework-specific. The view is what gets imported into a page. No "vanilla view" — every view targets a framework.
+
+| Filename | View |
+|---|---|
+| `<name>-machine-ui.tsx` / `.svelte` | our own view, consumes `<name>-machine.*.ts` via the shared contract. Backend is swappable. |
+| `<name>-radix-ui.tsx` | thin wrapper over radix-ui. Brings its own state — backend not swappable. |
+| `<name>-bits-ui.svelte` | thin wrapper over bits-ui. Same. |
+| `<name>-progressive.{tsx,svelte,astro}` | works without JS. Progressive enhancement layered on if JS loads. See below. |
+
+**`<name>-machine-ui`** is the contract-driven view: it imports from `./<name>-machine.vanilla` by default, but consumers can swap the backend file (matchina, xstate-fsm, …) without touching the view. This is the modular path — the "view + your choice of backend" combo.
+
+### Progressive sibling (no-JS / progressive enhancement)
+
+Components named `<name>-progressive.*` work with JS disabled. The HTML alone is functional and accessible (modulo enhancements JS would add — roving tabindex, focus restoration, etc.). If JS loads, an optional `<name>.client.ts` upgrades the a11y story; it is strictly additive.
+
+Common mechanisms (impl detail, not encoded in the name):
+- Native HTML elements with built-in behavior: `<dialog>`, `<details>`.
+- Form-state scaffolds: radio + `:has()` + CSS for tabs.
+- URL state: `:target` for addressable variants.
+
+Don't name files after the mechanism (`-native`, `-radio`, `-target`). The contract is "works without JS" — that's what the filename communicates. The mechanism is an implementation detail readers discover by opening the file.
+
+### What about the default `<name>.{tsx,svelte}`?
+
+For components that already shipped as `<name>.{tsx,svelte}` (Tabs today), treat that filename as **deprecated for stateful components**. The replacement is `<name>-machine-ui.{tsx,svelte}`. Existing names can be renamed in-place when touching the component for other reasons. Don't do a mass rename sweep — pair it with real work.
+
+For dumb (stateless) components, `<name>.{tsx,svelte}` stays as the single canonical file — no machine, no siblings.
+
+### Install-time rename (CLI, future)
+
+The shadcn install pattern is `npx ui26 add tabs` → copies files into the consumer project. We plan to support sibling selection:
+
+```
+npx ui26 add tabs --impl bits-ui
+```
+
+…which copies `tabs-bits-ui.svelte` into the consumer project as `tabs.svelte`. Consumer code always imports `from "@/components/tabs"` and doesn't have to know which impl backs it. The registry keeps the sibling files; the CLI handles rename-on-copy.
+
+Not yet implemented. Tracked separately.

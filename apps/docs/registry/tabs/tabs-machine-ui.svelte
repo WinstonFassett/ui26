@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { setContext } from "svelte";
-  import { createTabsState } from "./tabs.state";
+  import { createTabsState } from "./tabs-machine.vanilla";
 
   type Props = {
     defaultValue: string;

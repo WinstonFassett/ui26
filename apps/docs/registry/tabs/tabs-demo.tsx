@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs-machine-ui";
 
 export function TabsDemo() {
   return (

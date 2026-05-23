@@ -1,5 +1,5 @@
 /**
- * tabs.state.ts — DOM-agnostic state backend for Tabs.
+ * tabs-machine.vanilla.ts — DOM-agnostic state backend for Tabs.
  *
  * Layer 1: Pure state and behavior intent.
  * No DOM, no renderer, no framework. Testable with plain JS.

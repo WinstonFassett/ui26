@@ -48,7 +48,7 @@ import {
   PaginationLink as PaginationLinkRoot,
 } from "@registry/pagination/pagination.tsx";
 import { RadioGroup as RadioGroupRoot, RadioGroupItem as RadioGroupItemRoot } from "@registry/radio-group/radio-group.tsx";
-import { Tabs as TabsRoot, TabsList as TabsListRoot, TabsTrigger as TabsTriggerRoot, TabsContent as TabsContentRoot } from "@registry/tabs/tabs.tsx";
+import { Tabs as TabsRoot, TabsList as TabsListRoot, TabsTrigger as TabsTriggerRoot, TabsContent as TabsContentRoot } from "@registry/tabs/tabs-machine-ui.tsx";
 import { Tooltip as TooltipRoot, TooltipTrigger as TooltipTriggerRoot, TooltipContent as TooltipContentRoot } from "@registry/tooltip/tooltip.tsx";
 import {
   Field as FieldRoot,

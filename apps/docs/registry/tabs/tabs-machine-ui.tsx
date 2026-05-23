@@ -8,9 +8,13 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 import { tabsList, tabsTrigger, tabsContent } from "./tabs.tv";
-import { createTabsState, type TabsContext, type TabsState } from "./tabs.state";
+import { createTabsState, type TabsContext, type TabsState } from "./tabs-machine.vanilla";
+
+// ---------------------------------------------------------------------------
+// React context bridge
+// ---------------------------------------------------------------------------
 
 const TabsCtx = createContext<TabsContext | null>(null);
 
@@ -20,6 +24,7 @@ function useTabsCtx(): TabsContext | null {
 
 const EMPTY_STATE: TabsState = { activeTab: "" };
 
+/** Subscribe the component to the atom using useSyncExternalStore. */
 function useTabsState(ctx: TabsContext | null): TabsState {
   return useSyncExternalStore(
     (onStoreChange) => {
@@ -32,13 +37,21 @@ function useTabsState(ctx: TabsContext | null): TabsState {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Components
+// ---------------------------------------------------------------------------
+
 export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
+  /** The tab value that should be active on mount. */
   defaultValue: string;
   children?: ReactNode;
 }
 
 export function Tabs({ defaultValue, className, children, ...props }: TabsProps) {
+  // createTabsState is called once per mount — stable because defaultValue
+  // is only read on initialization (uncontrolled pattern for now).
   const ctx = createTabsState(defaultValue);
+
   return (
     <TabsCtx.Provider value={ctx}>
       <div className={cn("w-full", className)} {...props}>
@@ -48,15 +61,24 @@ export function Tabs({ defaultValue, className, children, ...props }: TabsProps)
   );
 }
 
+// ---------------------------------------------------------------------------
+
 export interface TabsListProps extends HTMLAttributes<HTMLDivElement> { children?: ReactNode; }
 
 export function TabsList({ className, ...props }: TabsListProps) {
   return (
-    <div role="tablist" className={cn(tabsList(), className)} {...props} />
+    <div
+      role="tablist"
+      className={cn(tabsList(), className)}
+      {...props}
+    />
   );
 }
 
+// ---------------------------------------------------------------------------
+
 export interface TabsTriggerProps extends ComponentPropsWithoutRef<"button"> {
+  /** Must match a TabsContent value. */
   value: string;
   children?: ReactNode;
 }
@@ -65,6 +87,7 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
   const ctx = useTabsCtx();
   const state = useTabsState(ctx);
   const isActive = state.activeTab === value;
+
   return (
     <button
       role="tab"
@@ -80,7 +103,10 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
   );
 }
 
+// ---------------------------------------------------------------------------
+
 export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
+  /** Must match a TabsTrigger value. */
   value: string;
   children?: ReactNode;
 }
@@ -89,6 +115,7 @@ export function TabsContent({ value, className, children, ...props }: TabsConten
   const ctx = useTabsCtx();
   const state = useTabsState(ctx);
   const isActive = ctx ? state.activeTab === value : true;
+
   return (
     <div
       role="tabpanel"

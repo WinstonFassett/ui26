@@ -1,5 +1,5 @@
 <script lang="ts">
-  import TabsSvelte from "./tabs.svelte";
+  import TabsSvelte from "./tabs-machine-ui.svelte";
   import TabsListSvelte from "./tabs-list.svelte";
   import TabsTriggerSvelte from "./tabs-trigger.svelte";
   import TabsContentSvelte from "./tabs-content.svelte";
