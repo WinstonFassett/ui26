@@ -5,4 +5,4 @@ export {
   type PopoverMachine   as DropdownMachine,
   type PopoverEffectorHandlers as DropdownEffectorHandlers,
   type PopoverSlotRefs  as DropdownSlotRefs,
-} from "../popover/popover-state.vanilla";
+} from "../popover/popover-machine.vanilla";

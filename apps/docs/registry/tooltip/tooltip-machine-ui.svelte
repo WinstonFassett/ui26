@@ -4,7 +4,7 @@
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
   import { tooltipContent } from "./tooltip.tv";
-  import { createTooltipMachine, bindTooltipEffects } from "./tooltip-state.vanilla";
+  import { createTooltipMachine, bindTooltipEffects } from "./tooltip-machine.vanilla";
 
   type Props = {
     class?: string;

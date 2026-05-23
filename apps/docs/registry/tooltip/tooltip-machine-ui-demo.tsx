@@ -1,5 +1,5 @@
 import { Button } from "../button/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "./tooltip";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./tooltip-machine-ui";
 
 export function TooltipDemo() {
   return (

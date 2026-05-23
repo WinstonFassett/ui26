@@ -4,12 +4,12 @@ title: Dialog
 description: Modal dialog across React and Svelte with Matchina state machine. Proves Layer 2 DOM behavior — focus trap, scroll lock, portal.
 ---
 
-import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-demo.tsx";
-import DialogSvelte from "@registry/dialog/dialog-div-bits-ui.svelte";
-import DialogNative from "@registry/dialog/dialog-native.svelte";
+import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-machine-ui-demo.tsx";
+import DialogSvelte from "@registry/dialog/dialog-bits-ui.svelte";
+import DialogProgressive from "@registry/dialog/dialog-progressive.svelte";
 import ButtonAstro from "@registry/button/button.astro";
 
-React and Svelte share one state machine: `dialog.state.ts` (Matchina). DOM behavior is delegated to the platform — Radix `DialogPrimitive` for React, `bits-ui` `Dialog` for Svelte. Both handle portal, focus trap, scroll lock, and `data-state` animation attributes identically.
+React and Svelte require a `dialog-machine.*` backend conforming to the shared interface (`dialog-machine.vanilla.ts` ships by default; `dialog-machine.matchina.ts` and `dialog-machine.xstate-fsm.ts` also satisfy the contract). DOM behavior delegates to whichever view is installed — `dialog-radix-ui.tsx` (Radix `DialogPrimitive`), `dialog-bits-ui.svelte` (bits-ui), `dialog-machine-ui.{tsx,svelte}` (own impl), or `dialog-progressive.{tsx,svelte}` (native `<dialog>`).
 
 ## Co-located trigger
 
@@ -82,11 +82,11 @@ Native `<dialog>` element — Astro SSRs the content into slots, Svelte island w
 <div class="not-content grid grid-cols-2 gap-6 my-6">
   <div>
     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Basic</p>
-    <DialogNative client:load triggerLabel="Open (native)" title="Native dialog" description="Powered by the browser's native &lt;dialog&gt; element." />
+    <DialogProgressive client:load triggerLabel="Open (native)" title="Native dialog" description="Powered by the browser's native &lt;dialog&gt; element." />
   </div>
   <div>
     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">SSR'd slot content</p>
-    <DialogNative client:load triggerLabel="Open (SSR content)" title="Server-rendered content">
+    <DialogProgressive client:load triggerLabel="Open (SSR content)" title="Server-rendered content">
       <div class="flex flex-col gap-3">
         <p class="text-sm text-muted-foreground">This content was rendered on the server. It's in the HTML source — crawlable — but hidden until the dialog opens.</p>
         <ul class="text-sm text-muted-foreground list-disc list-inside">
@@ -95,7 +95,7 @@ Native `<dialog>` element — Astro SSRs the content into slots, Svelte island w
           <li>Item three — SSR'd</li>
         </ul>
       </div>
-    </DialogNative>
+    </DialogProgressive>
   </div>
 </div>
 

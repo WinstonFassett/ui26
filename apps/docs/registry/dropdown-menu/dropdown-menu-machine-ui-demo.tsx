@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuLabel,
-} from "./dropdown-menu";
+} from "./dropdown-menu-machine-ui";
 
 export function DropdownMenuDemo() {
   return (

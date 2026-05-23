@@ -1,5 +1,5 @@
 // Vanilla state implementation — no matchina, no external deps.
-// Exports the same surface as dialog-state.matchina.ts so components are swappable.
+// Exports the same surface as dialog-machine.matchina.ts so components are swappable.
 
 type DialogStateKey = "Closed" | "Opening" | "Open" | "Closing";
 

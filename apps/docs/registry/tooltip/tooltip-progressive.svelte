@@ -3,33 +3,40 @@
   import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
-  import { dropdownContent, dropdownItem, dropdownSeparator, dropdownLabel } from "./dropdown-menu.tv";
-  import { createDropdownMachine, bindDropdownEffects } from "./dropdown-menu-state.vanilla";
-
-  type Item = { label: string; onSelect?: () => void; disabled?: boolean };
-  type Section = { heading?: string; items: Item[] };
+  import { tooltipContent } from "./tooltip.tv";
+  import { createTooltipMachine, bindTooltipEffects } from "./tooltip-machine.vanilla";
 
   type Props = {
     class?: string;
-    triggerLabel?: string;
-    sections?: Section[];
+    label?: string;
+    tip?: string;
     children?: Snippet;
+    openDelay?: number;
+    closeDelay?: number;
     sideOffset?: number;
   };
 
   let {
     class: className,
-    triggerLabel = "Open menu",
-    sections = [{ items: [{ label: "Item 1" }, { label: "Item 2" }, { label: "Item 3" }] }],
+    label = "Hover me",
+    tip = "Tooltip content",
     children,
+    openDelay = 600,
+    closeDelay = 300,
     sideOffset = 4,
   }: Props = $props();
+
+  const uid = Math.random().toString(36).slice(2, 8);
+  const tooltipId = `tooltip-${uid}`;
+  const anchorName = `--tooltip-anchor-${uid}`;
 
   let triggerEl: HTMLButtonElement | null = $state(null);
   let floatingEl: HTMLDivElement | null = $state(null);
   let cleanupPositioner: (() => void) | null = null;
 
-  const machine = createDropdownMachine();
+  const supportsAnchor = typeof CSS !== "undefined" && CSS.supports("anchor-name", "--x");
+
+  const machine = createTooltipMachine(openDelay, closeDelay);
 
   let stateKey = $state("Closed");
   machine.subscribe((ev: any) => { if (ev?.to?.key) stateKey = ev.to.key; });
@@ -37,16 +44,29 @@
   $effect(() => {
     if (machine.getState().key !== "Closed") machine.send("reset" as any);
 
-    const unsubEffects = bindDropdownEffects(machine, {
+    const unsubEffects = bindTooltipEffects(machine, {
+      StartOpenDelay: () => {
+        const id = setTimeout(() => machine.send("open"), openDelay);
+        return () => clearTimeout(id);
+      },
+      StartCloseDelay: () => {
+        const id = setTimeout(() => machine.send("close"), closeDelay);
+        return () => clearTimeout(id);
+      },
       StartPositioner: () => {
         requestAnimationFrame(() => {
           const trigger = triggerEl;
           const floating = floatingEl;
           if (!trigger || !floating) { machine.send("ready"); return; }
 
+          if (supportsAnchor) {
+            machine.send("ready");
+            return;
+          }
+
           const update = () =>
             computePosition(trigger, floating, {
-              placement: "bottom-start",
+              placement: "top",
               middleware: [offset(sideOffset), flip(), shift({ padding: 8 })],
             }).then(({ x, y, placement }) => {
               floating.style.setProperty("--x", `${x}px`);
@@ -75,23 +95,25 @@
       },
     });
 
-    // Close on outside click
-    const handleClick = (e: MouseEvent) => {
-      const key = machine.getState().key;
-      if (key !== "Open" && key !== "Opening") return;
-      if (triggerEl?.contains(e.target as Node) || floatingEl?.contains(e.target as Node)) return;
-      machine.send("close");
-    };
-    document.addEventListener("mousedown", handleClick);
-
     return () => {
       unsubEffects?.();
       cleanupPositioner?.();
-      document.removeEventListener("mousedown", handleClick);
     };
   });
 
-  const isOpen = $derived(stateKey === "Open" || stateKey === "Opening");
+  // Drive native popover from machine state
+  $effect(() => {
+    const floating = floatingEl;
+    if (!floating) return;
+    if ((stateKey === "Open" || stateKey === "Opening" || stateKey === "CloseDelay") && !floating.matches(":popover-open")) {
+      floating.showPopover?.();
+    }
+    if (stateKey === "Closed" && floating.matches(":popover-open")) {
+      floating.hidePopover?.();
+    }
+  });
+
+  const isVisible = $derived(stateKey === "Open" || stateKey === "Opening" || stateKey === "CloseDelay");
   const isClosing = $derived(stateKey === "Closing");
 </script>
 
@@ -99,50 +121,37 @@
   <button
     bind:this={triggerEl}
     type="button"
-    aria-haspopup="menu"
-    aria-expanded={isOpen}
-    data-state={isOpen ? "open" : "closed"}
+    aria-describedby={tooltipId}
+    style={supportsAnchor ? `anchor-name: ${anchorName};` : undefined}
     class={button({ variant: "secondary" })}
-    onclick={() => isOpen ? machine.send("close") : machine.send("open")}
+    onmouseenter={() => machine.send("enter")}
+    onmouseleave={() => machine.send("leave")}
+    onfocus={() => machine.send("enter")}
+    onblur={() => machine.send("leave")}
   >
-    {triggerLabel}
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
+    {label}
   </button>
 
   <div
     bind:this={floatingEl}
-    role="menu"
+    id={tooltipId}
+    popover="hint"
+    role="tooltip"
     data-state={isClosing ? "closed" : "open"}
-    hidden={!isOpen && !isClosing}
-    class={cn("absolute", dropdownContent(), className)}
-    style="left: var(--x); top: var(--y);"
+    hidden={!isVisible && !isClosing}
+    class={cn(
+      supportsAnchor ? "fixed m-0" : "absolute",
+      tooltipContent(),
+      className
+    )}
+    style={supportsAnchor
+      ? `position-anchor: ${anchorName}; inset-area: block-start span-inline-end; position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;`
+      : "left: var(--x); top: var(--y);"}
   >
-    {#each sections as section, i}
-      {#if i > 0}
-        <div role="separator" class={dropdownSeparator()} />
-      {/if}
-      {#if section.heading}
-        <div class={dropdownLabel()}>{section.heading}</div>
-      {/if}
-      {#each section.items as item}
-        <div
-          role="menuitem"
-          data-disabled={item.disabled || undefined}
-          class={dropdownItem()}
-          onclick={() => {
-            if (item.disabled) return;
-            item.onSelect?.();
-            machine.send("close");
-          }}
-        >
-          {item.label}
-        </div>
-      {/each}
-    {/each}
     {#if children}
       {@render children()}
+    {:else}
+      {tip}
     {/if}
   </div>
 </div>

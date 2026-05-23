@@ -13,7 +13,7 @@ import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/d
 import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { dropdownContent, dropdownItem, dropdownSeparator, dropdownLabel } from "./dropdown-menu.tv";
-import { createDropdownMachine, bindDropdownEffects, type DropdownMachine } from "./dropdown-menu-state.vanilla";
+import { createDropdownMachine, bindDropdownEffects, type DropdownMachine } from "./dropdown-menu-machine.vanilla";
 
 interface DropdownCtx {
   machine: DropdownMachine;

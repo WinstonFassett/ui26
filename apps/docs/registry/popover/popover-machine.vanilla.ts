@@ -1,5 +1,5 @@
 // Vanilla state — no matchina, no external deps.
-// Same surface as popover.state.ts so components are swappable.
+// Same surface as popover-machine.matchina.ts so components are swappable.
 
 type PopoverStateKey = "Closed" | "Opening" | "Open" | "Closing";
 

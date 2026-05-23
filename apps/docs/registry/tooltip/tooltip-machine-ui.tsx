@@ -12,7 +12,7 @@ import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/d
 import { Slot } from "radix-ui";
 import { cn } from "../lib/utils";
 import { tooltipContent } from "./tooltip.tv";
-import { createTooltipMachine, bindTooltipEffects, type TooltipMachine } from "./tooltip-state.vanilla";
+import { createTooltipMachine, bindTooltipEffects, type TooltipMachine } from "./tooltip-machine.vanilla";
 
 interface TooltipCtx {
   machine: TooltipMachine;

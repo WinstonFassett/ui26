@@ -1,5 +1,5 @@
 // Vanilla state — no matchina, no external deps.
-// Same surface as tooltip.state.ts so components are swappable.
+// Same surface as tooltip-machine.matchina.ts so components are swappable.
 
 type TooltipStateKey = "Closed" | "OpenDelay" | "Opening" | "Open" | "CloseDelay" | "Closing";
 

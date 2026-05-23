@@ -5,7 +5,7 @@ import {
   DialogHeader, DialogFooter,
   DialogTitle, DialogDescription, DialogClose,
   useDialogBodyAttr,
-} from "./dialog-div-radix";
+} from "./dialog-radix-ui";
 
 export function DialogDemo() {
   return (
@@ -50,7 +50,7 @@ function DistantDialogListener() {
 export function DialogDynamicDemo() {
   const [data, setData] = React.useState<{ name: string; email: string } | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const machineRef = React.useRef<import("./dialog-state.vanilla").DialogMachine | null>(null);
+  const machineRef = React.useRef<import("./dialog-machine.vanilla").DialogMachine | null>(null);
 
   async function handleClick() {
     setLoading(true);

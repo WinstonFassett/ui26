@@ -4,11 +4,11 @@ title: Tooltip
 description: Hover tooltip across React and Svelte with Matchina state machine and delay effects.
 ---
 
-import { TooltipDemo } from "@registry/tooltip/tooltip-demo.tsx";
-import TooltipSvelte from "@registry/tooltip/tooltip.svelte";
-import TooltipNative from "@registry/tooltip/tooltip-native.svelte";
+import { TooltipDemo } from "@registry/tooltip/tooltip-machine-ui-demo.tsx";
+import TooltipSvelte from "@registry/tooltip/tooltip-machine-ui.svelte";
+import TooltipProgressive from "@registry/tooltip/tooltip-progressive.svelte";
 
-React and Svelte share one state machine: `tooltip.state.ts` (Matchina). Delay timers (`StartOpenDelay`, `StartCloseDelay`) are declared effects with cleanup — the machine is pure state, the effector owns the `setTimeout`/`clearTimeout`.
+React and Svelte (`tooltip-machine-ui.tsx`, `tooltip-machine-ui.svelte`) require a `tooltip-machine.*` backend conforming to the shared interface. `tooltip-machine.vanilla.ts` ships by default; `tooltip-machine.matchina.ts` also satisfies the contract. Delay timers (`StartOpenDelay`, `StartCloseDelay`) are declared effects with cleanup — the backend is pure state, the effector owns the `setTimeout`/`clearTimeout`.
 
 ## Basic
 
@@ -29,7 +29,7 @@ React and Svelte share one state machine: `tooltip.state.ts` (Matchina). Delay t
 Uses `popover="hint"` — the semantic type for transient hover content. Machine still drives open/close timing and delays; the Popover API provides browser-managed stacking context and top-layer placement. CSS anchor positioning replaces Floating UI where supported.
 
 <div class="not-content my-6">
-  <TooltipNative client:load label="Hover me (native)" tip="Powered by popover=hint" />
+  <TooltipProgressive client:load label="Hover me (native)" tip="Powered by popover=hint" />
 </div>
 
 ## Under the hood

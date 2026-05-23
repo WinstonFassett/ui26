@@ -11,7 +11,7 @@ import { Dialog as DialogPrimitive } from "radix-ui";
 import { cn } from "../lib/utils";
 import { Button } from "../button/button";
 import { dialogOverlay, dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
-import { createDialogMachine, bindDialogEffects, type DialogMachine } from "./dialog-state.vanilla";
+import { createDialogMachine, bindDialogEffects, type DialogMachine } from "./dialog-machine.vanilla";
 
 // ---------------------------------------------------------------------------
 // Context

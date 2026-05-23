@@ -4,11 +4,11 @@ title: Popover
 description: Floating popover panel across React and Svelte with Matchina state machine.
 ---
 
-import { PopoverDemo } from "@registry/popover/popover-demo.tsx";
-import PopoverSvelte from "@registry/popover/popover.svelte";
-import PopoverNative from "@registry/popover/popover-native.svelte";
+import { PopoverDemo } from "@registry/popover/popover-machine-ui-demo.tsx";
+import PopoverSvelte from "@registry/popover/popover-machine-ui.svelte";
+import PopoverProgressive from "@registry/popover/popover-progressive.svelte";
 
-React and Svelte share one state machine: `popover.state.ts` (Matchina). Effects are declared as matchboxes — `StartPositioner`, `StopPositioner`, `AnimateClose` — and each framework implements them as a DOM effector using `@floating-ui/dom`.
+React and Svelte (`popover-machine-ui.tsx`, `popover-machine-ui.svelte`) require a `popover-machine.*` backend conforming to the shared interface. `popover-machine.vanilla.ts` ships by default; `popover-machine.matchina.ts` also satisfies the contract. Effects (`StartPositioner`, `StopPositioner`, `AnimateClose`) are declared on the backend; each view implements them as a DOM effector using `@floating-ui/dom`.
 
 ## Basic
 
@@ -29,7 +29,7 @@ React and Svelte share one state machine: `popover.state.ts` (Matchina). Effects
 Uses the browser's [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) (`popover="manual"` + `popovertarget`) and CSS anchor positioning where supported, with a Floating UI fallback for older browsers. The Svelte island wires the machine; `toggle` events from the native popover feed back into machine state.
 
 <div class="not-content my-6">
-  <PopoverNative client:load triggerLabel="Open (native)" />
+  <PopoverProgressive client:load triggerLabel="Open (native)" />
 </div>
 
 ## Under the hood

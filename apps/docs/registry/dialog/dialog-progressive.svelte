@@ -3,7 +3,7 @@
   import { cn } from "../lib/utils";
   import { button } from "../button/button.tv";
   import { dialogContent, dialogTitle, dialogDescription } from "./dialog.tv";
-  import { createDialogMachine, bindDialogEffects } from "./dialog-state.vanilla";
+  import { createDialogMachine, bindDialogEffects } from "./dialog-machine.vanilla";
   import { createFocusSaver } from "../lib/dom-behaviors";
 
   type Props = {

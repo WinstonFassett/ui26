@@ -1,5 +1,5 @@
 import { Button } from "../button/button";
-import { Popover, PopoverTrigger, PopoverContent } from "./popover";
+import { Popover, PopoverTrigger, PopoverContent } from "./popover-machine-ui";
 
 export function PopoverDemo() {
   return (

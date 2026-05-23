@@ -12,7 +12,7 @@ import { Slot } from "radix-ui";
 import { computePosition, flip, shift, offset, autoUpdate } from "@floating-ui/dom";
 import { cn } from "../lib/utils";
 import { popoverContent } from "./popover.tv";
-import { createPopoverMachine, bindPopoverEffects, type PopoverMachine } from "./popover-state.vanilla";
+import { createPopoverMachine, bindPopoverEffects, type PopoverMachine } from "./popover-machine.vanilla";
 
 // ---------------------------------------------------------------------------
 // Context
