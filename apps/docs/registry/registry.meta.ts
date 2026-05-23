@@ -344,10 +344,10 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
       { path: "tabs/tabs-machine.vanilla.ts", type: "registry:ui" },
     ];
     if (fw === "astro") return [
-      { path: "tabs/tabs.astro", type: "registry:ui" },
-      { path: "tabs/TabItem.astro", type: "registry:ui" },
-      { path: "tabs/tabs.client.ts", type: "registry:ui" },
-      { path: "tabs/tabs.css", type: "registry:file" },
+      { path: "tabs/tabs-progressive.astro", type: "registry:ui" },
+      { path: "tabs/tabs-progressive-item.astro", type: "registry:ui" },
+      { path: "tabs/tabs-progressive.client.ts", type: "registry:ui" },
+      { path: "tabs/tabs-progressive.css", type: "registry:file" },
       { path: "tabs/tabs.tv.ts", type: "registry:ui" },
     ];
   }
@@ -355,7 +355,7 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
   if (name === "tabs-progressive") return [
     { path: "tabs/tabs-progressive.tsx", type: "registry:ui" },
     { path: "tabs/tabs.tv.ts", type: "registry:ui" },
-    { path: "tabs/tabs.css", type: "registry:file" },
+    { path: "tabs/tabs-progressive.css", type: "registry:file" },
   ];
 
   if (name === "card") return withSubs(CARD_SUBS);

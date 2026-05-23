@@ -13,7 +13,7 @@
  */
 import { tabsList, tabsTrigger } from "./tabs.tv";
 import { cn } from "../lib/utils";
-import "./tabs.css";
+import "./tabs-progressive.css";
 
 interface Props {
   defaultIndex?: number;
@@ -82,5 +82,5 @@ const instanceCss = labels
 <style is:inline set:html={instanceCss}></style>
 
 <script>
-  import "./tabs.client";
+  import "./tabs-progressive.client";
 </script>

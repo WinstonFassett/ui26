@@ -83,20 +83,23 @@ Common mechanisms (impl detail, not encoded in the name):
 
 Don't name files after the mechanism (`-native`, `-radio`, `-target`). The contract is "works without JS" — that's what the filename communicates. The mechanism is an implementation detail readers discover by opening the file.
 
-### What about the default `<name>.{tsx,svelte}`?
+### No generic `<name>.{tsx,svelte}` for stateful components
 
-For components that already shipped as `<name>.{tsx,svelte}` (Tabs today), treat that filename as **deprecated for stateful components**. The replacement is `<name>-machine-ui.{tsx,svelte}`. Existing names can be renamed in-place when touching the component for other reasons. Don't do a mass rename sweep — pair it with real work.
+Stateful components never live at `<name>.{tsx,svelte}` in the registry. Every framework-specific file carries an impl qualifier (`-machine-ui`, `-radix-ui`, `-bits-ui`, `-progressive`). The generic name is forbidden — a reader should be able to tell from the filename alone which impl they're looking at, with no ambiguity.
+
+The only file in a stateful component dir without an impl qualifier is `<name>.tv.ts` — the shared styles, consumed by every impl.
 
 For dumb (stateless) components, `<name>.{tsx,svelte}` stays as the single canonical file — no machine, no siblings.
 
 ### Install-time rename (CLI, future)
 
-The shadcn install pattern is `npx ui26 add tabs` → copies files into the consumer project. We plan to support sibling selection:
+The shadcn install pattern is `npx ui26 add <name>` → copies files into the consumer project. We plan to support sibling selection and optional rename-on-copy:
 
 ```
-npx ui26 add tabs --impl bits-ui
+npx ui26 add tabs --impl bits-ui          # copies tabs-bits-ui.svelte as tabs-bits-ui.svelte (default: preserve)
+npx ui26 add tabs --impl bits-ui --as tabs # copies tabs-bits-ui.svelte as tabs.svelte (explicit opt-in)
 ```
 
-…which copies `tabs-bits-ui.svelte` into the consumer project as `tabs.svelte`. Consumer code always imports `from "@/components/tabs"` and doesn't have to know which impl backs it. The registry keeps the sibling files; the CLI handles rename-on-copy.
+Default behavior: preserve the specific filename. Consumers see exactly which impl they installed. Rename to a generic name only when explicitly requested via `--as` — and only in the consumer project, never in the registry itself.
 
 Not yet implemented. Tracked separately.

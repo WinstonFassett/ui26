@@ -4,7 +4,7 @@ Scoped to `registry/tabs/`. For user-facing docs, see the Tabs page in `apps/doc
 
 ## Canonical no-JS architecture (decided 2026-05-23, tix bcbe)
 
-Tabs.astro ships the canonical no-JS-first pattern. Do not refactor it into a different shape without re-litigating in tix.
+`tabs-progressive.astro` ships the canonical no-JS-first pattern. Do not refactor it into a different shape without re-litigating in tix.
 
 ### Markup shape
 
@@ -23,7 +23,7 @@ Key invariants:
 - **Radios live OUTSIDE the tablist as siblings.** This is the only structure that lets `role=tab` children-of-`role=tablist` (APG requirement) coexist with CSS-only state propagation.
 - **`<label role=tab>` IS the tab visually and interactively.** The radio is hidden state.
 - Cross-tree `:has(> #uid-N:checked)` from `<ui26-tabs>` drives active styles + panel visibility.
-- Per-instance CSS is generated at SSR-render time inside Tabs.astro — sized to the actual child count, not enumerated globally.
+- Per-instance CSS is generated at SSR-render time inside `tabs-progressive.astro` — sized to the actual child count, not enumerated globally.
 
 ### Why this shape and not alternatives
 
@@ -32,13 +32,13 @@ Audited 2026-05-23 against DaisyUI, `<details name>`, `:target`, Pines, Skeleton
 - DaisyUI radio-as-tab → drops rich content (text-only via `aria-label`).
 - DaisyUI label-wraps-input → drops all ARIA roles.
 - `<details name="group">` → wrong semantics (disclosure, not tabs).
-- `:target` → URL pollution, history entries. (Used intentionally in HashTabs only.)
+- `:target` → URL pollution, history entries. (Used intentionally in `tabs-hash.astro` only.)
 - Pines/Skeleton → require JS, weak a11y.
 - Bilal's no-JS tabs → same shape as us, but enumerated per-tab CSS doesn't scale.
 
 If you find yourself "simplifying" this back toward radio-IS-tab or label-wraps-input, stop. That regresses a constraint that has been deliberately defended.
 
-## JS-enhancement layer (`tabs.client.ts`)
+## JS-enhancement layer (`tabs-progressive.client.ts`)
 
 The `<ui26-tabs>` custom element upgrades the no-JS scaffold:
 
@@ -74,7 +74,7 @@ Visual + a11y parity with the Astro variant is the contract. State of truth diff
 
 ## Astro `.state.ts` consumption
 
-Astro Tabs.astro does **not** consume `tabs-machine.vanilla.ts` for its core state. The radio's `:checked` is the source of truth in no-JS mode. When tix lands a controlled-mode Astro variant, the state file becomes the JS-enhancement layer's source of truth, sync'd bidirectionally with `:checked` (see decision_state_layer_prop_api memory).
+`tabs-progressive.astro` does **not** consume a `tabs-machine.*` backend for its core state. The radio's `:checked` is the source of truth in no-JS mode. When tix lands a controlled-mode Astro variant, the machine backend becomes the JS-enhancement layer's source of truth, sync'd bidirectionally with `:checked` (see decision_state_layer_prop_api memory).
 
 ## What ships in the registry
 
@@ -90,8 +90,8 @@ Per `feedback_ui26_dumb_registry`: no runtime registries, stores, or helper mach
 |---|---|
 | `tabs.tv.ts` | shared styling (TV def) — consumed by all framework variants |
 | `tabs-machine.vanilla.ts` | shared state (vanilla atom factory) — consumed by React + Svelte (not Astro) |
-| `Tabs.astro` + `TabItem.astro` | Astro no-JS-first variant, radio scaffold |
-| `tabs.client.ts` | custom element upgrading the no-JS scaffold |
-| `tabs.css` | Astro-specific styles complementing the generated per-instance CSS |
+| `tabs-progressive.astro` + `tabs-progressive-item.astro` | Astro progressive variant, radio scaffold |
+| `tabs-progressive.client.ts` | custom element upgrading the no-JS scaffold |
+| `tabs-progressive.css` | progressive-variant styles complementing the generated per-instance CSS |
 | `tabs-machine-ui.tsx` + `tabs-machine-ui.svelte` | React + Svelte variants, atom-driven |
-| `HashTabs.astro` + `hashtabs.client.ts` + `hashtabs.css` | `:target`-based addressable variant (tix 7f3a) |
+| `tabs-hash.astro` + `tabs-hash-item.astro` + `tabs-hash.client.ts` + `tabs-hash.css` | `:target`-based addressable variant (tix 7f3a) |

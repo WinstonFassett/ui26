@@ -1,20 +1,20 @@
 ---
 /**
- * HashTabs.astro — URL-hash-addressable tabs.
+ * tabs-hash.astro — URL-hash-addressable tabs.
  *
  * Each tab maps to a #hash so links like /examples/ticket-card#code
  * open directly to that tab. Works without JS via CSS :target.
  * JS layer adds aria-selected sync, back/forward nav, and scroll prevention.
  *
  * Usage:
- *   <HashTabs base="example">
- *     <HashTabItem hash="preview" label="Preview" base="example">...</HashTabItem>
- *     <HashTabItem hash="code"    label="Code"    base="example">...</HashTabItem>
- *   </HashTabs>
+ *   <TabsHash base="example">
+ *     <TabsHashItem hash="preview" label="Preview" base="example">...</TabsHashItem>
+ *     <TabsHashItem hash="code"    label="Code"    base="example">...</TabsHashItem>
+ *   </TabsHash>
  */
 import { tabsList, tabsTrigger } from "./tabs.tv";
 import { cn } from "../lib/utils";
-import "./hashtabs.css";
+import "./tabs-hash.css";
 
 interface Props {
   base: string;
@@ -68,5 +68,5 @@ const enhancedPanels = panelsHtml.replace(/data-ui26-hash-panel/g, () => {
 </ui26-hash-tabs>
 
 <script>
-  import "./hashtabs.client";
+  import "./tabs-hash.client";
 </script>

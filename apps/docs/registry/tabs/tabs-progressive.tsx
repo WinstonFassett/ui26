@@ -9,7 +9,7 @@ declare module "react" {
 }
 import { cn } from "../lib/utils";
 import { tabsList, tabsTrigger, tabsContent } from "./tabs.tv";
-import "./tabs.css";
+import "./tabs-progressive.css";
 
 // ---------------------------------------------------------------------------
 // TabsProgressiveItem
