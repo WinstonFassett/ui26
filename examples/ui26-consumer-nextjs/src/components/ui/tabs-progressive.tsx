@@ -83,7 +83,8 @@ export function TabsProgressive({
       .map(
         (_, i) =>
           `ui26-tabs#${uid}:has(> #${uid}-${i}:checked) > .ui26-tab-panel[data-panel-index="${i}"]{display:block}` +
-          `ui26-tabs#${uid}:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{${activeStyle}}`
+          `ui26-tabs#${uid}:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{${activeStyle}}` +
+          `ui26-tabs#${uid}:has(> #${uid}-${i}:focus-visible) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{outline:2px solid var(--ring);outline-offset:2px}`
       )
       .join("");
 
@@ -98,7 +99,7 @@ export function TabsProgressive({
         <input
           key={i}
           type="radio"
-          className="sr-only"
+          className="absolute opacity-0 w-px h-px pointer-events-none"
           name={uid}
           id={`${uid}-${i}`}
           defaultChecked={i === defaultIndex}
