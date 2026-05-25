@@ -4,7 +4,7 @@ const sample: Sample = {
   id: "tabs-basic",
   kind: "atom",
   title: "Basic",
-  description: "Three tabs — Account active by default.",
+  description: "Three tabs — Account active by default. Uncontrolled (prop API: defaultValue).",
   componentName: "TabsBasic",
   relatedComponent: "tabs",
   group: "basic",

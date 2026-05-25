@@ -3,6 +3,7 @@
   import { getContext, untrack } from "svelte";
   import { cn } from "../lib/utils";
   import { tabsContent } from "./tabs.tv";
+  import { getSlotProps, type TabsState } from "./tabs-machine.vanilla";
 
   type Props = {
     value: string;
@@ -14,27 +15,27 @@
   let { value, class: className, children, ...rest }: Props = $props();
 
   const ctx = getContext<{
-    state: { get(): { activeTab: string } };
-    store: { subscribe(fn: (v: { activeTab: string }) => void): () => void };
+    state: { get(): TabsState };
+    store: { subscribe(fn: (v: TabsState) => void): () => void };
     activateTab: (v: string) => void;
   } | undefined>("tabs");
 
-  const initial = ctx ? ctx.state.get().activeTab : untrack(() => value);
-  let activeTab = $state(initial);
+  const initial: TabsState = ctx ? ctx.state.get() : untrack(() => ({ activeTab: value }));
+  let state = $state(initial);
   $effect(() => {
     if (!ctx) return;
-    const unsub = ctx.store.subscribe((s) => { activeTab = s.activeTab; });
-    return unsub;
+    return ctx.store.subscribe((s) => { state = s; });
   });
 
-  const isActive = $derived(activeTab === value);
+  const isActive = $derived(state.activeTab === value);
+  const slotProps = $derived(getSlotProps(state, "content", value));
 </script>
 
 <div
   role="tabpanel"
-  data-state={isActive ? "active" : "inactive"}
   hidden={!isActive}
   class={cn(tabsContent(), className)}
+  {...slotProps}
   {...rest}
 >
   {@render children?.()}

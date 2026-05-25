@@ -3,6 +3,9 @@
 import {
   createContext,
   useContext,
+  useEffect,
+  useMemo,
+  useRef,
   useSyncExternalStore,
   type HTMLAttributes,
   type ComponentPropsWithoutRef,
@@ -10,50 +13,93 @@ import {
 } from "react";
 import { cn } from "../lib/utils";
 import { tabsList, tabsTrigger, tabsContent } from "./tabs.tv";
-import { createTabsState, type TabsContext, type TabsState } from "./tabs-machine.vanilla";
+import {
+  createTabsMachine,
+  getSlotProps,
+  type TabsContext as TabsCtxShape,
+  type TabsState,
+} from "./tabs-machine.vanilla";
 
 // ---------------------------------------------------------------------------
-// React context bridge
+// Internal context — adds onValueChange so triggers can fan changes back out.
 // ---------------------------------------------------------------------------
 
-const TabsCtx = createContext<TabsContext | null>(null);
+type InternalCtx = TabsCtxShape & { onValueChange?: (v: string) => void };
 
-function useTabsCtx(): TabsContext | null {
-  return useContext(TabsCtx);
-}
+const TabsCtx = createContext<InternalCtx | null>(null);
 
 const EMPTY_STATE: TabsState = { activeTab: "" };
 
-/** Subscribe the component to the atom using useSyncExternalStore. */
-function useTabsState(ctx: TabsContext | null): TabsState {
+function useTabsState(ctx: InternalCtx | null): TabsState {
   return useSyncExternalStore(
-    (onStoreChange) => {
-      if (!ctx) return () => {};
-      const unsub = ctx.state.subscribe(() => onStoreChange());
-      return unsub;
-    },
+    (onStoreChange) => (ctx ? ctx.state.subscribe(() => onStoreChange()) : () => {}),
     () => ctx?.state.get() ?? EMPTY_STATE,
     () => ctx?.state.get() ?? EMPTY_STATE,
   );
 }
 
 // ---------------------------------------------------------------------------
-// Components
+// Root — supports controlled (value+onValueChange) and uncontrolled (defaultValue).
 // ---------------------------------------------------------------------------
 
-export interface TabsProps extends HTMLAttributes<HTMLDivElement> {
-  /** The tab value that should be active on mount. */
-  defaultValue: string;
+export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, "defaultValue"> {
+  /** Controlled active tab value. Pair with onValueChange. */
+  value?: string;
+  /** Called when a tab is activated (controlled or uncontrolled). */
+  onValueChange?: (value: string) => void;
+  /** Initial active tab in uncontrolled mode. */
+  defaultValue?: string;
   children?: ReactNode;
 }
 
-export function Tabs({ defaultValue, className, children, ...props }: TabsProps) {
-  // createTabsState is called once per mount — stable because defaultValue
-  // is only read on initialization (uncontrolled pattern for now).
-  const ctx = createTabsState(defaultValue);
+export function Tabs({
+  value,
+  onValueChange,
+  defaultValue = "",
+  className,
+  children,
+  ...props
+}: TabsProps) {
+  const isControlled = value !== undefined;
+
+  // Atom is the single internal source of truth in both modes.
+  // In controlled mode the parent's `value` is mirrored in via effect.
+  const ctx = useMemo(
+    () => createTabsMachine(isControlled ? (value as string) : defaultValue),
+    // Factory runs once per mount; subsequent value changes flow through the effect below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  // Push controlled prop into the atom when it changes.
+  useEffect(() => {
+    if (!isControlled) return;
+    if (ctx.state.get().activeTab !== value) {
+      ctx.state.set({ activeTab: value as string });
+    }
+  }, [ctx, isControlled, value]);
+
+  // Stable handler ref so context value is stable.
+  const handlerRef = useRef(onValueChange);
+  handlerRef.current = onValueChange;
+
+  const internalCtx = useMemo<InternalCtx>(
+    () => ({
+      ...ctx,
+      activateTab(v: string) {
+        handlerRef.current?.(v);
+        // In uncontrolled mode the atom is the source of truth; set directly.
+        // In controlled mode the parent decides — if it doesn't update `value`,
+        // the atom stays in sync with the parent via the effect above.
+        if (!isControlled) ctx.activateTab(v);
+      },
+      onValueChange,
+    }),
+    [ctx, isControlled, onValueChange],
+  );
 
   return (
-    <TabsCtx.Provider value={ctx}>
+    <TabsCtx.Provider value={internalCtx}>
       <div className={cn("w-full", className)} {...props}>
         {children}
       </div>
@@ -63,39 +109,33 @@ export function Tabs({ defaultValue, className, children, ...props }: TabsProps)
 
 // ---------------------------------------------------------------------------
 
-export interface TabsListProps extends HTMLAttributes<HTMLDivElement> { children?: ReactNode; }
+export interface TabsListProps extends HTMLAttributes<HTMLDivElement> {
+  children?: ReactNode;
+}
 
 export function TabsList({ className, ...props }: TabsListProps) {
-  return (
-    <div
-      role="tablist"
-      className={cn(tabsList(), className)}
-      {...props}
-    />
-  );
+  return <div role="tablist" className={cn(tabsList(), className)} {...props} />;
 }
 
 // ---------------------------------------------------------------------------
 
 export interface TabsTriggerProps extends ComponentPropsWithoutRef<"button"> {
-  /** Must match a TabsContent value. */
   value: string;
   children?: ReactNode;
 }
 
 export function TabsTrigger({ value, className, children, ...props }: TabsTriggerProps) {
-  const ctx = useTabsCtx();
+  const ctx = useContext(TabsCtx);
   const state = useTabsState(ctx);
-  const isActive = state.activeTab === value;
+  const slotProps = getSlotProps(state, "trigger", value);
 
   return (
     <button
       role="tab"
       type="button"
-      aria-selected={isActive}
-      data-state={isActive ? "active" : "inactive"}
       className={cn(tabsTrigger(), className)}
       onClick={() => ctx?.activateTab(value)}
+      {...slotProps}
       {...props}
     >
       {children}
@@ -106,22 +146,22 @@ export function TabsTrigger({ value, className, children, ...props }: TabsTrigge
 // ---------------------------------------------------------------------------
 
 export interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
-  /** Must match a TabsTrigger value. */
   value: string;
   children?: ReactNode;
 }
 
 export function TabsContent({ value, className, children, ...props }: TabsContentProps) {
-  const ctx = useTabsCtx();
+  const ctx = useContext(TabsCtx);
   const state = useTabsState(ctx);
   const isActive = ctx ? state.activeTab === value : true;
+  const slotProps = getSlotProps(state, "content", value);
 
   return (
     <div
       role="tabpanel"
-      data-state={isActive ? "active" : "inactive"}
       hidden={!isActive}
       className={cn(tabsContent(), className)}
+      {...slotProps}
       {...props}
     >
       {children}

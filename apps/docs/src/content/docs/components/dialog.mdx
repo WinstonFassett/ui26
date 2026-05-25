@@ -4,10 +4,14 @@ description: Modal dialog with focus trap, scroll lock, and portal. React and Sv
 ---
 
 import DocSingleShell from '@/components/demos/DocSingleShell.astro'
-import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-machine-ui-demo.tsx";
-import DialogSvelte from "@registry/dialog/dialog-bits-ui.svelte";
+import {
+  DialogDemo, DialogControlledDemo, DialogDistantDemo, DialogDynamicDemo,
+} from "@registry/dialog/dialog-machine-ui-demo.tsx";
+import DialogSvelte from "@registry/dialog/dialog-machine-ui.svelte";
 
 ## Basic
+
+Uncontrolled — `defaultOpen` initializes state; `DialogTrigger` and `DialogClose` flip it. No external props needed.
 
 <div class="not-content grid grid-cols-2 gap-6 my-6">
   <div>
@@ -18,6 +22,14 @@ import DialogSvelte from "@registry/dialog/dialog-bits-ui.svelte";
     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
     <DialogSvelte client:load triggerLabel="Open dialog" title="Edit profile" description="Make changes to your profile here." />
   </div>
+</div>
+
+## Controlled mode
+
+Parent owns `open` and `onOpenChange` (React) or uses `bind:open` (Svelte). Internal triggers fire `onOpenChange` instead of mutating internal state — the parent decides whether to honor the request.
+
+<div class="not-content my-6">
+  <DialogControlledDemo client:only="react" />
 </div>
 
 ## Distant trigger
@@ -39,7 +51,7 @@ The trigger doesn't have to be inside the dialog. Set `data-dialog-open="{id}"` 
 
 ## Dynamic content
 
-Pass a `loadContent` function to fetch data before opening. The trigger shows a loading state while the promise resolves, then the dialog opens with content already rendered.
+Pre-fetch data, then flip `open` to `true` once it's ready. The trigger shows a loading state while the promise resolves, then the dialog opens with content already rendered — all via the prop API.
 
 <div class="not-content my-6">
   <DialogDynamicDemo client:only="react" />
