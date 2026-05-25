@@ -28,6 +28,17 @@ type InternalCtx = TabsCtxShape & { onValueChange?: (v: string) => void };
 
 const TabsCtx = createContext<InternalCtx | null>(null);
 
+// DOM attribute → React prop name (the contract uses HTML-style lowercase;
+// React needs camelCase for synthetic props it owns).
+const REACT_PROP_ALIAS: Record<string, string> = {
+  tabindex: "tabIndex",
+};
+function toReactProps(p: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(p)) out[REACT_PROP_ALIAS[k] ?? k] = v;
+  return out;
+}
+
 const EMPTY_STATE: TabsState = { activeTab: "" };
 
 function useTabsState(ctx: InternalCtx | null): TabsState {
@@ -127,7 +138,7 @@ export interface TabsTriggerProps extends ComponentPropsWithoutRef<"button"> {
 export function TabsTrigger({ value, className, children, ...props }: TabsTriggerProps) {
   const ctx = useContext(TabsCtx);
   const state = useTabsState(ctx);
-  const slotProps = getSlotProps(state, "trigger", value);
+  const slotProps = toReactProps(getSlotProps(state, "trigger", value));
 
   return (
     <button
@@ -154,7 +165,7 @@ export function TabsContent({ value, className, children, ...props }: TabsConten
   const ctx = useContext(TabsCtx);
   const state = useTabsState(ctx);
   const isActive = ctx ? state.activeTab === value : true;
-  const slotProps = getSlotProps(state, "content", value);
+  const slotProps = toReactProps(getSlotProps(state, "content", value));
 
   return (
     <div
