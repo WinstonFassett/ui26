@@ -9,7 +9,11 @@ export type Atom<T> = { get(): T; set(v: T): void; subscribe(fn: (v: T) => void)
 function atom<T>(initial: T): Atom<T> {
   let val = initial;
   const ls = new Set<(v: T) => void>();
-  return { get: () => val, set: (v) => { val = v; ls.forEach(fn => fn(v)); }, subscribe: (fn) => { ls.add(fn); return () => ls.delete(fn); } };
+  return {
+    get: () => val,
+    set: (v) => { val = v; ls.forEach((fn) => fn(v)); },
+    subscribe: (fn) => { ls.add(fn); return () => ls.delete(fn); },
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -20,12 +24,38 @@ export interface TabsState {
   activeTab: string;
 }
 
+export type TabsSlot = "trigger" | "content";
+
+export type SlotPropsMap = Record<string, string | boolean | number>;
+
+// ---------------------------------------------------------------------------
+// SLOT_PROPS — parameterized by (active?: boolean) since the active value is dynamic
+// ---------------------------------------------------------------------------
+
+export const SLOT_PROPS: Record<"active" | "inactive", Record<TabsSlot, SlotPropsMap>> = {
+  active: {
+    trigger: { "aria-selected": true,  "data-state": "active",   tabindex: 0 },
+    content: { "data-state": "active" },
+  },
+  inactive: {
+    trigger: { "aria-selected": false, "data-state": "inactive", tabindex: -1 },
+    content: { "data-state": "inactive" },
+  },
+};
+
+/** Read slot props for a given (value, activeValue) pair. */
+export function getSlotProps(state: TabsState, slot: TabsSlot, value: string): SlotPropsMap {
+  const isActive = state.activeTab === value;
+  return SLOT_PROPS[isActive ? "active" : "inactive"][slot];
+}
+
+// ---------------------------------------------------------------------------
+// Context
+// ---------------------------------------------------------------------------
+
 export interface TabsContext {
-  /** The atom holding the current state. */
   state: Atom<TabsState>;
-  /** Activate a tab by its value string. */
   activateTab(value: string): void;
-  /** Returns true if the given tab value is currently active. */
   isActive(value: string): boolean;
 }
 
@@ -34,46 +64,18 @@ export interface TabsContext {
 // ---------------------------------------------------------------------------
 
 /**
- * createTabsState — creates a self-contained Tabs state context.
+ * createTabsMachine — creates a self-contained Tabs state context.
  *
- * @param defaultValue - The tab value that should be active initially.
- *
- * @example React
- * ```ts
- * const ctx = createTabsState("account");
- * // Pass ctx down via React context, then use ctx.state, ctx.activateTab, ctx.isActive
- * ```
- *
- * @example Svelte (Layer 1 → reactive store adapter)
- * ```ts
- * const ctx = createTabsState("account");
- *
- * // Svelte store protocol: { subscribe(fn: (value) => void): () => void }
- * // The matchina atom emits StoreChange<TabsState>, not plain TabsState.
- * // Bridge with a thin derived store:
- * const tabsStore = {
- *   subscribe(fn: (value: TabsState) => void) {
- *     fn(ctx.state.get()); // emit current value immediately (Svelte protocol)
- *     return ctx.state.subscribe((change) => fn(change.to));
- *   }
- * };
- * // In a .svelte file: $tabsStore.activeTab
- * ```
- *
- * @example Astro (islands, SSR-safe)
- * ```ts
- * // Astro components are server-rendered; state only matters client-side.
- * // In an Astro island (client:load), call createTabsState and wire the same
- * // way as the Svelte adapter above. Pass the initial activeTab as a prop from
- * // the Astro template so the server-rendered default matches hydration.
- * ```
+ * @param initial - The tab value that should be active initially.
+ *                  Positional, mirroring matchina's createMachine(states, transitions, initial).
  */
-export function createTabsState(defaultValue: string): TabsContext {
-  const state = atom<TabsState>({ activeTab: defaultValue });
+export function createTabsMachine(initial = ""): TabsContext {
+  const state = atom<TabsState>({ activeTab: initial });
 
   return {
     state,
     activateTab(value: string) {
+      if (state.get().activeTab === value) return;
       state.set({ activeTab: value });
     },
     isActive(value: string) {
@@ -81,11 +83,3 @@ export function createTabsState(defaultValue: string): TabsContext {
     },
   };
 }
-
-// ---------------------------------------------------------------------------
-// Dialog feasibility note (Layer 2 assessment — see assessment at bottom)
-// ---------------------------------------------------------------------------
-// Dialog needs the same atom pattern for open/closed state, PLUS a separate
-// concern: DOM behavior (focus trap, scroll lock, portal). createTabsState
-// proves the atom pattern works for Layer 1. Dialog will stress-test the
-// Layer 2 seam. See inline assessment at end of file.

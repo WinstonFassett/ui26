@@ -1,6 +1,42 @@
 import { defineStates, defineEffects, createMachine, bindEffects, withSubscribe } from "matchina";
 
+export type DialogStateKey = "Closed" | "Open";
+
+export type DialogEvent = "open" | "close" | "settle" | "reset";
+
+export type DialogSnapshot = {
+  key: DialogStateKey;
+  transitioning: boolean;
+};
+
+export type DialogChangeEvent = {
+  type: DialogEvent;
+  from: DialogSnapshot;
+  to: DialogSnapshot;
+};
+
 export type SlotPropsMap = Record<string, Record<string, string | boolean | number>>;
+
+export type DialogSlot = "trigger" | "panel";
+
+export const SLOT_PROPS: Record<DialogStateKey, SlotPropsMap> = {
+  Closed: { trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } },
+  Open:   { trigger: { "aria-expanded": true  }, panel: { "data-state": "open"   } },
+};
+
+export function getSlotProps(state: DialogStateKey, slot: DialogSlot) {
+  return SLOT_PROPS[state]?.[slot] ?? {};
+}
+
+export function isOpening(ev: DialogChangeEvent | null, snap: DialogSnapshot): boolean {
+  if (!snap.transitioning) return false;
+  return ev?.to.key === "Open";
+}
+
+export function isClosing(ev: DialogChangeEvent | null, snap: DialogSnapshot): boolean {
+  if (!snap.transitioning) return false;
+  return ev?.to.key === "Closed";
+}
 
 export const dialogEffects = defineEffects({
   OpenDialog:      undefined,
@@ -17,43 +53,90 @@ export const dialogEffects = defineEffects({
   ReleaseFocus:    undefined,
 });
 
-const closed  = () => ({ effects: [
-  dialogEffects.SlotProps({ trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } }),
+const closed = () => ({ effects: [
+  dialogEffects.SlotProps(SLOT_PROPS.Closed),
   dialogEffects.RestoreFocus(),
 ] });
-const opening = () => ({ effects: [
+const open = () => ({ effects: [
+  dialogEffects.SlotProps(SLOT_PROPS.Open),
   dialogEffects.SaveFocus(),
   dialogEffects.LockScroll(),
   dialogEffects.HideBackground(),
   dialogEffects.TrapFocus(),
   dialogEffects.OpenDialog(),
-  dialogEffects.SlotProps({ trigger: { "aria-expanded": true }, panel: { "data-state": "open" } }),
-] });
-const open    = () => ({ effects: [
-  dialogEffects.SlotProps({ trigger: { "aria-expanded": true }, panel: { "data-state": "open" } }),
-] });
-const closing = () => ({ effects: [
-  dialogEffects.ReleaseFocus(),
-  dialogEffects.UnlockScroll(),
-  dialogEffects.ShowBackground(),
-  dialogEffects.CloseDialog(),
-  dialogEffects.AnimateClose(),
-  dialogEffects.SlotProps({ trigger: { "aria-expanded": false }, panel: { "data-state": "closed" } }),
 ] });
 
-export function createDialogMachine() {
-  const states = defineStates({ Closed: closed, Opening: opening, Open: open, Closing: closing });
+/**
+ * @param initial Starting state key — only `Closed` or `Open`.
+ *   Transient transitions are tracked via `snapshot.transitioning`, not separate keys.
+ */
+export function createDialogMachine(initial: DialogStateKey = "Closed") {
+  const states = defineStates({ Closed: closed, Open: open });
 
-  return withSubscribe(createMachine(
+  const machine = withSubscribe(createMachine(
     states,
     {
-      Closed:  { open:  "Opening", reset: "Closed" },
-      Opening: { ready: "Open",    close: "Closing", reset: "Closed" },
-      Open:    { close: "Closing", reset: "Closed" },
-      Closing: { done:  "Closed",  open:  "Opening", reset: "Closed" },
+      Closed: { open: "Open",   reset: "Closed" },
+      Open:   { close: "Closed", reset: "Closed" },
     },
-    "Closed"
+    initial
   ));
+
+  let transitioning = false;
+  let lastEvent: DialogChangeEvent | null = null;
+  const wrappers = new Set<(ev: DialogChangeEvent) => void>();
+
+  function buildSnap(key: DialogStateKey): DialogSnapshot {
+    return { key, transitioning };
+  }
+
+  (machine as any).subscribe((ev: any) => {
+    const fromKey = ev?.from?.key as DialogStateKey;
+    const toKey = ev?.to?.key as DialogStateKey;
+    const type = (ev?.type as DialogEvent) ?? "open";
+    if (type === "open" || type === "close") transitioning = true;
+    const wrapped: DialogChangeEvent = {
+      type,
+      from: { key: fromKey, transitioning: false },
+      to: { key: toKey, transitioning },
+    };
+    lastEvent = wrapped;
+    wrappers.forEach((fn) => fn(wrapped));
+  });
+
+  function send(event: DialogEvent) {
+    if (event === "settle") {
+      if (!transitioning) return;
+      transitioning = false;
+      const key = (machine as any).getState().key as DialogStateKey;
+      const wrapped: DialogChangeEvent = {
+        type: "settle",
+        from: { key, transitioning: true },
+        to: { key, transitioning: false },
+      };
+      lastEvent = wrapped;
+      wrappers.forEach((fn) => fn(wrapped));
+      return;
+    }
+    (machine as any).send(event);
+  }
+
+  return {
+    getSnapshot(): DialogSnapshot {
+      return buildSnap((machine as any).getState().key as DialogStateKey);
+    },
+    /** @deprecated use getSnapshot */
+    getState(): { key: DialogStateKey } {
+      return { key: (machine as any).getState().key as DialogStateKey };
+    },
+    getLastEvent(): DialogChangeEvent | null { return lastEvent; },
+    send,
+    subscribe(fn: (ev: DialogChangeEvent) => void) {
+      wrappers.add(fn);
+      return () => wrappers.delete(fn);
+    },
+    _matchina: machine,
+  };
 }
 
 export type DialogMachine = ReturnType<typeof createDialogMachine>;
@@ -82,7 +165,7 @@ export function bindDialogEffects(
   handlers: DialogEffectorHandlers,
   slotRefs?: DialogSlotRefs,
 ) {
-  return bindEffects(machine, (s) => (s as any)?.data?.effects, {
+  return bindEffects((machine as any)._matchina, (s: any) => s?.data?.effects, {
     ...handlers,
     SlotProps: (props: SlotPropsMap) => {
       if (!slotRefs) return;

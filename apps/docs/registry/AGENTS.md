@@ -91,6 +91,64 @@ The only file in a stateful component dir without an impl qualifier is `<name>.t
 
 For dumb (stateless) components, `<name>.{tsx,svelte}` stays as the single canonical file — no machine, no siblings.
 
+### Machine-file contract
+
+Every `<name>-machine.{vanilla,matchina,xstate-fsm}.ts` file MUST export the same surface so views are swappable. The shared surface is the contract; how each backend implements it internally is hidden.
+
+**Required exports:**
+
+```ts
+// State keys — STABLE only. No transient/in-flight keys.
+export type <Name>StateKey = /* e.g. "Closed" | "Open" */;
+
+// Events the machine accepts.
+export type <Name>Event = /* e.g. "open" | "close" | "settle" | "reset" */;
+
+// Snapshot — what subscribers see. `transitioning: boolean` rides alongside
+// the key for animation gating instead of bloating state keys with Opening/Closing.
+export type <Name>Snapshot = { key: <Name>StateKey; transitioning: boolean };
+
+// Change event — carries from/to snapshots so derivers can compute direction.
+export type <Name>ChangeEvent = {
+  type: <Name>Event;
+  from: <Name>Snapshot;
+  to:   <Name>Snapshot;
+};
+
+// SLOT_PROPS — ARIA / data-attribute table indexed by state key.
+export const SLOT_PROPS: Record<<Name>StateKey, Record<SlotName, AttrMap>>;
+
+// getSlotProps — convenience reader. Single source of ARIA truth for both
+// SSR (view reads at render time) and runtime (machine applies via effects).
+export function getSlotProps(state: <Name>StateKey, slot: SlotName): AttrMap;
+
+// Direction derivers — operate on (event, snapshot), not on key alone.
+export function is<Verb>ing(ev: <Name>ChangeEvent | null, snap: <Name>Snapshot): boolean;
+
+// Factory — `initial` is POSITIONAL, mirroring matchina's createMachine(states, transitions, initial).
+// Default to the "rest" key. Only stable keys are valid entry points.
+export function create<Name>Machine(initial?: <Name>StateKey, options?: ...): <Name>Machine;
+```
+
+**Returned machine surface:**
+
+```ts
+{
+  getSnapshot(): <Name>Snapshot;
+  getLastEvent(): <Name>ChangeEvent | null;   // for deriver lookback
+  send(event: <Name>Event): void;
+  subscribe(fn: (ev: <Name>ChangeEvent) => void): () => void;
+}
+```
+
+**Why no transient keys:** `Opening` / `Closing` (and equivalents) as first-class state keys force every consumer to special-case them and exclude them from `initial`. `transitioning: boolean` + direction derivers gives the same animation hooks while keeping the state graph small, the keys orthogonal, and transitions interruptible (open during close just flips `to.key` back and leaves `transitioning` true until `settle`).
+
+**`settle` event:** sent by the view when an entering animation has played out (`requestAnimationFrame` for opens, `animationend` for closes). Clears `transitioning`. Views with no animation can call `settle` synchronously.
+
+**Reset:** `send("reset")` returns to the rest key with `transitioning: false`. Used by view unmount and by parents that want to forcibly close.
+
+**Stores (no transitions):** Components like Tabs whose state is just a value, not a state graph, still ship as `<name>-machine.*.ts` for naming parallelism. Their factory exports `state` (an atom-like subscribable) plus per-value helpers (`activateTab`, `isActive`). `SLOT_PROPS` is keyed by an active/inactive boolean rather than a state key; `getSlotProps(state, slot, value)` carries the extra parameter.
+
 ### Install-time rename (CLI, future)
 
 The shadcn install pattern is `npx ui26 add <name>` → copies files into the consumer project. We plan to support sibling selection and optional rename-on-copy:
