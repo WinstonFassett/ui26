@@ -7,6 +7,7 @@ description: Stateful Tabs across React, Svelte, and Astro.
 import { TabsDemo } from "@registry/tabs/tabs-machine-ui-demo.tsx";
 import TabsDemo2 from "@registry/tabs/tabs-machine-ui-demo.svelte";
 import TabsAstro from "@registry/tabs/tabs-progressive.astro";
+import TabItem from "@registry/tabs/tabs-progressive-item.astro";
 
 React and Svelte (`tabs-machine-ui.tsx`, `tabs-machine-ui.svelte`) require a `tabs-machine.*` backend that conforms to the shared interface. The default is `tabs-machine.vanilla.ts`; swap in `tabs-machine.matchina.ts`, `tabs-machine.xstate.ts`, or any backend matching the contract. Astro (`tabs-progressive.astro`) is SSR-first — prop-driven, plain HTML, custom element for switching. No framework runtime, no hydration gap, first tab visible without JS.
 
@@ -25,13 +26,11 @@ React and Svelte (`tabs-machine-ui.tsx`, `tabs-machine-ui.svelte`) require a `ta
 
   <div>
     <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Astro</p>
-    <TabsAstro
-      tabs={[
-        { label: "Account",  content: "Manage your account details." },
-        { label: "Password", content: "Update your password." },
-        { label: "Settings", content: "Configure your settings." },
-      ]}
-    />
+    <TabsAstro>
+      <TabItem label="Account">Manage your account details.</TabItem>
+      <TabItem label="Password">Update your password.</TabItem>
+      <TabItem label="Settings">Configure your settings.</TabItem>
+    </TabsAstro>
   </div>
 </div>
 
