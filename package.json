@@ -12,7 +12,8 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "dev": "pnpm --filter ./apps/docs dev",
+    "dev": "portless ui26 pnpm --filter ./apps/docs dev",
+    "preview": "portless ui26-preview sh -c 'pnpm --filter ./apps/docs exec astro preview --port $PORT --host 127.0.0.1'",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
   },
