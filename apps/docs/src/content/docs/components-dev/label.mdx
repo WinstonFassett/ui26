@@ -1,0 +1,64 @@
+---
+topic: component-dev
+title: Label
+description: Dumb, stateless Label primitive. Three wrappers (React, Svelte, Astro) over one shared class config.
+---
+
+import { Label as LabelReact } from "@registry/label/label.tsx";
+import LabelSvelte from "@registry/label/label.svelte";
+import LabelAstro from "@registry/label/label.astro";
+import { Input as InputReact } from "@registry/input/input.tsx";
+import InputSvelte from "@registry/input/input.svelte";
+import InputAstro from "@registry/input/input.astro";
+
+Same `Label` rendered three times per row — React, Svelte, Astro. No `variant` or `size` prop; disabled styling is driven by the `peer` of an adjacent disabled input.
+
+## Default
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <LabelReact client:load>React · email</LabelReact>
+  <LabelSvelte client:load>Svelte · email</LabelSvelte>
+  <LabelAstro>Astro · email</LabelAstro>
+</div>
+
+## Paired with Input
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <div class="flex flex-col gap-2">
+    <LabelReact htmlFor="email-react" client:load>React · email</LabelReact>
+    <InputReact id="email-react" type="email" placeholder="you@example.com" client:load />
+  </div>
+  <div class="flex flex-col gap-2">
+    <LabelSvelte for="email-svelte" client:load>Svelte · email</LabelSvelte>
+    <InputSvelte id="email-svelte" type="email" placeholder="you@example.com" client:load />
+  </div>
+  <div class="flex flex-col gap-2">
+    <LabelAstro for="email-astro">Astro · email</LabelAstro>
+    <InputAstro id="email-astro" type="email" placeholder="you@example.com" />
+  </div>
+</div>
+
+## Disabled peer
+
+Wrap label + input in a flex container and mark the input `peer disabled` — the label dims via `peer-disabled:opacity-50`.
+
+<div class="not-content grid grid-cols-3 gap-3 my-6">
+  <div class="flex flex-col-reverse gap-2">
+    <InputReact id="disabled-react" class="peer" disabled placeholder="disabled" client:load />
+    <LabelReact htmlFor="disabled-react" client:load>React · disabled</LabelReact>
+  </div>
+  <div class="flex flex-col-reverse gap-2">
+    <InputSvelte id="disabled-svelte" class="peer" disabled placeholder="disabled" client:load />
+    <LabelSvelte for="disabled-svelte" client:load>Svelte · disabled</LabelSvelte>
+  </div>
+  <div class="flex flex-col-reverse gap-2">
+    <InputAstro id="disabled-astro" class="peer" disabled placeholder="disabled" />
+    <LabelAstro for="disabled-astro">Astro · disabled</LabelAstro>
+  </div>
+</div>
+
+## Under the hood
+
+- **Shared config:** `apps/docs/registry/Label/Label.tv.ts` — base classes only, no variants.
+- **Wrappers:** `apps/docs/registry/Label/Label.{tsx,svelte,astro}` — thin passthroughs rendering `<label>`.
+- **Disabled linking:** uses Tailwind's `peer` / `peer-disabled` modifier on the sibling input, so no JS or prop coordination is needed.

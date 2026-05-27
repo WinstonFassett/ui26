@@ -1,0 +1,108 @@
+---
+topic: component-dev
+title: Dialog
+description: Modal dialog across React and Svelte with Matchina state machine. Proves Layer 2 DOM behavior — focus trap, scroll lock, portal.
+---
+
+import { DialogDemo, DialogDistantDemo, DialogDynamicDemo } from "@registry/dialog/dialog-machine-ui-demo.tsx";
+import DialogSvelte from "@registry/dialog/dialog-bits-ui.svelte";
+import DialogProgressive from "@registry/dialog/dialog-progressive.svelte";
+import ButtonAstro from "@registry/button/button.astro";
+
+React and Svelte require a `dialog-machine.*` backend conforming to the shared interface (`dialog-machine.vanilla.ts` ships by default; `dialog-machine.matchina.ts` and `dialog-machine.xstate-fsm.ts` also satisfy the contract). DOM behavior delegates to whichever view is installed — `dialog-radix-ui.tsx` (Radix `DialogPrimitive`), `dialog-bits-ui.svelte` (bits-ui), `dialog-machine-ui.{tsx,svelte}` (own impl), or `dialog-progressive.{tsx,svelte}` (native `<dialog>`).
+
+## Co-located trigger
+
+Trigger and dialog live together. Machine manages open/close transitions and animation timing.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <DialogDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <DialogSvelte client:load triggerLabel="Open dialog" title="Edit profile" description="Make changes to your profile here." />
+  </div>
+</div>
+
+## Distant trigger
+
+Trigger lives outside the component tree. Sets `data-dialog-open="{id}"` on `document.body`. Dialog watches via `MutationObserver` and fires machine events.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <DialogDistantDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <div class="flex flex-col gap-3">
+      <ButtonAstro variant="secondary" size="lg" onclick="document.body.setAttribute('data-dialog-open', 'svelte-profile')">
+        Distant trigger
+      </ButtonAstro>
+      <DialogSvelte client:load watchId="svelte-profile" title="Remotely opened" description="This dialog was opened by a trigger outside the component tree." />
+    </div>
+  </div>
+</div>
+
+## Pre-opened (defaultOpen)
+
+Opens immediately on mount — useful for confirmation screens, onboarding gates, or error states that should block interaction. Shown on its own page to avoid blocking this one: [dialog-default-open](/components/dev/dialog-default-open).
+
+## Dynamic content
+
+Trigger calls `loadContent` before opening. Dialog waits for the promise to resolve, shows a loading state on the button, then opens with the fetched data already rendered.
+
+<div class="not-content my-6">
+  <DialogDynamicDemo client:only="react" />
+</div>
+
+## SSR'd slot content
+
+The Svelte island owns interaction and transitions. The slot content is server-rendered by Astro — no JS needed to paint it. This is the same pattern as the code block previews.
+
+<div class="not-content my-6">
+  <DialogSvelte client:load triggerLabel="Open (SSR content)" title="Server-rendered content">
+    <div class="flex flex-col gap-3">
+      <p class="text-sm text-muted-foreground">This content was rendered on the server. It could be a database query result, markdown, a form — anything Astro can render.</p>
+      <ul class="text-sm text-muted-foreground list-disc list-inside">
+        <li>Item one — SSR'd</li>
+        <li>Item two — SSR'd</li>
+        <li>Item three — SSR'd</li>
+      </ul>
+    </div>
+  </DialogSvelte>
+</div>
+
+## Native `<dialog>` (progressive enhancement)
+
+Native `<dialog>` element — Astro SSRs the content into slots, Svelte island wires the machine on mount. No bits-ui, no portal. Focus trap, scroll lock, and Escape handling are browser-native. `::backdrop` replaces the overlay div. Machine reads `dialogEl.open` on mount so hydration never stomps open state.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Basic</p>
+    <DialogProgressive client:load triggerLabel="Open (native)" title="Native dialog" description="Powered by the browser's native &lt;dialog&gt; element." />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">SSR'd slot content</p>
+    <DialogProgressive client:load triggerLabel="Open (SSR content)" title="Server-rendered content">
+      <div class="flex flex-col gap-3">
+        <p class="text-sm text-muted-foreground">This content was rendered on the server. It's in the HTML source — crawlable — but hidden until the dialog opens.</p>
+        <ul class="text-sm text-muted-foreground list-disc list-inside">
+          <li>Item one — SSR'd</li>
+          <li>Item two — SSR'd</li>
+          <li>Item three — SSR'd</li>
+        </ul>
+      </div>
+    </DialogProgressive>
+  </div>
+</div>
+
+## Under the hood
+
+- **Machine**: `Closed → Opening → Open → Closing → Closed` — same shape as Popover
+- **Effects**: `OpenDialog` (delegate to platform, fire `ready`), `CloseDialog` (no-op — platform owns teardown), `AnimateClose` (wait for CSS animation, then `done`)
+- **React effector**: Radix `DialogPrimitive` handles focus trap, portal, scroll lock — machine just reflects open state via `open` prop
+- **Svelte effector**: `bits-ui` `Dialog` — same Radix primitives ported to Svelte, `data-state` attributes match React exactly
+- **Distant trigger**: `MutationObserver` on `document.body` watching `data-dialog-open` — SSR-safe, zero overhead, no shared bus needed for the 80% case

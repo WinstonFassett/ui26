@@ -4,6 +4,7 @@ import {
   COMPONENTS,
   FRAMEWORKS,
   filesFor,
+  supportsFramework,
   type Framework,
   type RegistryFile,
 } from "../../../../registry/registry.meta";
@@ -60,7 +61,9 @@ export const getStaticPaths: GetStaticPaths = () => {
   const paths = [] as { params: { framework: string; component: string } }[];
   for (const fw of FRAMEWORKS) {
     for (const c of COMPONENTS) {
-      paths.push({ params: { framework: fw, component: c.name } });
+      if (supportsFramework(c.name, fw)) {
+        paths.push({ params: { framework: fw, component: c.name } });
+      }
     }
   }
   return paths;

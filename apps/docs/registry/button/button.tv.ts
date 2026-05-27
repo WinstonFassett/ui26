@@ -3,7 +3,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 export const button = tv({
   base: [
     "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap select-none",
-    "rounded-lg text-sm font-medium tracking-[-0.005em]",
+    "rounded-[var(--radius,0.5rem)] text-sm font-medium tracking-[-0.005em]",
     "transition-[background-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
     "outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "active:translate-y-px",

@@ -1,0 +1,35 @@
+---
+title: Tabs
+description: Stateful tab switcher. DOM-agnostic state backend via tabs-machine.vanilla.ts — framework adapters wire to the same atom.
+---
+
+import DocSingleShell from '@/components/demos/DocSingleShell.astro'
+import { TabsDemo, TabsControlledDemo } from "@registry/tabs/tabs-machine-ui-demo.tsx";
+import TabsSvelteDemo from "@registry/tabs/tabs-machine-ui-demo.svelte";
+
+## Basic
+
+<DocSingleShell id="tabs-basic" />
+
+## Controlled mode
+
+Parent owns `value` and `onValueChange` (React) or uses `bind:value` (Svelte). The state-layer atom mirrors the prop bidirectionally — clicks update parent state; parent updates flow back into the active tab.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <TabsControlledDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <TabsSvelteDemo client:only="svelte" />
+  </div>
+</div>
+
+## Uncontrolled (live)
+
+Same state-layer atom drives both — React reads via `useSyncExternalStore`, Svelte via context + store-protocol bridge.
+
+<div class="not-content my-6">
+  <TabsDemo client:only="react" />
+</div>

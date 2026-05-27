@@ -42,10 +42,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["cb1", "cb-lbl1"],
       },
-      cb1: { type: "Checkbox", props: { checked: true }, children: [] },
+      cb1: { type: "Checkbox", props: { id: "cb1", checked: true }, children: [] },
       "cb-lbl1": {
-        type: "FieldTitle",
-        props: { text: "Enable streaming responses" },
+        type: "FieldLabel",
+        props: { text: "Enable streaming responses", htmlFor: "cb1" },
         children: [],
       },
       "cb-item2": {
@@ -53,10 +53,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["cb2", "cb-lbl2"],
       },
-      cb2: { type: "Checkbox", props: {}, children: [] },
+      cb2: { type: "Checkbox", props: { id: "cb2" }, children: [] },
       "cb-lbl2": {
-        type: "FieldTitle",
-        props: { text: "Allow guest edits" },
+        type: "FieldLabel",
+        props: { text: "Allow guest edits", htmlFor: "cb2" },
         children: [],
       },
       "cb-item3": {
@@ -64,10 +64,10 @@ const sample: Sample = {
         props: { orientation: "horizontal", className: "opacity-50" },
         children: ["cb3", "cb-lbl3"],
       },
-      cb3: { type: "Checkbox", props: { checked: true, disabled: true }, children: [] },
+      cb3: { type: "Checkbox", props: { id: "cb3", checked: true, disabled: true }, children: [] },
       "cb-lbl3": {
-        type: "FieldTitle",
-        props: { text: "Legacy sync (enterprise)" },
+        type: "FieldLabel",
+        props: { text: "Legacy sync (enterprise)", htmlFor: "cb3" },
         children: [],
       },
 
@@ -92,10 +92,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["sw1", "sw-lbl1"],
       },
-      sw1: { type: "Switch", props: { checked: true }, children: [] },
+      sw1: { type: "Switch", props: { id: "sw1", checked: true }, children: [] },
       "sw-lbl1": {
-        type: "FieldTitle",
-        props: { text: "Claude suggestions" },
+        type: "FieldLabel",
+        props: { text: "Claude suggestions", htmlFor: "sw1" },
         children: [],
       },
       "sw-item2": {
@@ -103,10 +103,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["sw2", "sw-lbl2"],
       },
-      sw2: { type: "Switch", props: {}, children: [] },
+      sw2: { type: "Switch", props: { id: "sw2" }, children: [] },
       "sw-lbl2": {
-        type: "FieldTitle",
-        props: { text: "Auto-run effects in dev" },
+        type: "FieldLabel",
+        props: { text: "Auto-run effects in dev", htmlFor: "sw2" },
         children: [],
       },
       "sw-item3": {
@@ -114,10 +114,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["sw3", "sw-lbl3"],
       },
-      sw3: { type: "Switch", props: { checked: true }, children: [] },
+      sw3: { type: "Switch", props: { id: "sw3", checked: true }, children: [] },
       "sw-lbl3": {
-        type: "FieldTitle",
-        props: { text: "Telemetry" },
+        type: "FieldLabel",
+        props: { text: "Telemetry", htmlFor: "sw3" },
         children: [],
       },
 
@@ -142,10 +142,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["rd1", "rd-lbl1"],
       },
-      rd1: { type: "Checkbox", props: { checked: true }, children: [] },
+      rd1: { type: "Checkbox", props: { id: "rd1", checked: true }, children: [] },
       "rd-lbl1": {
-        type: "FieldTitle",
-        props: { text: "Free — up to 3 machines" },
+        type: "FieldLabel",
+        props: { text: "Free — up to 3 machines", htmlFor: "rd1" },
         children: [],
       },
       "rd-item2": {
@@ -153,10 +153,10 @@ const sample: Sample = {
         props: { orientation: "horizontal" },
         children: ["rd2", "rd-lbl2"],
       },
-      rd2: { type: "Checkbox", props: {}, children: [] },
+      rd2: { type: "Checkbox", props: { id: "rd2" }, children: [] },
       "rd-lbl2": {
-        type: "FieldTitle",
-        props: { text: "Pro · $19/mo" },
+        type: "FieldLabel",
+        props: { text: "Pro · $19/mo", htmlFor: "rd2" },
         children: [],
       },
       "rd-item3": {
@@ -164,10 +164,10 @@ const sample: Sample = {
         props: { orientation: "horizontal", className: "opacity-50" },
         children: ["rd3", "rd-lbl3"],
       },
-      rd3: { type: "Checkbox", props: { disabled: true }, children: [] },
+      rd3: { type: "Checkbox", props: { id: "rd3", disabled: true }, children: [] },
       "rd-lbl3": {
-        type: "FieldTitle",
-        props: { text: "Enterprise" },
+        type: "FieldLabel",
+        props: { text: "Enterprise", htmlFor: "rd3" },
         children: [],
       },
     },

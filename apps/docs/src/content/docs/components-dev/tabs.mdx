@@ -1,0 +1,41 @@
+---
+topic: component-dev
+title: Tabs
+description: Stateful Tabs across React, Svelte, and Astro.
+---
+
+import { TabsDemo } from "@registry/tabs/tabs-machine-ui-demo.tsx";
+import TabsDemo2 from "@registry/tabs/tabs-machine-ui-demo.svelte";
+import TabsAstro from "@registry/tabs/tabs-progressive.astro";
+import TabItem from "@registry/tabs/tabs-progressive-item.astro";
+
+React and Svelte (`tabs-machine-ui.tsx`, `tabs-machine-ui.svelte`) require a `tabs-machine.*` backend that conforms to the shared interface. The default is `tabs-machine.vanilla.ts`; swap in `tabs-machine.matchina.ts`, `tabs-machine.xstate.ts`, or any backend matching the contract. Astro (`tabs-progressive.astro`) is SSR-first — prop-driven, plain HTML, custom element for switching. No framework runtime, no hydration gap, first tab visible without JS.
+
+## Basic
+
+<div class="not-content grid grid-cols-3 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <TabsDemo client:only="react" />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <TabsDemo2 client:load />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Astro</p>
+    <TabsAstro>
+      <TabItem label="Account">Manage your account details.</TabItem>
+      <TabItem label="Password">Update your password.</TabItem>
+      <TabItem label="Settings">Configure your settings.</TabItem>
+    </TabsAstro>
+  </div>
+</div>
+
+## Under the hood
+
+- **React (`tabs-machine-ui.tsx`):** `useSyncExternalStore` + `createContext` wired to whichever `tabs-machine.*` backend is installed.
+- **Svelte (`tabs-machine-ui.svelte`):** `setContext` + a thin `{ subscribe }` adapter bridging the backend to the Svelte store protocol. SSR-correct with `client:load`.
+- **Astro (`tabs-progressive.astro`):** prop-driven, fully SSR'd, custom element for switching. No framework runtime, no machine backend.

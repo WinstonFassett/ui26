@@ -1,0 +1,86 @@
+---
+/**
+ * Tabs.astro — composition-based, progressively enhanced.
+ *
+ * Reads <TabItem label="..."> children, generates radio/label tablist
+ * sized to the actual child count, emits per-instance CSS for no-JS switching.
+ *
+ * Usage:
+ *   <Tabs>
+ *     <TabItem label="Preview">...</TabItem>
+ *     <TabItem label="Code">...</TabItem>
+ *   </Tabs>
+ */
+import { tabsList, tabsTrigger } from "./tabs.tv";
+import { cn } from "../lib/utils";
+import "./tabs-progressive.css";
+
+interface Props {
+  defaultIndex?: number;
+  variant?: "pill" | "underline";
+  listClass?: string;
+  class?: string;
+  id?: string;
+}
+
+const { defaultIndex = 0, variant = "pill", listClass, class: className, id: providedId } = Astro.props;
+const uid = providedId ?? `tabs-${Math.random().toString(36).slice(2, 8)}`;
+
+const panelsHtml = await Astro.slots.render("default");
+const labels = [...panelsHtml.matchAll(/data-ui26-tab-item[^>]*data-label="([^"]+)"/g)].map((m) => m[1]);
+
+// Inject id + data-panel-index into each TabItem div in render order.
+let idx = 0;
+const enhancedPanels = panelsHtml.replace(/data-ui26-tab-item/g, () => {
+  const i = idx++;
+  return `data-ui26-tab-item data-panel-index="${i}" aria-labelledby="${uid}-label-${i}"`;
+});
+
+const activeStyle = variant === "underline"
+  ? `border-color:var(--accent);color:var(--foreground)`
+  : `background:var(--background);color:var(--foreground);box-shadow:var(--shadow-sm,0 1px 2px 0 rgb(0 0 0 / 0.05))`;
+
+const instanceCss = labels
+  .map((_, i) =>
+    `ui26-tabs:has(> #${uid}-${i}:checked) > .ui26-tab-panel[data-panel-index="${i}"]{display:block}` +
+    `ui26-tabs:has(> #${uid}-${i}:checked) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{${activeStyle}}` +
+    `ui26-tabs:has(> #${uid}-${i}:focus-visible) > .tablist > .ui26-tab-label[data-tab-index="${i}"]{outline:2px solid var(--ring);outline-offset:2px}`
+  )
+  .join("");
+---
+
+<ui26-tabs class={cn("ui26-tabs w-full block", className)} data-default={defaultIndex}>
+  {labels.map((_, i) => (
+    <input
+      type="radio"
+      class="sr-only"
+      name={uid}
+      id={`${uid}-${i}`}
+      checked={i === defaultIndex || undefined}
+    />
+  ))}
+
+  <div class={cn(tabsList({ variant }), "tablist", listClass)} role="tablist">
+    {labels.map((label, i) => (
+      <label
+        for={`${uid}-${i}`}
+        id={`${uid}-label-${i}`}
+        role="tab"
+        data-tab-index={i}
+        aria-selected={i === defaultIndex ? "true" : "false"}
+        class={cn(tabsTrigger({ variant }), "ui26-tab-label")}
+      >
+        {label}
+      </label>
+    ))}
+    <slot name="tablist-end" />
+  </div>
+
+  <Fragment set:html={enhancedPanels} />
+</ui26-tabs>
+
+<style is:inline set:html={instanceCss}></style>
+
+<script>
+  import "./tabs-progressive.client";
+</script>

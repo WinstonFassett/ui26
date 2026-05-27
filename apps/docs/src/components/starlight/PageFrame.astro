@@ -8,7 +8,7 @@ const rawTopics = Astro.locals.starlightSidebarTopics?.topics ?? [];
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 const customTopicPrefixes: Record<string, RegExp> = {
     Examples: /^\/examples(\/|$)/,
-    Docs: /^\/(kitchen-sink|ecosystem|tix-app)(\/|$)/,
+    Docs: /^\/(ecosystem|tix-app)(\/|$)/,
 };
 const fallback = rawTopics.length > 0 && !rawTopics.some((t: any) => t.isCurrent);
 const topics = rawTopics.map((t: any) => {

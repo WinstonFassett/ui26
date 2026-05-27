@@ -1,0 +1,72 @@
+---
+/**
+ * tabs-hash.astro — URL-hash-addressable tabs.
+ *
+ * Each tab maps to a #hash so links like /examples/ticket-card#code
+ * open directly to that tab. Works without JS via CSS :target.
+ * JS layer adds aria-selected sync, back/forward nav, and scroll prevention.
+ *
+ * Usage:
+ *   <TabsHash base="example">
+ *     <TabsHashItem hash="preview" label="Preview" base="example">...</TabsHashItem>
+ *     <TabsHashItem hash="code"    label="Code"    base="example">...</TabsHashItem>
+ *   </TabsHash>
+ */
+import { tabsList, tabsTrigger } from "./tabs.tv";
+import { cn } from "../lib/utils";
+import "./tabs-hash.css";
+
+interface Props {
+  base: string;
+  variant?: "pill" | "underline";
+  listClass?: string;
+  class?: string;
+  defaultHash?: string;
+}
+
+const { base, variant = "pill", listClass, class: className } = Astro.props;
+
+const panelsHtml = await Astro.slots.render("default");
+// Extract per-panel opening tags, then pluck hash and label from each
+const panelTags = [...panelsHtml.matchAll(/(<[^>]*data-ui26-hash-panel[^>]*>)/g)].map((m) => m[1]);
+const tabMeta = panelTags.map((tag) => {
+  const hash  = (tag.match(/data-hash="([^"]+)"/)  ?? [])[1] ?? "";
+  const label = (tag.match(/data-label="([^"]+)"/) ?? [])[1] ?? hash;
+  return { hash, label };
+});
+
+// Inject aria-labelledby and data-default (first panel) into each panel
+let idx = 0;
+const enhancedPanels = panelsHtml.replace(/data-ui26-hash-panel/g, () => {
+  const i = idx++;
+  const hash = tabMeta[i]?.hash ?? String(i);
+  const defaultAttr = i === 0 ? " data-default" : "";
+  return `data-ui26-hash-panel${defaultAttr} aria-labelledby="${base}-tab-${hash}"`;
+});
+---
+
+<ui26-hash-tabs
+  class={cn("ui26-hash-tabs w-full block", className)}
+  data-base={base}
+>
+  <div class={cn(tabsList({ variant }), "tablist", listClass)} role="tablist">
+    {tabMeta.map(({ hash, label }) => (
+      <a
+        href={`#${base}-${hash}`}
+        id={`${base}-tab-${hash}`}
+        role="tab"
+        data-hash={hash}
+        aria-selected="false"
+        class={cn(tabsTrigger({ variant }), "ui26-hash-tab")}
+      >
+        {label}
+      </a>
+    ))}
+  </div>
+
+  <Fragment set:html={enhancedPanels} />
+</ui26-hash-tabs>
+
+<script>
+  import "./tabs-hash.client";
+</script>

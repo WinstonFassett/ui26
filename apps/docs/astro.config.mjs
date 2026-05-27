@@ -56,7 +56,6 @@ export default defineConfig({
                                 {
                                     label: 'Dev',
                                     items: [
-                                        { label: 'Kitchen Sink', link: '/kitchen-sink' },
                                         { label: 'Ecosystem', link: '/ecosystem' },
                                         { label: 'Tix App', link: '/tix-app' },
                                     ],
@@ -65,15 +64,29 @@ export default defineConfig({
                         ],
                     },
                     {
+                        id: 'components',
                         label: 'Components',
                         link: '/components/button',
                         items: [
                             {
                                 label: 'Components',
-                                autogenerate: { directory: 'components', exclude: ['components/dev/**'] },
+                                autogenerate: { directory: 'components' },
                             },
                         ],
                     },
+                    ...(import.meta.env?.DEV ? [
+                        {
+                            id: 'component-dev',
+                            label: 'Component Dev',
+                            link: '/components-dev/dialog',
+                            items: [
+                                {
+                                    label: 'Component Dev',
+                                    autogenerate: { directory: 'components-dev' },
+                                },
+                            ],
+                        },
+                    ] : []),
                     {
                         id: 'examples',
                         label: 'Examples',
@@ -86,7 +99,9 @@ export default defineConfig({
                 {
                     topics: {
                         examples: ['/examples', '/examples/**'],
-                        docs: ['/kitchen-sink', '/ecosystem', '/tix-app', '/components/dev/**', '/guides/**', '/reference/**'],
+                        'component-dev': ['/components-dev/**'],
+                        components: ['/components/**'],
+                        docs: ['/ecosystem', '/tix-app', '/guides/**', '/reference/**'],
                     },
                 },
             ),

@@ -1,0 +1,41 @@
+---
+topic: component-dev
+title: Popover
+description: Floating popover panel across React and Svelte with Matchina state machine.
+---
+
+import { PopoverDemo } from "@registry/popover/popover-machine-ui-demo.tsx";
+import PopoverSvelte from "@registry/popover/popover-machine-ui.svelte";
+import PopoverProgressive from "@registry/popover/popover-progressive.svelte";
+
+React and Svelte (`popover-machine-ui.tsx`, `popover-machine-ui.svelte`) require a `popover-machine.*` backend conforming to the shared interface. `popover-machine.vanilla.ts` ships by default; `popover-machine.matchina.ts` also satisfies the contract. Effects (`StartPositioner`, `StopPositioner`, `AnimateClose`) are declared on the backend; each view implements them as a DOM effector using `@floating-ui/dom`.
+
+## Basic
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <PopoverDemo client:only="react" />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <PopoverSvelte client:load />
+  </div>
+</div>
+
+## Native Popover API (progressive enhancement)
+
+Uses the browser's [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) (`popover="manual"` + `popovertarget`) and CSS anchor positioning where supported, with a Floating UI fallback for older browsers. The Svelte island wires the machine; `toggle` events from the native popover feed back into machine state.
+
+<div class="not-content my-6">
+  <PopoverProgressive client:load triggerLabel="Open (native)" />
+</div>
+
+## Under the hood
+
+- **Machine**: `Closed → Opening → Open → Closing → Closed` — four states, four events (`open`, `ready`, `close`, `done`)
+- **Effects**: `Opening` emits `StartPositioner`, `Closing` emits `StopPositioner` + `AnimateClose`
+- **Effector**: each framework binds `@floating-ui/dom` via `bindPopoverEffects` — refs and positioning live in the view, machine stays DOM-free
+- **CSS vars**: position written as `--x` / `--y` on the floating element, read via `style="left: var(--x); top: var(--y)"`
+- **Native variant**: `popover="manual"` gives browser-managed stacking context and top-layer placement; `popovertarget` links trigger declaratively; CSS anchor positioning (`anchor-name` / `position-anchor`) replaces Floating UI where available

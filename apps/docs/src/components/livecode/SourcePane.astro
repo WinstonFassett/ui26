@@ -1,0 +1,132 @@
+---
+import { cn } from "@/lib/utils";
+import { SHIKI_CLASSES } from "@/lib/shiki-classes";
+import { FRAMEWORKS, FRAMEWORK_LABELS } from "@/lib/spec-to-code";
+import { PlayroomLink } from "./PlayroomLink";
+import type { RenderedFiles } from "@/lib/prerender-source";
+import Tabs from "@registry/tabs/tabs-progressive.astro";
+import TabItem from "@registry/tabs/tabs-progressive-item.astro";
+
+export interface SourcePaneRegion {
+  id: string;
+  label: string;
+  section: string;
+  files: RenderedFiles;
+}
+
+interface Props {
+  region: SourcePaneRegion;
+  hideHeader?: boolean;
+  class?: string;
+  className?: string;
+}
+
+const { region, hideHeader, class: cls, className } = Astro.props;
+const uid = `fwtabs-${region.id}`;
+---
+
+<div class={cn("flex flex-col bg-card border border-border h-full ui26-source-pane", cls, className)} data-uid={uid}>
+
+  {!hideHeader && (
+    <div class="flex items-center gap-2 px-3.5 py-3 border-b border-border">
+      <div class="flex-1 min-w-0">
+        <div class="font-mono text-[9px] uppercase tracking-widest text-accent mb-0.5">
+          {region.section}
+        </div>
+        <div class="text-[13px] font-semibold text-foreground truncate">
+          {region.label}
+        </div>
+      </div>
+      <button type="button" class="ui26-copy inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider border transition-colors bg-foreground text-background border-foreground hover:bg-foreground/90" style="display:none">
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="2.5" width="5.5" height="5.5" /><path d="M1 6V1h5" /></svg>
+        <span class="ui26-copy-label">Copy</span>
+      </button>
+    </div>
+  )}
+
+  <Tabs
+    id={uid}
+    variant="underline"
+    class="flex flex-col flex-1 min-h-0"
+    listClass="flex items-stretch border-b border-border"
+  >
+    {FRAMEWORKS.map((f) => (
+      <TabItem
+        label={FRAMEWORK_LABELS[f]}
+        class={cn(SHIKI_CLASSES, "ui26-fw-panel flex-1 overflow-auto")}
+      >
+        <div
+          data-fw-panel={f}
+          data-code={region.files[f]?.code ?? ""}
+          data-filename={region.files[f]?.filename ?? ""}
+          set:html={region.files[f]?.html ?? ""}
+        />
+        <div class="flex items-center justify-between px-3.5 py-2 border-t border-border bg-card shrink-0">
+          <span class="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+            ui26/{f}
+          </span>
+          <div class="ml-auto flex items-center gap-2">
+            {hideHeader && (
+              <button type="button" class="ui26-copy inline-flex items-center gap-1.5 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider border transition-colors bg-foreground text-background border-foreground hover:bg-foreground/90" style="display:none">
+                <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.5" y="2.5" width="5.5" height="5.5" /><path d="M1 6V1h5" /></svg>
+                <span class="ui26-copy-label">Copy</span>
+              </button>
+            )}
+            {import.meta.env.DEV && <PlayroomLink code={region.files.react.code} client:load />}
+          </div>
+        </div>
+      </TabItem>
+    ))}
+
+    <Fragment slot="tablist-end">
+      <span class="flex-1" />
+      <span class="ui26-fw-filename self-center px-3 font-mono text-[10px] tracking-wider lowercase text-muted-foreground" />
+    </Fragment>
+  </Tabs>
+
+</div>
+
+<script>
+  // SourcePane enhancement: copy button + populate active filename from active panel.
+  function init(root: HTMLElement) {
+    const tabs = root.querySelector<HTMLElement>("ui26-tabs");
+    if (!tabs) return;
+
+    const inputs = [...tabs.children].filter(
+      (c): c is HTMLInputElement => c.tagName === "INPUT" && (c as HTMLInputElement).type === "radio"
+    );
+    const panels = [...root.querySelectorAll<HTMLElement>("[data-fw-panel]")];
+    const filenameEl = root.querySelector<HTMLElement>(".ui26-fw-filename");
+    const copyBtns = [...root.querySelectorAll<HTMLButtonElement>(".ui26-copy")];
+
+    const activePanel = () => panels[inputs.findIndex((r) => r.checked)];
+    const activeCode = () => activePanel()?.dataset.code ?? "";
+    const updateFilename = () => {
+      if (filenameEl) filenameEl.textContent = activePanel()?.dataset.filename ?? "";
+    };
+
+    inputs.forEach((input) => input.addEventListener("change", updateFilename));
+    updateFilename();
+
+    copyBtns.forEach((btn) => {
+      btn.style.display = "";
+      btn.addEventListener("click", () => {
+        navigator.clipboard?.writeText(activeCode()).catch(() => {});
+        const label = btn.querySelector<HTMLElement>(".ui26-copy-label");
+        if (label) {
+          const orig = label.textContent;
+          label.textContent = "Copied";
+          btn.classList.add("bg-accent", "text-accent-foreground", "border-accent");
+          btn.classList.remove("bg-foreground", "text-background", "border-foreground");
+          setTimeout(() => {
+            label.textContent = orig;
+            btn.classList.remove("bg-accent", "text-accent-foreground", "border-accent");
+            btn.classList.add("bg-foreground", "text-background", "border-foreground");
+          }, 900);
+        }
+      });
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>(".ui26-source-pane").forEach(init);
+</script>

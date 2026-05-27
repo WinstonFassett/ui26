@@ -1,0 +1,41 @@
+---
+topic: component-dev
+title: Tooltip
+description: Hover tooltip across React and Svelte with Matchina state machine and delay effects.
+---
+
+import { TooltipDemo } from "@registry/tooltip/tooltip-machine-ui-demo.tsx";
+import TooltipSvelte from "@registry/tooltip/tooltip-machine-ui.svelte";
+import TooltipProgressive from "@registry/tooltip/tooltip-progressive.svelte";
+
+React and Svelte (`tooltip-machine-ui.tsx`, `tooltip-machine-ui.svelte`) require a `tooltip-machine.*` backend conforming to the shared interface. `tooltip-machine.vanilla.ts` ships by default; `tooltip-machine.matchina.ts` also satisfies the contract. Delay timers (`StartOpenDelay`, `StartCloseDelay`) are declared effects with cleanup — the backend is pure state, the effector owns the `setTimeout`/`clearTimeout`.
+
+## Basic
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <TooltipDemo client:only="react" />
+  </div>
+
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <TooltipSvelte client:load />
+  </div>
+</div>
+
+## Native Popover API (progressive enhancement)
+
+Uses `popover="hint"` — the semantic type for transient hover content. Machine still drives open/close timing and delays; the Popover API provides browser-managed stacking context and top-layer placement. CSS anchor positioning replaces Floating UI where supported.
+
+<div class="not-content my-6">
+  <TooltipProgressive client:load label="Hover me (native)" tip="Powered by popover=hint" />
+</div>
+
+## Under the hood
+
+- **Machine**: `Closed → OpenDelay → Opening → Open → CloseDelay → Closing → Closed`
+- **Delay effects**: `StartOpenDelay` / `StartCloseDelay` return cleanup functions (`clearTimeout`) — same pattern as `StopPositioner`
+- **Hover re-entry**: `enter` in `CloseDelay` short-circuits back to `Open` without re-running the positioner
+- **Effector**: same Floating UI effector pattern as Popover — `StartPositioner` / `StopPositioner` / `AnimateClose`
+- **Native variant**: `popover="hint"` is the correct semantic for transient tooltips — auto-dismissable, no focus trap; CSS anchor positioning handles placement without JS when available

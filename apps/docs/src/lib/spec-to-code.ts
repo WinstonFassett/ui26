@@ -61,8 +61,12 @@ const COMPOUND_PARENT: Record<string, string> = {
   BreadcrumbList: 'breadcrumb', BreadcrumbItem: 'breadcrumb', BreadcrumbLink: 'breadcrumb', BreadcrumbPage: 'breadcrumb', BreadcrumbSeparator: 'breadcrumb',
   PaginationContent: 'pagination', PaginationItem: 'pagination', PaginationLink: 'pagination',
   RadioGroupItem: 'radio-group',
+  TabsList: 'tabs', TabsTrigger: 'tabs', TabsContent: 'tabs',
   FieldContent: 'field', FieldLabel: 'field', FieldDescription: 'field', FieldError: 'field',
   FieldGroup: 'field', FieldSet: 'field', FieldLegend: 'field', FieldTitle: 'field', FieldSeparator: 'field',
+  TooltipTrigger: 'tooltip', TooltipContent: 'tooltip',
+  DialogTrigger: 'dialog', DialogContent: 'dialog', DialogClose: 'dialog',
+  DialogHeader: 'dialog', DialogFooter: 'dialog', DialogTitle: 'dialog', DialogDescription: 'dialog',
 }
 
 function kebab(s: string) {

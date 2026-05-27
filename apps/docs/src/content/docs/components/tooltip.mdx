@@ -1,0 +1,25 @@
+---
+title: Tooltip
+description: Hover tooltip with open/close delay and Floating UI positioning. React and Svelte.
+---
+
+import DocSingleShell from '@/components/demos/DocSingleShell.astro'
+import { TooltipDemo } from "@registry/tooltip/tooltip-machine-ui-demo.tsx";
+import TooltipSvelte from "@registry/tooltip/tooltip-machine-ui.svelte";
+
+## Basic
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">React</p>
+    <TooltipDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Svelte</p>
+    <TooltipSvelte client:load />
+  </div>
+</div>
+
+## In context
+
+<DocSingleShell id="tooltip-card" />

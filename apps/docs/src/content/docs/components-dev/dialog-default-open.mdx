@@ -1,0 +1,22 @@
+---
+topic: component-dev
+title: Dialog — defaultOpen
+description: Native dialog open by default — open attribute in SSR HTML, visible before JS runs.
+---
+
+import DialogProgressive from "@registry/dialog/dialog-progressive.svelte";
+
+The `open` attribute is set in the SSR'd HTML — the dialog is visible before JS loads. When Svelte hydrates it reads `dialogEl.open` and calls `showModal()` without stomping the existing DOM.
+
+<div class="not-content my-6">
+  <DialogProgressive client:load defaultOpen triggerLabel="Reopen" title="Server-rendered content">
+    <div class="flex flex-col gap-3">
+      <p class="text-sm text-muted-foreground">This content was rendered on the server and is in the HTML source. The dialog opened on mount — no trigger click required.</p>
+      <ul class="text-sm text-muted-foreground list-disc list-inside">
+        <li>Item one — SSR'd</li>
+        <li>Item two — SSR'd</li>
+        <li>Item three — SSR'd</li>
+      </ul>
+    </div>
+  </DialogProgressive>
+</div>

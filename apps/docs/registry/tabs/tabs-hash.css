@@ -1,0 +1,13 @@
+/* HashTabs: :target-based panel switching, no JS required */
+ui26-hash-tabs > .ui26-hash-panel { display: none; }
+
+/* Default: show first panel when no hash matches */
+ui26-hash-tabs:not(:has(.ui26-hash-panel:target)) > .ui26-hash-panel[data-default] { display: block; }
+
+/* Show targeted panel */
+ui26-hash-tabs > .ui26-hash-panel:target { display: block; }
+
+ui26-hash-tabs .ui26-hash-tab { cursor: pointer; user-select: none; }
+
+/* Prevent browser scroll-to-anchor jump */
+ui26-hash-tabs > .ui26-hash-panel { scroll-margin-top: 0; }

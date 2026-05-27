@@ -43,6 +43,16 @@ const FIELD_SUBS = [
 
 const BASE_DEPS = ["tailwind-variants"];
 const BASE_REGISTRY_DEPS = ["utils"];
+const STATEFUL_DEPS = [...BASE_DEPS, "matchina", "@floating-ui/dom"];
+
+// These components require JS — no meaningful Astro-only variant exists.
+// filesFor() returns [] for astro; getStaticPaths skips those routes.
+const JS_ONLY_COMPONENTS = new Set([
+  "dialog", "popover", "tooltip", "dropdown-menu",
+  "dialog-progressive", "dialog-machine-ui", "dialog-radix-ui",
+  "popover-progressive", "tooltip-progressive",
+  "dialog-bits-ui",
+]);
 
 export const COMPONENTS: ComponentMeta[] = [
   {
@@ -206,9 +216,104 @@ export const COMPONENTS: ComponentMeta[] = [
     dependencies: BASE_DEPS,
     registryDependencies: [...BASE_REGISTRY_DEPS, "label", "separator"],
   },
+  {
+    name: "tooltip",
+    title: "Tooltip",
+    description: "Hover tooltip with open/close delay, Floating UI positioning, and Matchina state machine. React (compound) and Svelte (single-file).",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
+  },
+  {
+    name: "tooltip-progressive",
+    title: "Tooltip (Native)",
+    description: "Tooltip using the Popover API (popover=hint) and CSS anchor positioning, with Floating UI fallback. Svelte only.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "tooltip"],
+  },
+  {
+    name: "popover",
+    title: "Popover",
+    description: "Floating popover panel with Floating UI positioning and Matchina state machine. React and Svelte.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
+  },
+  {
+    name: "popover-progressive",
+    title: "Popover (Native)",
+    description: "Popover using the Popover API and CSS anchor positioning, with Floating UI fallback. Svelte only.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "popover"],
+  },
+  {
+    name: "dialog",
+    title: "Dialog",
+    description: "Base dialog — shared state machine, TV styles, and dom-behaviors. Required by all dialog variants.",
+    dependencies: [...STATEFUL_DEPS],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "button"],
+  },
+  {
+    name: "dialog-progressive",
+    title: "Dialog (Progressive)",
+    description: "Modal dialog using the native <dialog> element — browser-native focus trap, scroll lock, and ::backdrop. Works with progressive enhancement.",
+    dependencies: [...BASE_DEPS],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dialog-machine-ui",
+    title: "Dialog (Machine-UI)",
+    description: "Modal dialog with fully owned DOM behaviors — focus trap, scroll lock, aria-hidden — via dom-behaviors.ts. Consumes any dialog-machine.* backend. No external primitive deps.",
+    dependencies: [...BASE_DEPS],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dialog-bits-ui",
+    title: "Dialog (bits-ui)",
+    description: "Modal dialog using bits-ui for focus trap, scroll lock, and portal. Svelte only.",
+    dependencies: [...BASE_DEPS, "bits-ui"],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dialog-radix-ui",
+    title: "Dialog (Radix)",
+    description: "Modal dialog using Radix UI for focus trap, scroll lock, and portal. React only.",
+    dependencies: [...STATEFUL_DEPS, "@radix-ui/react-dialog"],
+    registryDependencies: [...BASE_REGISTRY_DEPS, "dialog"],
+  },
+  {
+    name: "dropdown-menu",
+    title: "Dropdown Menu",
+    description: "Dropdown menu reusing the Popover state machine. Floating UI positioning, outside-click dismissal, section/heading support. React and Svelte.",
+    dependencies: STATEFUL_DEPS,
+    registryDependencies: [...BASE_REGISTRY_DEPS, "popover", "button"],
+  },
+  {
+    name: "tabs",
+    title: "Tabs",
+    description: "State-driven tabs with vanilla state layer (useSyncExternalStore). Idiomatic React/Svelte; progressive radio-shell variant in Astro. Requires client JS.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
+  {
+    name: "tabs-progressive",
+    title: "Tabs (Progressive)",
+    description: "No-JS tabs shell using radio inputs and :has(:checked) CSS. RSC-renderable, uncontrolled, works without JavaScript. React only.",
+    dependencies: BASE_DEPS,
+    registryDependencies: BASE_REGISTRY_DEPS,
+  },
 ];
 
+export function supportsFramework(name: string, fw: Framework): boolean {
+  if (fw === "astro" && JS_ONLY_COMPONENTS.has(name)) return false;
+  const svelteOnly = ["tooltip-progressive", "popover-progressive", "dialog-bits-ui"];
+  if (fw === "react" && svelteOnly.includes(name)) return false;
+  const reactOnly = ["dialog-radix-ui", "tabs-progressive"];
+  if (fw !== "react" && reactOnly.includes(name)) return false;
+  return true;
+}
+
 export function filesFor(name: string, fw: Framework): RegistryFile[] {
+  if (!supportsFramework(name, fw)) return [];
+
   const ext = EXT[fw];
 
   function withSubs(subs: readonly string[]): RegistryFile[] {
@@ -224,6 +329,35 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
     return files;
   }
 
+  if (name === "tabs") {
+    if (fw === "react") return [
+      { path: "tabs/tabs-machine-ui.tsx", type: "registry:ui" },
+      { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+      { path: "tabs/tabs-machine.vanilla.ts", type: "registry:ui" },
+    ];
+    if (fw === "svelte") return [
+      { path: "tabs/tabs-machine-ui.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-content.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-list.svelte", type: "registry:ui" },
+      { path: "tabs/tabs-trigger.svelte", type: "registry:ui" },
+      { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+      { path: "tabs/tabs-machine.vanilla.ts", type: "registry:ui" },
+    ];
+    if (fw === "astro") return [
+      { path: "tabs/tabs-progressive.astro", type: "registry:ui" },
+      { path: "tabs/tabs-progressive-item.astro", type: "registry:ui" },
+      { path: "tabs/tabs-progressive.client.ts", type: "registry:ui" },
+      { path: "tabs/tabs-progressive.css", type: "registry:file" },
+      { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+    ];
+  }
+
+  if (name === "tabs-progressive") return [
+    { path: "tabs/tabs-progressive.tsx", type: "registry:ui" },
+    { path: "tabs/tabs.tv.ts", type: "registry:ui" },
+    { path: "tabs/tabs-progressive.css", type: "registry:file" },
+  ];
+
   if (name === "card") return withSubs(CARD_SUBS);
   if (name === "alert") return withSubs(ALERT_SUBS);
   if (name === "avatar") return withSubs(AVATAR_SUBS);
@@ -232,6 +366,32 @@ export function filesFor(name: string, fw: Framework): RegistryFile[] {
   if (name === "pagination") return withSubs(PAGINATION_SUBS);
   if (name === "radio-group") return withSubs(RADIO_GROUP_SUBS);
   if (name === "field") return withSubs(FIELD_SUBS);
+
+  // Stateful components: ship machine backend alongside view file
+  if (JS_ONLY_COMPONENTS.has(name)) {
+    // Variant suffixes: only the framework-appropriate view file ships
+    // Machine + tv come via registryDependency on base
+    const variantSuffixes = ["-progressive", "-bits-ui", "-machine-ui", "-radix-ui"];
+    for (const suffix of variantSuffixes) {
+      if (name.endsWith(suffix)) {
+        const base = name.slice(0, -suffix.length);
+        return [{ path: `${base}/${name}.${ext}`, type: "registry:ui" }];
+      }
+    }
+    // dialog base is shared-only — no single view file (variants are separate entries)
+    if (name === "dialog") {
+      return [
+        { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
+        { path: `${name}/${name}-machine.vanilla.ts`, type: "registry:ui" },
+        { path: `lib/dom-behaviors.ts`, type: "registry:lib" },
+      ];
+    }
+    return [
+      { path: `${name}/${name}-machine-ui.${ext}`, type: "registry:ui" },
+      { path: `${name}/${name}.tv.ts`, type: "registry:ui" },
+      { path: `${name}/${name}-machine.vanilla.ts`, type: "registry:ui" },
+    ];
+  }
 
   return [
     { path: `${name}/${name}.${ext}`, type: "registry:ui" },

@@ -1,0 +1,2 @@
+ui26-tabs > .ui26-tab-panel { display: none; }
+ui26-tabs .ui26-tab-label { cursor: pointer; user-select: none; }
