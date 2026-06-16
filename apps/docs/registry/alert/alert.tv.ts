@@ -12,7 +12,7 @@ export const alert = tv({
       destructive:
         "border-destructive/50 text-destructive [&>svg]:text-destructive",
       warning:
-        "border-warning/50 text-warning [&>svg]:text-warning",
+        "border-warn/50 text-warn [&>svg]:text-warn",
       success:
         "border-success/50 text-success [&>svg]:text-success",
     },

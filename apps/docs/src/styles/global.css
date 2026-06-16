@@ -19,6 +19,9 @@
 
 /* All themes — same source the /r/themes.json registry endpoint serves. */
 @import '../../registry/all-themes.css';
+
+/* Generated plugin layer — component class names derived from TV configs. */
+@import '../../registry/plugin/ui26.css';
 @import './starlight-ui26.css';
 
 /* Starlight sets data-theme="dark" (no prefix) before our ThemeProvider JS runs.

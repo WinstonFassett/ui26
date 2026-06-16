@@ -1,0 +1,242 @@
+---
+title: Tailwind Plugin
+description: Generate DaisyUI-style component classes (.btn, .card, …) from ui26's tailwind-variants configs — for plain HTML, no framework required.
+---
+
+Every ui26 component is styled by a shared `tailwind-variants` (TV) config. The **Tailwind plugin generator** walks those configs and emits flat, DaisyUI-style component classes — `btn`, `btn-secondary`, `card`, `alert-destructive` — so you can style raw HTML without importing a single React/Svelte/Astro component:
+
+```html
+<button class="btn btn-default">Click me</button>
+```
+
+This is the same idea as DaisyUI: semantic component classes you apply to ordinary markup. The difference is that **you generate them from your own components and your own theme tokens** — so the output always matches the components you've actually added and the theme you're running.
+
+## How it works
+
+You don't install a prebuilt stylesheet. You install a **generator** and run it:
+
+1. `npx shadcn add …/r/tailwind-plugin.json` drops `scripts/tailwind-plugin.ts` into your repo.
+2. You run it. It reads your `components.json` — `aliases.ui` to find your components' `*.tv.ts` files, and `tailwind.css` for your theme tokens — and emits a `ui26.css` next to your stylesheet.
+3. It only emits classes for the components you've actually added. Add more components later, re-run it, and the CSS updates.
+
+You own the generator and the output. Re-running it is the whole maintenance story.
+
+## Install
+
+```sh
+npx shadcn@latest add https://winston-ui26.netlify.app/r/tailwind-plugin.json
+```
+
+This installs `scripts/tailwind-plugin.ts`. Add a script to your `package.json` to run it:
+
+```json
+{
+  "scripts": {
+    "tailwind-plugin": "tsx scripts/tailwind-plugin.ts"
+  }
+}
+```
+
+And install the two dev dependencies it needs:
+
+```sh
+npm i -D tailwindcss tsx
+```
+
+## Generate
+
+Installing adds a `tailwind-plugin` script to your `package.json`. Run it:
+
+```sh
+pnpm tailwind-plugin
+```
+
+Zero config — it reads `components.json` to find your components and theme tokens, and writes `ui26.css` beside your stylesheet. Re-run it whenever you add or change components.
+
+<details>
+<summary>Overriding the paths</summary>
+
+The script reads `aliases.ui` and `tailwind.css` from `components.json`. To point it elsewhere, pass flags:
+
+```sh
+pnpm tailwind-plugin -- \
+  --components src/components/ui \
+  --css src/index.css \
+  --out src/ui26.css
+```
+
+</details>
+
+## Theming still works
+
+The generated CSS never bakes in colors. Every value compiles to a CSS variable:
+
+```css
+.btn-default {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+}
+```
+
+So the component classes resolve against whatever theme tokens are in scope — exactly like the framework components. Ship your theme tokens (the same `--primary`, `--background`, … contract from [Theming](/guides/theming/)) and switch themes live with `data-theme`:
+
+```html
+<body data-theme="shad-dark">
+  <button class="btn btn-default">Themed by --primary</button>
+</body>
+```
+
+Nothing to regenerate when the theme changes — only the tokens change, and the `var()` references pick them up.
+
+## Using it with a Tailwind build
+
+If your project already builds with Tailwind v4, import the generated CSS in your stylesheet:
+
+```css
+@import "./ui26.css";
+```
+
+The classes live in `@layer components`, so your own utilities (`flex`, `p-4`, `gap-2`) compose on top as usual.
+
+## Using it with no build (CDN)
+
+For plain HTML with no build step — prototypes, no-build/CDN artifacts — link the generated CSS plus your theme tokens, and add the Tailwind v4 browser compiler so utility classes still work:
+
+```html
+<head>
+  <link rel="stylesheet" href="./ui26.css" />
+  <link rel="stylesheet" href="./your-theme.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body data-theme="shad-dark">
+  <button class="btn btn-default">Click</button>
+  <div class="card flex flex-col gap-2 p-4">…</div>
+</body>
+```
+
+This mirrors DaisyUI's CDN setup: prebuilt component classes from the `<link>`, utilities compiled in-browser by `@tailwindcss/browser@4`. (Tailwind's old Play CDN is v3-only and won't work with v4 ui26.)
+
+## Class reference
+
+The generator follows a DaisyUI-style convention: a base class plus modifier classes for each variant value.
+
+| Component | Base | Modifiers |
+|-----------|------|-----------|
+| Button | `btn` | `btn-default` `btn-secondary` `btn-outline` `btn-ghost` `btn-destructive` · `btn-sm` `btn-lg` `btn-icon` |
+| Badge | `badge` | `badge-default` `badge-secondary` `badge-outline` `badge-ghost` `badge-destructive` |
+| Input | `input` | — |
+| Card | `card` | `card-header` `card-title` `card-description` `card-content` `card-footer` |
+| Alert | `alert` | `alert-default` `alert-destructive` `alert-success` `alert-warning` · `alert-title` `alert-description` |
+| Toggle | `toggle` | `toggle-default` `toggle-outline` `toggle-ghost` · `toggle-sm` `toggle-lg` |
+| Avatar | `avatar` | `avatar-fallback` `avatar-image` · `avatar-sm` `avatar-lg` `avatar-xl` |
+| Skeleton | `skeleton` | — |
+
+Interactive components (Dialog, Tabs, Accordion, Dropdown, Popover, Tooltip) also emit classes, but those only style the markup — open/close state, focus management, and positioning still require JavaScript. For working interactive components, add the framework component instead.
+
+## Examples
+
+These are styled with plugin classes only — no component imports.
+
+### Buttons
+
+<div class="not-content flex flex-wrap gap-2 my-4">
+  <button class="btn btn-default">Default</button>
+  <button class="btn btn-secondary">Secondary</button>
+  <button class="btn btn-outline">Outline</button>
+  <button class="btn btn-ghost">Ghost</button>
+  <button class="btn btn-destructive">Destructive</button>
+</div>
+
+```html
+<button class="btn btn-default">Default</button>
+<button class="btn btn-secondary">Secondary</button>
+<button class="btn btn-outline">Outline</button>
+<button class="btn btn-ghost">Ghost</button>
+<button class="btn btn-destructive">Destructive</button>
+```
+
+### Badges
+
+<div class="not-content flex flex-wrap gap-2 my-4">
+  <span class="badge badge-default">Default</span>
+  <span class="badge badge-secondary">Secondary</span>
+  <span class="badge badge-outline">Outline</span>
+  <span class="badge badge-destructive">Destructive</span>
+</div>
+
+```html
+<span class="badge badge-default">Default</span>
+<span class="badge badge-secondary">Secondary</span>
+<span class="badge badge-outline">Outline</span>
+<span class="badge badge-destructive">Destructive</span>
+```
+
+### Card
+
+<div class="not-content my-4 max-w-sm">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Card Title</div>
+      <div class="card-description">Card description text here.</div>
+    </div>
+    <div class="card-content">
+      <p class="text-sm">Card body content.</p>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-default btn-sm">Action</button>
+    </div>
+  </div>
+</div>
+
+```html
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">Card Title</div>
+    <div class="card-description">Card description text here.</div>
+  </div>
+  <div class="card-content">
+    <p class="text-sm">Card body content.</p>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-default btn-sm">Action</button>
+  </div>
+</div>
+```
+
+### Alert
+
+<div class="not-content flex flex-col gap-2 my-4 max-w-sm">
+  <div class="alert alert-default">
+    <div class="alert-title">Default Alert</div>
+    <div class="alert-description">Something happened.</div>
+  </div>
+  <div class="alert alert-destructive">
+    <div class="alert-title">Error</div>
+    <div class="alert-description">Something went wrong.</div>
+  </div>
+</div>
+
+```html
+<div class="alert alert-default">
+  <div class="alert-title">Default Alert</div>
+  <div class="alert-description">Something happened.</div>
+</div>
+<div class="alert alert-destructive">
+  <div class="alert-title">Error</div>
+  <div class="alert-description">Something went wrong.</div>
+</div>
+```
+
+### Input
+
+<div class="not-content flex flex-col gap-2 my-4 max-w-sm">
+  <input class="input" placeholder="Default input" />
+  <input class="input" placeholder="Invalid input" aria-invalid="true" />
+  <input class="input" disabled placeholder="Disabled input" />
+</div>
+
+```html
+<input class="input" placeholder="Default input" />
+<input class="input" placeholder="Invalid input" aria-invalid="true" />
+<input class="input" disabled placeholder="Disabled input" />
+```

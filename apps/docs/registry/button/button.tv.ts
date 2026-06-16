@@ -2,7 +2,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 export const button = tv({
   base: [
-    "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap select-none",
+    "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap select-none bg-transparent text-foreground",
     "rounded-[var(--radius,0.5rem)] text-sm font-medium tracking-[-0.005em]",
     "transition-[background-color,box-shadow,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)]",
     "outline-none focus-visible:ring-[1.5px] focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -16,9 +16,9 @@ export const button = tv({
       default:
         "bg-primary text-primary-foreground shadow-[var(--highlight-inset),var(--shadow-xs)] hover:bg-primary/90 hover:shadow-[var(--highlight-inset),var(--shadow-sm)]",
       secondary:
-        "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 hover:border-border-foreground/20 hover:shadow-[var(--highlight-inset),var(--shadow-xs)]",
+        "bg-secondary text-secondary-foreground border border-border hover:bg-secondary/80 hover:border-foreground/20 hover:shadow-[var(--highlight-inset),var(--shadow-xs)]",
       outline:
-        "border border-border bg-transparent hover:bg-border/5 hover:border-border-foreground/30 hover:text-foreground",
+        "border border-border bg-transparent hover:bg-border/5 hover:border-foreground/30 hover:text-foreground",
       ghost:
         "hover:bg-muted/50 hover:text-foreground",
       destructive:
