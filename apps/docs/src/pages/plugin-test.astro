@@ -1,0 +1,123 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en" data-theme="shad-dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ui26 plugin test</title>
+  </head>
+  <body class="bg-background text-foreground p-8 space-y-10">
+
+    <h1 class="text-2xl font-bold">ui26 CSS plugin test</h1>
+    <p class="text-muted-foreground text-sm">Raw class names — no component imports. Just <code>@layer components</code>.</p>
+
+    <!-- Buttons -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">btn</h2>
+      <div class="flex flex-wrap gap-2">
+        <button class="btn btn-default">btn-default</button>
+        <button class="btn btn-secondary">btn-secondary</button>
+        <button class="btn btn-outline">btn-outline</button>
+        <button class="btn btn-ghost">btn-ghost</button>
+        <button class="btn btn-destructive">btn-destructive</button>
+      </div>
+      <div class="flex flex-wrap gap-2 items-center">
+        <button class="btn btn-default btn-sm">btn-sm</button>
+        <button class="btn btn-default">btn (default size)</button>
+        <button class="btn btn-default btn-lg">btn-lg</button>
+        <button class="btn btn-default btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Badges -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">badge</h2>
+      <div class="flex flex-wrap gap-2">
+        <span class="badge badge-default">Default</span>
+        <span class="badge badge-secondary">Secondary</span>
+        <span class="badge badge-outline">Outline</span>
+        <span class="badge badge-ghost">Ghost</span>
+        <span class="badge badge-destructive">Destructive</span>
+      </div>
+    </section>
+
+    <!-- Input -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">input</h2>
+      <div class="flex flex-col gap-2 max-w-sm">
+        <input class="input" placeholder="Default input" />
+        <input class="input" placeholder="Invalid input" aria-invalid="true" />
+        <input class="input" disabled placeholder="Disabled input" />
+      </div>
+    </section>
+
+    <!-- Card -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">card</h2>
+      <div class="card max-w-sm">
+        <div class="card-header">
+          <div class="card-title">Card Title</div>
+          <div class="card-description">Card description text here.</div>
+        </div>
+        <div class="card-content">
+          <p class="text-sm">Card body content.</p>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-default btn-sm">Action</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alert -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">alert</h2>
+      <div class="flex flex-col gap-2 max-w-sm">
+        <div class="alert alert-default">
+          <div class="alert-title">Default Alert</div>
+          <div class="alert-description">Something happened.</div>
+        </div>
+        <div class="alert alert-destructive">
+          <div class="alert-title">Error</div>
+          <div class="alert-description">Something went wrong.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toggle -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">toggle</h2>
+      <div class="flex gap-2">
+        <button class="toggle toggle-default" aria-pressed="false">Off</button>
+        <button class="toggle toggle-default" aria-pressed="true">On</button>
+        <button class="toggle toggle-outline" aria-pressed="false">Outline Off</button>
+        <button class="toggle toggle-outline" aria-pressed="true">Outline On</button>
+      </div>
+    </section>
+
+    <!-- Avatar -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">avatar</h2>
+      <div class="flex gap-2">
+        <div class="avatar">
+          <span class="avatar-fallback">WF</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skeleton -->
+    <section class="space-y-3">
+      <h2 class="text-lg font-semibold">skeleton</h2>
+      <div class="flex flex-col gap-2">
+        <div class="skeleton h-4 w-48"></div>
+        <div class="skeleton h-4 w-32"></div>
+        <div class="skeleton h-10 w-full max-w-sm rounded"></div>
+      </div>
+    </section>
+
+  </body>
+</html>
