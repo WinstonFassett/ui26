@@ -49,6 +49,7 @@ export default defineConfig({
                                 label: 'Guides',
                                 items: [
                                     { label: 'Theming', slug: 'guides/theming' },
+                                    { label: 'Tailwind Plugin', slug: 'guides/tailwind-plugin' },
                                     { label: 'JSON Render', slug: 'guides/json-render' },
                                 ],
                             },

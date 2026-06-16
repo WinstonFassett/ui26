@@ -1,4 +1,4 @@
-/* AUTO-GENERATED — do not edit. Run: pnpm build:plugin */
+/* AUTO-GENERATED — do not edit. Run: pnpm tailwind-plugin */
 @layer components {
   .accordion-content {
     overflow: hidden;

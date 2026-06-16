@@ -5,7 +5,7 @@
  * Phase 2: run through Tailwind compile API to emit real CSS
  * Output: apps/docs/registry/plugin/ui26.css
  *
- * Run: pnpm build:plugin
+ * Run: pnpm tailwind-plugin
  */
 
 import { readdirSync, writeFileSync, mkdirSync, readFileSync } from "fs";
@@ -15,9 +15,63 @@ import { compile } from "tailwindcss";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const REGISTRY = join(ROOT, "registry");
-const GLOBAL_CSS = join(ROOT, "src", "styles", "global.css");
-const OUT = join(REGISTRY, "plugin", "ui26.css");
+
+/**
+ * Resolve where TV configs, theme tokens, and output live.
+ *
+ * In a consumer repo we read paths from `components.json` (the shadcn manifest
+ * every ui26 consumer already has): `aliases.ui` → the dir holding the added
+ * components' *.tv.ts files; `tailwind.css` → the token/theme source.
+ *
+ * In this repo (no components.json at cwd) we fall back to the docs layout so
+ * `pnpm tailwind-plugin` keeps working unchanged.
+ *
+ * Override any of them with flags: --components <dir> --css <file> --out <file>.
+ */
+function resolveConfig() {
+  const cwd = process.cwd();
+  const flags = parseFlags(process.argv.slice(2));
+
+  // Fallback = this repo's docs layout.
+  let registry = join(ROOT, "registry");
+  let globalCss = join(ROOT, "src", "styles", "global.css");
+  let out = join(ROOT, "registry", "plugin", "ui26.css");
+
+  // Consumer path: read components.json from cwd.
+  const cjPath = join(cwd, "components.json");
+  let aliasUiToken: string | undefined;
+  try {
+    const cj = JSON.parse(readFileSync(cjPath, "utf8"));
+    const ui: string | undefined = cj?.aliases?.ui;
+    const css: string | undefined = cj?.tailwind?.css;
+    // Strip a leading alias prefix ("@/", "$lib/") → repo-relative path.
+    if (ui) {
+      aliasUiToken = ui;
+      registry = resolve(cwd, ui.replace(/^[@$][^/]*\//, "src/"));
+    }
+    if (css) globalCss = resolve(cwd, css);
+    out = join(dirname(globalCss), "ui26.css");
+  } catch {
+    // No components.json at cwd — keep docs-layout fallback.
+  }
+
+  if (flags.components) registry = resolve(cwd, flags.components);
+  if (flags.css) globalCss = resolve(cwd, flags.css);
+  if (flags.out) out = resolve(cwd, flags.out);
+
+  return { registry, globalCss, out, aliasUiToken };
+}
+
+function parseFlags(argv: string[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith("--")) out[a.slice(2)] = argv[++i] ?? "";
+  }
+  return out;
+}
+
+const { registry: REGISTRY, globalCss: GLOBAL_CSS, out: OUT } = resolveConfig();
 
 const NAME_MAP: Record<string, string> = {
   button: "btn",
@@ -142,7 +196,9 @@ function resolvePackageCss(id: string, searchDirs: string[]): string | null {
   return null;
 }
 
-const SEARCH_DIRS = [ROOT, join(ROOT, "../..")];
+// Where to resolve bare CSS deps (tailwindcss, tw-animate-css) from node_modules.
+// Consumer cwd first, then this repo's locations as fallback.
+const SEARCH_DIRS = [process.cwd(), ROOT, join(ROOT, "../..")];
 
 async function loadStylesheet(id: string, base: string) {
   let path: string;
@@ -157,7 +213,7 @@ async function loadStylesheet(id: string, base: string) {
 }
 
 async function loadModule() {
-  return { module: {}, base: ROOT };
+  return { module: {}, base: process.cwd() };
 }
 
 async function buildPlugin() {
@@ -219,9 +275,11 @@ async function buildPlugin() {
   // Phase 2: build input CSS using global.css as the theme source + our @apply blocks
   const globalCss = readFileSync(GLOBAL_CSS, "utf8");
 
-  // Strip @import lines that reference non-existent paths in our codegen context
-  // (e.g. starlight packages). We only need the @theme inline block.
-  const themeBlock = globalCss.match(/@theme inline \{[\s\S]*?\n\}/)?.[0] ?? "";
+  // We only need the @theme inline block (token → --color-* mapping) so @apply
+  // can resolve colors. Pull every @theme block (consumers may have more than
+  // one); if none, the tokens are likely raw @theme — fall back to those too.
+  const themeBlocks = globalCss.match(/@theme[^{]*\{[\s\S]*?\n\}/g) ?? [];
+  const themeBlock = themeBlocks.join("\n\n");
 
   const rules = Object.entries(applyBlocks)
     .map(([cls, classes]) => `${cls} { @apply ${classes}; }`)
@@ -237,7 +295,7 @@ async function buildPlugin() {
   ].join("\n\n");
 
   const result = await compile(inputCss, {
-    base: ROOT,
+    base: process.cwd(),
     loadStylesheet,
     loadModule,
   });
@@ -252,7 +310,7 @@ async function buildPlugin() {
       ? compiled.slice(componentStart)
       : compiled;
 
-  const output = `/* AUTO-GENERATED — do not edit. Run: pnpm build:plugin */\n${componentCss}`;
+  const output = `/* AUTO-GENERATED — do not edit. Run: pnpm tailwind-plugin */\n${componentCss}`;
 
   mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(OUT, output, "utf8");

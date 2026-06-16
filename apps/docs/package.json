@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "build:plugin": "tsx scripts/build-plugin.ts"
+    "tailwind-plugin": "tsx scripts/tailwind-plugin.ts --components registry --css src/styles/global.css --out registry/plugin/ui26.css"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.4",
