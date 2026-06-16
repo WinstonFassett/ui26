@@ -318,14 +318,15 @@ a.action.secondary {
 /* ---------- Code blocks ---------- */
 
 .expressive-code {
-  border: 1px solid var(--sl-color-hairline);
-  background: var(--sl-color-bg-inline-code);
+  border: 1px solid var(--border);
+  background: var(--card);
 }
 .expressive-code pre {
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.6;
   padding: 14px 20px !important;
+  background: color-mix(in oklab, var(--muted) 40%, var(--card)) !important;
 }
 .expressive-code .frame .title {
   font-family: var(--font-mono);
@@ -333,6 +334,12 @@ a.action.secondary {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--sl-color-gray-3);
+}
+.expressive-code .frame.is-terminal .header::before {
+  display: none;
+}
+.expressive-code .frame.is-terminal:not(:has(.title:not(:empty))) .header {
+  display: none;
 }
 :not(pre) > code {
   font-family: var(--font-mono);

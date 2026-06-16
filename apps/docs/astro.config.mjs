@@ -25,7 +25,7 @@ export default defineConfig({
             // themeCssSelector maps each theme to our compound data-theme format
             // (e.g. "editorial-dark", "shad-dark") rather than Starlight's native
             // data-theme="light"/"dark", which we never set.
-            themes: ['github-light', 'github-dark'],
+            themes: ['github-light', 'github-dark-default'],
             useDarkModeMediaQuery: false,
             themeCssSelector: (theme) =>
                 theme.type === 'dark' ? '[data-theme$="dark"]' : ':root',
