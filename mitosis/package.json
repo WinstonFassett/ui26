@@ -1,0 +1,14 @@
+{
+  "name": "ui26-mitosis",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "mitosis build",
+    "build:watch": "mitosis build --watch"
+  },
+  "devDependencies": {
+    "@builder.io/mitosis-cli": "latest",
+    "@builder.io/mitosis": "latest",
+    "typescript": "^5"
+  }
+}
