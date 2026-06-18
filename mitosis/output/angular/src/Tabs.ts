@@ -3,22 +3,17 @@ import { CommonModule } from "@angular/common";
 
 import { Component, Input } from "@angular/core";
 
-export interface TabItem {
+export interface TabTrigger {
   value: string;
   label: string;
-  content: string;
 }
 export interface TabsProps {
-  tabs: TabItem[];
+  triggers: TabTrigger[];
   defaultValue?: string;
   variant?: "pill" | "underline";
 }
 
-import {
-  tabsList,
-  tabsTrigger,
-  tabsContent,
-} from "../../apps/docs/registry/tabs/tabs.tv";
+import { tabsList, tabsTrigger } from "../../apps/docs/registry/tabs/tabs.tv";
 
 @Component({
   selector: "tabs",
@@ -30,27 +25,21 @@ import {
           variant: variant
         })"
       >
-        <ng-container *ngFor="let tab of tabs"
+        <ng-container *ngFor="let trigger of triggers"
           ><button
             role="tab"
-            [attr.data-state]="activeTab === tab.value ? 'active' : 'inactive'"
-            [attr.aria-selected]="activeTab === tab.value"
+            [attr.data-state]="activeTab === trigger.value ? 'active' : 'inactive'"
+            [attr.aria-selected]="activeTab === trigger.value"
             [class]="tabsTrigger({
           variant: variant
         })"
-            (click)="activate(tab.value)"
+            (click)="activate(trigger.value)"
           >
-            {{tab.label}}
+            {{trigger.label}}
           </button></ng-container
         >
       </div>
-      <ng-container *ngFor="let tab of tabs"
-        ><ng-container *ngIf="activeTab === tab.value"
-          ><div role="tabpanel" data-state="active" [class]="tabsContent()">
-            {{tab.content}}
-          </div></ng-container
-        ></ng-container
-      >
+      <slot></slot>
     </div>
   `,
   styles: [
@@ -64,10 +53,9 @@ import {
 export default class Tabs {
   tabsList = tabsList;
   tabsTrigger = tabsTrigger;
-  tabsContent = tabsContent;
 
   @Input() defaultValue!: TabsProps["defaultValue"];
-  @Input() tabs!: TabsProps["tabs"];
+  @Input() triggers!: TabsProps["triggers"];
   @Input() variant!: TabsProps["variant"];
 
   activeTab = null;
@@ -76,7 +64,7 @@ export default class Tabs {
   }
 
   ngOnInit() {
-    this.activeTab = this.defaultValue ?? this.tabs[0]?.value ?? "";
+    this.activeTab = this.defaultValue ?? this.triggers[0]?.value ?? "";
   }
 }
 

@@ -1,18 +1,13 @@
-import {
-  tabsContent,
-  tabsList,
-  tabsTrigger,
-} from "../../apps/docs/registry/tabs/tabs.tv";
+import { tabsList, tabsTrigger } from "../../apps/docs/registry/tabs/tabs.tv";
 
 import { $, Fragment, component$, h, useStore } from "@builder.io/qwik";
 
-export interface TabItem {
+export interface TabTrigger {
   value: string;
   label: string;
-  content: string;
 }
 export interface TabsProps {
-  tabs: TabItem[];
+  triggers: TabTrigger[];
   defaultValue?: string;
   variant?: "pill" | "underline";
 }
@@ -21,7 +16,7 @@ export const activate = function activate(props, state, value: string) {
 };
 export const Tabs = component$((props: TabsProps) => {
   const state = useStore<any>({
-    activeTab: props.defaultValue ?? props.tabs[0]?.value ?? "",
+    activeTab: props.defaultValue ?? props.triggers[0]?.value ?? "",
   });
 
   return (
@@ -32,33 +27,27 @@ export const Tabs = component$((props: TabsProps) => {
           variant: props.variant,
         })}
       >
-        {(props.tabs || []).map((tab) => {
+        {(props.triggers || []).map((trigger) => {
           return (
             <button
               role="tab"
               data-state={(() => {
-                state.activeTab === tab.value ? "active" : "inactive";
+                state.activeTab === trigger.value ? "active" : "inactive";
               })()}
               aria-selected={(() => {
-                state.activeTab === tab.value;
+                state.activeTab === trigger.value;
               })()}
               class={tabsTrigger({
                 variant: props.variant,
               })}
-              onClick$={$((event) => activate(props, state, tab.value))}
+              onClick$={$((event) => activate(props, state, trigger.value))}
             >
-              {tab.label}
+              {trigger.label}
             </button>
           );
         })}
       </div>
-      {(props.tabs || []).map((tab) => {
-        return state.activeTab === tab.value ? (
-          <div role="tabpanel" data-state="active" class={tabsContent()}>
-            {tab.content}
-          </div>
-        ) : null;
-      })}
+      <slot></slot>
     </div>
   );
 });

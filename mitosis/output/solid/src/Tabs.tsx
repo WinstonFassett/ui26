@@ -1,25 +1,20 @@
-import { Show, For, createSignal, createMemo } from "solid-js";
+import { For, createSignal, createMemo } from "solid-js";
 
-export interface TabItem {
+export interface TabTrigger {
   value: string;
   label: string;
-  content: string;
 }
 export interface TabsProps {
-  tabs: TabItem[];
+  triggers: TabTrigger[];
   defaultValue?: string;
   variant?: "pill" | "underline";
 }
 
-import {
-  tabsList,
-  tabsTrigger,
-  tabsContent,
-} from "../../apps/docs/registry/tabs/tabs.tv";
+import { tabsList, tabsTrigger } from "../../apps/docs/registry/tabs/tabs.tv";
 
 function Tabs(props: TabsProps) {
   const [activeTab, setActiveTab] = createSignal(
-    props.defaultValue ?? props.tabs[0]?.value ?? ""
+    props.defaultValue ?? props.triggers[0]?.value ?? ""
   );
 
   function activate(value: string) {
@@ -35,8 +30,8 @@ function Tabs(props: TabsProps) {
           })}
           role="tablist"
         >
-          <For each={props.tabs}>
-            {(tab, _index) => {
+          <For each={props.triggers}>
+            {(trigger, _index) => {
               const index = _index();
               return (
                 <button
@@ -44,28 +39,19 @@ function Tabs(props: TabsProps) {
                     variant: props.variant,
                   })}
                   role="tab"
-                  data-state={activeTab() === tab.value ? "active" : "inactive"}
-                  aria-selected={activeTab() === tab.value}
-                  onClick={(event) => activate(tab.value)}
+                  data-state={
+                    activeTab() === trigger.value ? "active" : "inactive"
+                  }
+                  aria-selected={activeTab() === trigger.value}
+                  onClick={(event) => activate(trigger.value)}
                 >
-                  {tab.label}
+                  {trigger.label}
                 </button>
               );
             }}
           </For>
         </div>
-        <For each={props.tabs}>
-          {(tab, _index) => {
-            const index = _index();
-            return (
-              <Show when={activeTab() === tab.value}>
-                <div class={tabsContent()} role="tabpanel" data-state="active">
-                  {tab.content}
-                </div>
-              </Show>
-            );
-          }}
-        </For>
+        <slot></slot>
       </div>
     </>
   );

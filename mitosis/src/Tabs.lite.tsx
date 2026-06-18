@@ -1,21 +1,20 @@
-import { useStore, onMount } from '@builder.io/mitosis';
-import { tabsList, tabsTrigger, tabsContent } from '../../apps/docs/registry/tabs/tabs.tv';
+import { useStore } from '@builder.io/mitosis';
+import { tabsList, tabsTrigger } from '../../apps/docs/registry/tabs/tabs.tv';
 
-export interface TabItem {
+export interface TabTrigger {
   value: string;
   label: string;
-  content: string;
 }
 
 export interface TabsProps {
-  tabs: TabItem[];
+  triggers: TabTrigger[];
   defaultValue?: string;
   variant?: 'pill' | 'underline';
 }
 
 export default function Tabs(props: TabsProps) {
   const state = useStore({
-    activeTab: props.defaultValue ?? props.tabs[0]?.value ?? '',
+    activeTab: props.defaultValue ?? props.triggers[0]?.value ?? '',
     activate(value: string) {
       state.activeTab = value;
     },
@@ -24,33 +23,21 @@ export default function Tabs(props: TabsProps) {
   return (
     <div>
       <div class={tabsList({ variant: props.variant })} role="tablist">
-        <For each={props.tabs}>
-          {(tab) => (
+        <For each={props.triggers}>
+          {(trigger) => (
             <button
               role="tab"
-              data-state={state.activeTab === tab.value ? 'active' : 'inactive'}
-              aria-selected={state.activeTab === tab.value}
+              data-state={state.activeTab === trigger.value ? 'active' : 'inactive'}
+              aria-selected={state.activeTab === trigger.value}
               class={tabsTrigger({ variant: props.variant })}
-              onClick={() => state.activate(tab.value)}
+              onClick={() => state.activate(trigger.value)}
             >
-              {tab.label}
+              {trigger.label}
             </button>
           )}
         </For>
       </div>
-      <For each={props.tabs}>
-        {(tab) => (
-          <Show when={state.activeTab === tab.value}>
-            <div
-              role="tabpanel"
-              data-state="active"
-              class={tabsContent()}
-            >
-              {tab.content}
-            </div>
-          </Show>
-        )}
-      </For>
+      <slot />
     </div>
   );
 }
