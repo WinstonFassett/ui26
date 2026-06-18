@@ -58,6 +58,7 @@ export default defineConfig({
                                     label: 'Dev',
                                     items: [
                                         { label: 'Ecosystem', link: '/ecosystem' },
+                                        { label: 'Chat App', link: '/chat-app' },
                                         { label: 'Tix App', link: '/tix-app' },
                                     ],
                                 },
@@ -102,7 +103,7 @@ export default defineConfig({
                         examples: ['/examples', '/examples/**'],
                         'component-dev': ['/components-dev/**'],
                         components: ['/components/**'],
-                        docs: ['/ecosystem', '/tix-app', '/guides/**', '/reference/**'],
+                        docs: ['/ecosystem', '/chat-app', '/tix-app', '/guides/**', '/reference/**'],
                     },
                 },
             ),
