@@ -1,0 +1,15 @@
+---
+import { badge } from '../../apps/docs/registry/badge/badge.tv';
+
+interface Props {
+  variant?: string;
+}
+
+const { variant } = Astro.props;
+---
+
+<span class={badge({
+  variant: variant
+})}>
+  <slot />
+</span>

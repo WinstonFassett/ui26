@@ -1,0 +1,46 @@
+---
+import { tabsList, tabsTrigger } from '../../apps/docs/registry/tabs/tabs.tv';
+
+interface Props {
+  variant?: string;
+  triggers?: any[];
+}
+
+const { variant, triggers } = Astro.props;
+---
+
+<div>
+  <div role="tablist" class={tabsList({
+  variant: variant
+})}>
+    {triggers.map((trigger) => (
+      <button role="tab" data-value={trigger.value} data-state="inactive" aria-selected="false" class={tabsTrigger({
+  variant: variant
+})}>
+        {trigger.label}
+      </button>
+    ))}
+  </div>
+  <slot />
+</div>
+
+<script>
+  let activeTab = document.querySelector('[role="tab"]')?.dataset.value ?? '';
+  function activate(value) {
+  activeTab = value;
+}
+  document.querySelectorAll('[role="tablist"] [role="tab"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = btn.dataset.value ?? btn.textContent?.trim() ?? '';
+      activate(value);
+      document.querySelectorAll('[role="tab"]').forEach(b => {
+        const active = b === btn;
+        b.setAttribute('data-state', active ? 'active' : 'inactive');
+        b.setAttribute('aria-selected', String(active));
+      });
+      document.querySelectorAll('[role="tabpanel"]').forEach(panel => {
+        panel.hidden = panel.dataset.value !== value;
+      });
+    });
+  });
+</script>

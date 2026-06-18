@@ -1,0 +1,19 @@
+---
+import { button } from '../../apps/docs/registry/button/button.tv';
+
+interface Props {
+  type?: string;
+  disabled?: boolean;
+  variant?: string;
+  size?: string;
+}
+
+const { type, disabled, variant, size } = Astro.props;
+---
+
+<button type={type ?? 'button'} disabled={disabled || undefined} class={button({
+  variant: variant,
+  size: size
+})}>
+  <slot />
+</button>

@@ -1,0 +1,15 @@
+---
+import { tabsContent } from '../../apps/docs/registry/tabs/tabs.tv';
+
+interface Props {
+  active?: boolean;
+}
+
+const { active } = Astro.props;
+---
+
+{active && (
+  <div role="tabpanel" data-state="active" class={tabsContent()}>
+    <slot />
+  </div>
+)}

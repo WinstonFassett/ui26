@@ -1,0 +1,14 @@
+---
+import { accordionContent, accordionContentInner } from '../../apps/docs/registry/accordion/accordion.tv';
+
+interface Props {
+}
+
+// no props
+---
+
+<div class={accordionContent()}>
+  <div class={accordionContentInner()}>
+    <slot />
+  </div>
+</div>

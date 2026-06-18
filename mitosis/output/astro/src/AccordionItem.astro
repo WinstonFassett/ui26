@@ -1,0 +1,13 @@
+---
+import { accordionItem } from '../../apps/docs/registry/accordion/accordion.tv';
+
+interface Props {
+  open?: boolean;
+}
+
+const { open } = Astro.props;
+---
+
+<details open={open || undefined} class={accordionItem()}>
+  <slot />
+</details>
