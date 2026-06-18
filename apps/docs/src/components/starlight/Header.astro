@@ -20,7 +20,7 @@ const fallback = rawTopics.length > 0 && !rawTopics.some((t: any) => t.isCurrent
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 const customTopicPrefixes: Record<string, RegExp> = {
     Examples: /^\/examples(\/|$)/,
-    Docs: /^\/(ecosystem|tix-app)(\/|$)/,
+    Docs: /^\/(ecosystem|chat-app|tix-app)(\/|$)/,
 };
 const topics = rawTopics.map((t: any) => {
     if (t.isCurrent || !fallback) return t;
