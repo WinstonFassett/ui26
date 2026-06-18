@@ -17,6 +17,7 @@ const site = process.env.SITE_URL || process.env.URL || undefined;
 // https://astro.build/config
 export default defineConfig({
     site,
+    server: { port: process.env.PORT ? Number(process.env.PORT) : 4321, host: '127.0.0.1' },
     integrations: [starlight({
         title: 'ui26',
         favicon: '/favicon.svg',
