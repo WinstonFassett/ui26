@@ -1,0 +1,266 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import Button from "@registry/button/button.astro";
+import Badge from "@registry/badge/badge.astro";
+import Avatar from "@registry/avatar/avatar.astro";
+import AvatarImage from "@registry/avatar/avatar-image.astro";
+import AvatarFallback from "@registry/avatar/avatar-fallback.astro";
+import Textarea from "@registry/textarea/textarea.astro";
+import Separator from "@registry/separator/separator.astro";
+
+type Chat = {
+  id: string;
+  title: string;
+  icon: string;
+  archived?: boolean;
+};
+
+const recentChats: Chat[] = [
+  { id: "c1", icon: "⚡", title: "Refactor auth middleware" },
+  { id: "c2", icon: "✦", title: "Write migration plan for v2" },
+  { id: "c3", icon: "◈", title: "Debug flaky checkout test" },
+  { id: "c4", icon: "⬡", title: "Design token audit" },
+];
+
+const archivedChats: Chat[] = [
+  { id: "a1", icon: "◈", title: "Old onboarding copy", archived: true },
+  { id: "a2", icon: "⚡", title: "Stripe webhook spike", archived: true },
+];
+
+type Message = {
+  id: string;
+  sender: "user" | "ai";
+  content: string;
+  time: string;
+};
+
+const messages: Message[] = [
+  {
+    id: "m1",
+    sender: "user",
+    content: "Why is the checkout test flaky on Mondays only?",
+    time: "2:14 pm",
+  },
+  {
+    id: "m2",
+    sender: "ai",
+    content:
+      "Likely a weekend cron that recycles staging Stripe keys. The first Monday run sees stale keys until the seed job catches up. Run pnpm seed:stripe before the test suite, or move the cron to Sundays.",
+    time: "2:14 pm",
+  },
+  {
+    id: "m3",
+    sender: "user",
+    content: "How do I move the cron to Sundays without breaking the pipeline?",
+    time: "2:15 pm",
+  },
+  {
+    id: "m4",
+    sender: "ai",
+    content:
+      "Edit .github/workflows/seed.yml and change the cron expression from 0 2 * * 1 (Monday 2am) to 0 2 * * 0 (Sunday 2am). Then trigger a manual run once to confirm the keys are fresh before your Monday CI starts.",
+    time: "2:15 pm",
+  },
+];
+
+type Mode = { id: string; label: string; icon: string; pro?: boolean };
+const modes: Mode[] = [
+  { id: "fast", label: "Fast", icon: "⚡" },
+  { id: "indepth", label: "In-depth", icon: "◎" },
+  { id: "magic", label: "Magic AI", icon: "✦", pro: true },
+  { id: "holistic", label: "Holistic", icon: "◈" },
+];
+---
+
+<StarlightPage frontmatter={{ title: "Chat App", template: "splash", pagefind: false }}>
+  <div class="chat-app-shell not-content flex bg-background text-foreground overflow-hidden">
+
+    {/* ── Sidebar ─────────────────────────────────────────────── */}
+    <aside class="shrink-0 flex flex-col border-r border-border overflow-hidden" style="width:260px">
+
+      {/* Workspace header */}
+      <div class="flex items-center justify-between px-3 py-2.5 border-b border-border h-12">
+        <div class="flex items-center gap-2.5">
+          <div class="size-6 rounded-full bg-primary/10 flex items-center justify-center text-[11px]">✦</div>
+          <span class="text-sm font-semibold">ui26 AI</span>
+        </div>
+        <Avatar size="sm">
+          <AvatarFallback class="text-[10px]">WF</AvatarFallback>
+        </Avatar>
+      </div>
+
+      {/* Search */}
+      <div class="px-3 py-2 border-b border-border">
+        <div class="relative flex items-center">
+          <span class="absolute left-2.5 text-muted-foreground text-[13px]">⌕</span>
+          <input
+            type="text"
+            placeholder="Search anything"
+            class="w-full h-[34px] rounded-md border border-border bg-muted/50 pl-8 pr-8 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring"
+          />
+          <kbd class="absolute right-2 text-[10px] font-mono bg-muted text-muted-foreground rounded border border-border px-1">/</kbd>
+        </div>
+      </div>
+
+      {/* Nav */}
+      <nav class="px-2 py-2 border-b border-border space-y-0.5">
+        {[
+          { icon: "⌂", label: "Home" },
+          { icon: "✦", label: "Ask AI", active: true },
+          { icon: "≡", label: "Prompt Library" },
+          { icon: "⬡", label: "Extensions" },
+          { icon: "⊟", label: "Folders" },
+        ].map((item) => (
+          <div class:list={[
+            "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm cursor-pointer transition-colors",
+            item.active
+              ? "bg-secondary text-secondary-foreground"
+              : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground",
+          ]}>
+            <span class="font-mono text-[13px] w-4 text-center">{item.icon}</span>
+            <span>{item.label}</span>
+          </div>
+        ))}
+      </nav>
+
+      {/* Chat history */}
+      <div class="flex-1 overflow-y-auto py-2">
+        <div class="px-3 pt-2 pb-1">
+          <span class="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Recent</span>
+        </div>
+        <div class="px-2 space-y-0.5">
+          {recentChats.map((chat) => (
+            <div class="group/item relative flex items-center rounded-md overflow-hidden">
+              <div class="flex-1 flex items-center gap-2 px-2 py-1.5 text-sm cursor-pointer text-muted-foreground hover:bg-secondary/60 hover:text-foreground transition-colors rounded-md min-w-0">
+                <span class="font-mono text-[11px] shrink-0">{chat.icon}</span>
+                <span class="truncate">{chat.title}</span>
+              </div>
+              <button class="absolute right-1 size-6 rounded opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-secondarytext-muted-foreground text-[12px]">⋯</button>
+            </div>
+          ))}
+        </div>
+
+        <div class="px-3 pt-4 pb-1">
+          <span class="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Archived</span>
+        </div>
+        <div class="px-2 space-y-0.5">
+          {archivedChats.map((chat) => (
+            <div class="group/item relative flex items-center rounded-md overflow-hidden">
+              <div class="flex-1 flex items-center gap-2 px-2 py-1.5 text-sm cursor-pointer text-muted-foreground/60 hover:bg-secondary/60 hover:text-foreground transition-colors rounded-md min-w-0">
+                <span class="font-mono text-[11px] shrink-0">{chat.icon}</span>
+                <span class="truncate">{chat.title}</span>
+              </div>
+              <button class="absolute right-1 size-6 rounded opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-secondarytext-muted-foreground text-[12px]">⋯</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div class="px-3 py-2.5 border-t border-border">
+        <div class="flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
+          <span class="w-2 h-2 rounded-full bg-success" />
+          <span>connected · claude-sonnet</span>
+        </div>
+      </div>
+    </aside>
+
+    {/* ── Main ────────────────────────────────────────────────── */}
+    <div class="flex-1 h-full overflow-hidden flex flex-col">
+
+      {/* Message thread */}
+      <div class="flex-1 overflow-y-auto px-4 md:px-8 py-8">
+        <div class="max-w-[640px] mx-auto space-y-6">
+          {messages.map((msg) => (
+            <div class:list={[
+              "flex gap-3",
+              msg.sender === "user" ? "justify-end" : "justify-start",
+            ]}>
+              {msg.sender === "ai" && (
+                <div class="shrink-0 size-8 rounded-full bg-muted flex items-center justify-center text-[13px] font-mono">✦</div>
+              )}
+              <div class="max-w-[80%]">
+                {msg.sender === "user" ? (
+                  <div class="rounded-2xl px-4 py-3 bg-muted">
+                    <p class="text-sm leading-relaxed">{msg.content}</p>
+                    <p class="text-[10px] font-mono mt-1.5 text-muted-foreground">{msg.time}</p>
+                  </div>
+                ) : (
+                  <div class="px-2 py-1">
+                    <p class="text-sm leading-relaxed">{msg.content}</p>
+                    <p class="text-[10px] font-mono mt-1 text-muted-foreground">{msg.time}</p>
+                  </div>
+                )}
+              </div>
+              {msg.sender === "user" && (
+                <Avatar size="sm" class="shrink-0">
+                  <AvatarFallback class="text-[10px]">WF</AvatarFallback>
+                </Avatar>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Input */}
+      <div class="border-t border-border px-4 md:px-8 py-3">
+        <div class="max-w-[640px] mx-auto space-y-2">
+          {/* Mode pills */}
+          <div class="flex flex-wrap items-center justify-center gap-1.5">
+            {modes.map((mode) => (
+              <Button
+                variant={mode.id === "fast" ? "secondary" : "ghost"}
+                size="sm"
+                class:list={["gap-1.5 h-7 px-3 text-xs", mode.id === "fast" && "bg-secondary"]}
+              >
+                <span class="font-mono text-[11px]">{mode.icon}</span>
+                <span>{mode.label}</span>
+                {mode.pro && (
+                  <span class="rounded bg-primary/10 px-1 py-px text-[9px] font-medium">Pro</span>
+                )}
+              </Button>
+            ))}
+          </div>
+
+          {/* Double-border input card */}
+          <div class="rounded-2xl border border-border bg-secondary p-1">
+            <div class="rounded-xl border border-border bg-card">
+              <Textarea
+                placeholder="Continue the conversation…"
+                class="min-h-13 resize-none border-0 bg-transparent px-4 py-2.5 text-sm placeholder:text-muted-foreground/60 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+              <div class="flex items-center justify-between px-3 py-2 border-t border-border/50">
+                <div class="flex items-center gap-1.5">
+                  <Button variant="ghost" size="sm" class="size-7 rounded-full border border-border px-0">
+                    <span class="text-muted-foreground text-[12px]">⊕</span>
+                  </Button>
+                  <Button variant="ghost" size="sm" class="h-7 rounded-full border border-border gap-1.5 px-2.5">
+                    <span class="text-muted-foreground text-[11px]">◎</span>
+                    <span class="text-xs text-muted-foreground/70 hidden sm:inline">Deep Search</span>
+                  </Button>
+                  <Button variant="ghost" size="sm" class="h-7 rounded-full border border-border gap-1.5 px-2.5">
+                    <span class="text-muted-foreground text-[11px]">✦</span>
+                    <span class="text-xs text-muted-foreground/70 hidden sm:inline">Think</span>
+                  </Button>
+                </div>
+                <Button size="sm" class="h-7 px-4">Send</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</StarlightPage>
+
+<style is:global>
+  body:has(.chat-app-shell) .content-panel:first-child { display: none; }
+  body:has(.chat-app-shell) .content-panel { padding: 0 !important; border: 0 !important; }
+  body:has(.chat-app-shell) .sl-container { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  body:has(.chat-app-shell) .sl-markdown-content { margin-top: 0 !important; padding-top: var(--sl-nav-height, 3.75rem) !important; height: 100svh !important; box-sizing: border-box !important; }
+  body:has(.chat-app-shell) .sl-markdown-content > :first-child { margin-top: 0 !important; }
+  body:has(.chat-app-shell) .sl-markdown-content ~ * { display: none; }
+  body:has(.chat-app-shell) main { padding-bottom: 0 !important; }
+  .chat-app-shell { height: 100%; }
+</style>
