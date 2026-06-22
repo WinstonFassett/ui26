@@ -39,6 +39,7 @@ pnpm-debug.log*
 .spike-baseline.mjs
 .spike-after.mjs
 .spike-check.mjs
+.spike-close.mjs
 screenshot.mjs
 
 # web-dev-mcp runtime logs
