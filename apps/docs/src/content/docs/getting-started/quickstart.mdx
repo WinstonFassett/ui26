@@ -72,3 +72,12 @@ This adds CSS vars to `:root` (light) and `.dark` (dark mode), matching shadcn's
 </Tabs>
 
 That's it. See [Theming](/guides/theming/) to customize the palette or add a theme switcher.
+
+## No framework? Use the Tailwind plugin
+
+If you're working in plain HTML or a no-build environment, the [Tailwind Plugin](/guides/tailwind-plugin/) generates DaisyUI-style semantic classes (`btn`, `card`, `badge`, …) from your installed components. No React, Svelte, or Astro required.
+
+```html
+<button class="btn btn-default">Click me</button>
+<div class="card">…</div>
+```
