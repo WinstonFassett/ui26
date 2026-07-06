@@ -761,7 +761,8 @@ const CreateScene: React.FC = () => {
       </div>
       {/* The live preview — the same card the next scene re-themes. */}
       <div
-        className={`${dark ? "dark " : ""}**:font-normal!`}
+        data-theme={dark ? "editorial-dark" : "editorial"}
+        className="**:font-normal!"
         style={
           {
             "--radius": `${radius}px`,
@@ -854,7 +855,8 @@ const PresetScene: React.FC = () => {
       }}
     >
       <div
-        className={`${preset.dark ? "dark " : ""}**:font-normal!`}
+        data-theme={preset.dark ? "editorial-dark" : "editorial"}
+        className="**:font-normal!"
         style={
           {
             "--radius": `${radius}px`,
@@ -1498,7 +1500,7 @@ export const IntroducingUi26Demo: React.FC = () => {
         softness={0.8}
       />
       <Scrim strength={0.85} />
-      <TransitionSeries from={-1}>
+      <TransitionSeries from={92}>
         {/* 1 — The component field: a camera flight through real ui26 */}
         <TransitionSeries.Sequence durationInFrames={S_FIELD}>
           <FieldScene />

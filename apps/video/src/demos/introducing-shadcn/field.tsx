@@ -8,64 +8,34 @@ import {
   useVideoConfig,
 } from "remotion";
 
-// ui26 registry components
-import { Button } from "@/ui26/button/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/ui26/card/card";
-import { Input } from "@/ui26/input/input";
-import { Label } from "@/ui26/label/label";
-import { Textarea } from "@/ui26/textarea/textarea";
-import { Separator } from "@/ui26/separator/separator";
-import { Switch } from "@/ui26/switch/switch";
-import { Badge } from "@/ui26/badge/badge";
-import { Avatar, AvatarFallback } from "@/ui26/avatar/avatar";
-import { Progress } from "@/ui26/progress/progress";
-import { Slider } from "@/ui26/slider/slider";
-import { Toggle } from "@/ui26/toggle/toggle";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/ui26/accordion/accordion";
-import { Alert, AlertTitle, AlertDescription } from "@/ui26/alert/alert";
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/ui26/breadcrumb/breadcrumb";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "@/ui26/pagination/pagination";
-import { RadioGroup, RadioGroupItem } from "@/ui26/radio-group/radio-group";
-import { Checkbox } from "@/ui26/checkbox/checkbox";
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-  FieldLegend,
-  FieldTitle,
-  FieldSeparator,
-} from "@/ui26/field/field";
-import { Heading } from "@/ui26/heading/heading";
-import { Stack } from "@/ui26/stack/stack";
-import { Grid } from "@/ui26/grid/grid";
+import { BlockPreview } from "@/components/BlockPreview";
+import type { Spec } from "@json-render/core";
+
+// Import sample specs directly (webpack doesn't support import.meta.glob)
+import ticketCard from "@/samples/ticket-card.sample";
+import statsCard from "@/samples/stats-card.sample";
+import kpiStrip from "@/samples/kpi-strip.sample";
+import signInForm from "@/samples/sign-in-form.sample";
+import activityFeed from "@/samples/activity-feed.sample";
+import commandPalette from "@/samples/command-palette.sample";
+import chatThread from "@/samples/chat-thread.sample";
+import aiMessage from "@/samples/ai-message.sample";
+import alertGallery from "@/samples/alert-gallery.sample";
+import progressCard from "@/samples/progress-card.sample";
+import onboardingCard from "@/samples/onboarding-card.sample";
+import accordionCard from "@/samples/accordion-card.sample";
+import notificationList from "@/samples/notification-list.sample";
+import ticketTable from "@/samples/ticket-table.sample";
+import machineStats from "@/samples/machine-stats.sample";
+import tixIssueList from "@/samples/tix-issue-list.sample";
+import upgradeCard from "@/samples/upgrade-card.sample";
+import emptyState from "@/samples/empty-state.sample";
+import breadcrumbNav from "@/samples/breadcrumb-nav.sample";
+import paginationBar from "@/samples/pagination-bar.sample";
+import badgeCompositions from "@/samples/badge-compositions.sample";
+import avatarRow from "@/samples/avatar-row.sample";
+import tooltipCard from "@/samples/tooltip-card.sample";
+import workspaceForm from "@/samples/workspace-form.sample";
 
 const clampOpts = {
   extrapolateLeft: "clamp" as const,
@@ -112,543 +82,25 @@ export const MiniBars: React.FC<{
 };
 
 // ---------------------------------------------------------------------------
-// The component field — real ui26 components, packed tight.
+// The component field — real ui26 examples rendered from JSON Render specs.
 // ---------------------------------------------------------------------------
-const CreateAccountCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Create an account</CardTitle>
-      <CardDescription>Enter your email below to get started</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 gap-3">
-        <Button variant="outline">GitHub</Button>
-        <Button variant="outline">Google</Button>
-      </div>
-      <div className="flex items-center gap-3">
-        <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground">or continue with</span>
-        <Separator className="flex-1" />
-      </div>
-      <Field>
-        <FieldLabel htmlFor="fld-email">Email</FieldLabel>
-        <FieldContent>
-          <Input id="fld-email" placeholder="m@example.com" readOnly />
-        </FieldContent>
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="fld-pass">Password</FieldLabel>
-        <FieldContent>
-          <Input id="fld-pass" type="password" defaultValue="password" readOnly />
-        </FieldContent>
-      </Field>
-      <Button className="w-full">Create account</Button>
-    </CardContent>
-  </Card>
-);
-
-const PaymentCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Payment method</CardTitle>
-      <CardDescription>All transactions are secure</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <Field>
-        <FieldLabel htmlFor="fld-card-name">Name</FieldLabel>
-        <FieldContent>
-          <Input id="fld-card-name" defaultValue="First Last" readOnly />
-        </FieldContent>
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="fld-card-num">Card number</FieldLabel>
-        <FieldContent>
-          <Input id="fld-card-num" defaultValue="1234 1234 1234 1234" readOnly />
-        </FieldContent>
-      </Field>
-      <div className="grid grid-cols-3 gap-3">
-        <Input defaultValue="06/28" readOnly />
-        <Input defaultValue="CVC" readOnly />
-        <Input defaultValue="90210" readOnly />
-      </div>
-    </CardContent>
-    <CardFooter>
-      <Button className="w-full">Save</Button>
-    </CardFooter>
-  </Card>
-);
-
-const TeamCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Team members</CardTitle>
-      <CardDescription>Invite your team to collaborate.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      {[
-        { initials: "SD", name: "Sofia Davis", email: "m@example.com", role: "Owner" },
-        { initials: "JL", name: "Jackson Lee", email: "p@example.com", role: "Member" },
-        { initials: "IN", name: "Isabella Nguyen", email: "i@example.com", role: "Member" },
-      ].map((m) => (
-        <div key={m.initials} className="flex items-center gap-3">
-          <Avatar>
-            <AvatarFallback>{m.initials}</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm">{m.name}</span>
-            <span className="text-xs text-muted-foreground">{m.email}</span>
-          </div>
-          <Button variant="outline" size="sm" className="ml-auto">
-            {m.role}
-          </Button>
-        </div>
-      ))}
-    </CardContent>
-  </Card>
-);
-
-const ChatCard = (
-  <Card>
-    <CardHeader>
-      <div className="flex items-center gap-3">
-        <Avatar>
-          <AvatarFallback>SD</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <CardTitle>Sofia Davis</CardTitle>
-          <CardDescription>m@example.com</CardDescription>
-        </div>
-      </div>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-2">
-      <div className="max-w-[85%] self-start rounded-lg bg-muted px-3 py-2 text-sm">
-        Hi, how can I help you today?
-      </div>
-      <div className="max-w-[85%] self-end rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground">
-        Hey, I&apos;m having trouble with my account.
-      </div>
-      <div className="max-w-[85%] self-start rounded-lg bg-muted px-3 py-2 text-sm">
-        What seems to be the problem?
-      </div>
-      <div className="max-w-[85%] self-end rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground">
-        I can&apos;t log in.
-      </div>
-    </CardContent>
-    <CardFooter className="gap-2">
-      <Input placeholder="Type your message..." readOnly className="flex-1" />
-      <Button size="icon">Send</Button>
-    </CardFooter>
-  </Card>
-);
-
-const MoveGoalCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Move goal</CardTitle>
-      <CardDescription>Set your daily activity goal.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <div className="flex items-baseline gap-2">
-        <span className="text-4xl tracking-normal">350</span>
-        <span className="text-xs text-muted-foreground">calories/day</span>
-      </div>
-      <MiniBars
-        values={[40, 70, 52, 88, 60, 76, 96, 58, 70, 82, 64, 90]}
-        height={64}
-        barWidth={16}
-        gap={7}
-        color="#3f3f46"
-      />
-    </CardContent>
-    <CardFooter>
-      <Button variant="outline" className="w-full">
-        Set goal
-      </Button>
-    </CardFooter>
-  </Card>
-);
-
-const CookieCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Cookie settings</CardTitle>
-      <CardDescription>Manage your cookie settings here.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-5">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="fld-necessary">Strictly necessary</Label>
-          <span className="text-xs text-muted-foreground">
-            Essential for the website to function.
-          </span>
-        </div>
-        <Switch id="fld-necessary" defaultChecked />
-      </div>
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="fld-functional">Functional cookies</Label>
-          <span className="text-xs text-muted-foreground">
-            Personalized features and content.
-          </span>
-        </div>
-        <Switch id="fld-functional" />
-      </div>
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex flex-col gap-1">
-          <Label htmlFor="fld-perf">Performance cookies</Label>
-          <span className="text-xs text-muted-foreground">
-            Help us improve the website.
-          </span>
-        </div>
-        <Switch id="fld-perf" defaultChecked />
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const ReportCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Report an issue</CardTitle>
-      <CardDescription>What area are you having problems with?</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <Field>
-        <FieldLabel htmlFor="fld-subject">Subject</FieldLabel>
-        <FieldContent>
-          <Input id="fld-subject" defaultValue="I need help with..." readOnly />
-        </FieldContent>
-      </Field>
-      <Field>
-        <FieldLabel htmlFor="fld-desc">Description</FieldLabel>
-        <FieldContent>
-          <Textarea
-            id="fld-desc"
-            placeholder="Please include all information relevant to your issue."
-            readOnly
-          />
-        </FieldContent>
-      </Field>
-    </CardContent>
-    <CardFooter className="justify-end gap-2">
-      <Button variant="ghost">Cancel</Button>
-      <Button>Submit</Button>
-    </CardFooter>
-  </Card>
-);
-
-const ShareCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Share this document</CardTitle>
-      <CardDescription>Anyone with the link can view.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <div className="flex gap-2">
-        <Input defaultValue="http://example.com/link/to/document" readOnly className="flex-1" />
-        <Button variant="secondary">Copy</Button>
-      </div>
-      <Separator />
-      <div className="flex items-center gap-3">
-        <Avatar>
-          <AvatarFallback>OM</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <span className="text-sm">Olivia Martin</span>
-          <span className="text-xs text-muted-foreground">m@example.com</span>
-        </div>
-        <Button variant="outline" size="sm" className="ml-auto">
-          Can edit
-        </Button>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const AccordionCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>FAQ</CardTitle>
-      <CardDescription>Frequently asked questions.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <Accordion className="flex flex-col gap-2">
-        <AccordionItem open>
-          <AccordionTrigger>What is ui26?</AccordionTrigger>
-          <AccordionContent>
-            A cross-framework UI component library for React, Svelte, and Astro.
-            Source-distributed — you own the code.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionTrigger>How do I install components?</AccordionTrigger>
-          <AccordionContent>
-            Run <code className="text-xs">npx @winstonfassett/ui26 add button</code> and
-            the component source is copied into your project.
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem>
-          <AccordionTrigger>Which frameworks are supported?</AccordionTrigger>
-          <AccordionContent>
-            React, Svelte 5, and Astro. Every component ships in all three frameworks
-            with a shared tailwind-variants definition.
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </CardContent>
-  </Card>
-);
-
-const PlanCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Upgrade your plan</CardTitle>
-      <CardDescription>Pick what fits your team.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <RadioGroup defaultValue="pro" className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <RadioGroupItem value="hobby" id="fld-hobby" />
-          <Label htmlFor="fld-hobby">Hobby</Label>
-          <span className="ml-auto text-sm text-muted-foreground">$0</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <RadioGroupItem value="pro" id="fld-pro" />
-          <Label htmlFor="fld-pro">Pro</Label>
-          <span className="ml-auto text-sm text-muted-foreground">$20</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <RadioGroupItem value="team" id="fld-team" />
-          <Label htmlFor="fld-team">Team</Label>
-          <span className="ml-auto text-sm text-muted-foreground">$100</span>
-        </div>
-      </RadioGroup>
-    </CardContent>
-    <CardFooter>
-      <Button className="w-full">Upgrade</Button>
-    </CardFooter>
-  </Card>
-);
-
-const ExerciseCard = (
-  <Card>
-    <CardHeader>
-      <CardDescription>Exercise minutes</CardDescription>
-      <CardTitle className="text-3xl">1,284</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <MiniBars
-        values={[38, 62, 44, 78, 52, 70, 88, 58, 72, 84, 60, 92]}
-        height={110}
-        barWidth={22}
-        gap={8}
-        color="#52525b"
-      />
-    </CardContent>
-  </Card>
-);
-
-const BreadcrumbCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Navigation</CardTitle>
-      <CardDescription>Breadcrumb trail.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Home</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="#">Components</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <Separator />
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>2</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </CardContent>
-  </Card>
-);
-
-const StatusCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Deployment status</CardTitle>
-      <CardDescription>Your latest builds at a glance.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <span className="text-sm">production</span>
-        <Badge>Ready</Badge>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-sm">preview</span>
-        <Badge variant="secondary">Building</Badge>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-sm">staging</span>
-        <Badge variant="outline">Queued</Badge>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const PlayerCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Now playing</CardTitle>
-      <CardDescription>Adjust playback and levels.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-5">
-      <Slider defaultValue={[60]} max={100} />
-      <Progress value={42} />
-      <div className="flex items-center gap-2">
-        <Toggle defaultPressed aria-label="Shuffle">
-          Shuffle
-        </Toggle>
-        <Toggle aria-label="Repeat">Repeat</Toggle>
-        <Toggle aria-label="Mute">Mute</Toggle>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const StorageCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Storage</CardTitle>
-      <CardDescription>82.4 GB of 100 GB used</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <Progress value={82} />
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">Documents</span>
-        <span className="text-sm">24.1 GB</span>
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">Media</span>
-        <span className="text-sm">51.6 GB</span>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const FeedbackCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Send feedback</CardTitle>
-      <CardDescription>Help us improve your experience.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <Textarea placeholder="Tell us what you think..." readOnly />
-      <div className="flex justify-end">
-        <Button size="sm">Send</Button>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-const AlertCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Notifications</CardTitle>
-      <CardDescription>Stay informed about your account.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-3">
-      <Alert>
-        <AlertTitle>Heads up!</AlertTitle>
-        <AlertDescription>
-          Your subscription expires in 7 days. Renew to avoid interruption.
-        </AlertDescription>
-      </Alert>
-      <Alert variant="secondary">
-        <AlertTitle>New feature</AlertTitle>
-        <AlertDescription>
-          Dark mode is now available in your theme settings.
-        </AlertDescription>
-      </Alert>
-    </CardContent>
-  </Card>
-);
-
-const CheckboxCard = (
-  <Card>
-    <CardHeader>
-      <CardTitle>Preferences</CardTitle>
-      <CardDescription>Choose what you want to receive.</CardDescription>
-    </CardHeader>
-    <CardContent className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <Checkbox id="fld-email-pref" defaultChecked />
-        <Label htmlFor="fld-email-pref">Email notifications</Label>
-      </div>
-      <div className="flex items-center gap-3">
-        <Checkbox id="fld-sms-pref" />
-        <Label htmlFor="fld-sms-pref">SMS alerts</Label>
-      </div>
-      <div className="flex items-center gap-3">
-        <Checkbox id="fld-push-pref" defaultChecked />
-        <Label htmlFor="fld-push-pref">Push notifications</Label>
-      </div>
-    </CardContent>
-  </Card>
-);
-
-// Order matters: CSS columns fill left to right, so the first cards land in
-// the leftmost columns where the camera opens. The tail cards keep every
-// column tall enough that the end of the glide never sees an empty bottom.
-const FIELD_CARDS: React.ReactNode[] = [
-  CreateAccountCard,
-  MoveGoalCard,
-  ChatCard,
-  AccordionCard,
-  BreadcrumbCard,
-  ExerciseCard,
-  PaymentCard,
-  CookieCard,
-  TeamCard,
-  AlertCard,
-  ReportCard,
-  ShareCard,
-  PlanCard,
-  StatusCard,
-  PlayerCard,
-  StorageCard,
-  FeedbackCard,
-  CheckboxCard,
-];
+const FIELD_SPECS: { id: string; spec: Spec }[] = [
+  ticketCard, statsCard, kpiStrip, signInForm, activityFeed,
+  commandPalette, chatThread, aiMessage, alertGallery, progressCard,
+  onboardingCard, accordionCard, notificationList, ticketTable, machineStats,
+  tixIssueList, upgradeCard, emptyState, breadcrumbNav, paginationBar,
+  badgeCompositions, avatarRow, tooltipCard, workspaceForm,
+].map((s: any) => ({ id: s.id, spec: s.spec }));
 
 // ---------------------------------------------------------------------------
-// Camera: no pull-back — one continuous diagonal glide across the packed
-// wall, top-left to bottom-right, with a slight push-in. The plane is a
-// 4-column CSS-columns masonry, ~1720px wide — dense, homepage-like.
+// Camera: one continuous diagonal glide across the packed wall.
 // ---------------------------------------------------------------------------
 const PLANE_W = 1720;
-const PLANE_H = 1620;
+const PLANE_H = 2000;
 
-// One single-segment glide: no keyframe joints mid-flight, so the camera
-// never halts — it is still moving when the swirl cover takes over at ~4s.
 const CAM_T = [0, 224];
 const CAM_X = [620, 1105];
-const CAM_Y = [360, 900];
+const CAM_Y = [360, 1100];
 const CAM_S = [1.02, 1.1];
 
 const camEasing = Easing.inOut(Easing.cubic);
@@ -656,18 +108,9 @@ const camEasing = Easing.inOut(Easing.cubic);
 export const FieldScene: React.FC = () => {
   const frame = useCurrentFrame();
 
-  const px = interpolate(frame, CAM_T, CAM_X, {
-    ...clampOpts,
-    easing: camEasing,
-  });
-  const py = interpolate(frame, CAM_T, CAM_Y, {
-    ...clampOpts,
-    easing: camEasing,
-  });
-  const s = interpolate(frame, CAM_T, CAM_S, {
-    ...clampOpts,
-    easing: camEasing,
-  });
+  const px = interpolate(frame, CAM_T, CAM_X, { ...clampOpts, easing: camEasing });
+  const py = interpolate(frame, CAM_T, CAM_Y, { ...clampOpts, easing: camEasing });
+  const s = interpolate(frame, CAM_T, CAM_S, { ...clampOpts, easing: camEasing });
   const rotate = interpolate(frame, [0, 224], [-1.0, 0.4], clampOpts);
 
   const tx = 640 - px * s;
@@ -677,8 +120,10 @@ export const FieldScene: React.FC = () => {
     <AbsoluteFill style={{ overflow: "hidden" }}>
       <AbsoluteFill style={{ transform: `rotate(${rotate}deg)` }}>
         <div
-          className="dark **:font-normal!"
+          data-theme="editorial-dark"
+          className="**:font-normal!"
           style={{
+            fontFamily: '"Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
             position: "absolute",
             width: PLANE_W,
             transform: `translate(${tx}px, ${ty}px) scale(${s})`,
@@ -686,10 +131,7 @@ export const FieldScene: React.FC = () => {
           }}
         >
           <div className="columns-4 gap-5 p-5">
-            {FIELD_CARDS.map((node, i) => {
-              // Cards assemble as a quick left-to-right wave: the opening
-              // close-up is already set, the far columns land before the
-              // pull-back reveals them.
+            {FIELD_SPECS.map((item, i) => {
               const d = 2 + i * 5;
               const enter = interpolate(frame, [d, d + 12], [0, 1], {
                 ...clampOpts,
@@ -697,8 +139,8 @@ export const FieldScene: React.FC = () => {
               });
               return (
                 <div
-                  key={i}
-                  className="mb-5 break-inside-avoid"
+                  key={item.id}
+                  className="mb-5 break-inside-avoid border border-border bg-card p-4 overflow-hidden"
                   style={{
                     opacity: enter,
                     transform: `translateY(${(1 - enter) * 22}px) scale(${
@@ -706,7 +148,7 @@ export const FieldScene: React.FC = () => {
                     })`,
                   }}
                 >
-                  {node}
+                  <BlockPreview spec={item.spec} />
                 </div>
               );
             })}
