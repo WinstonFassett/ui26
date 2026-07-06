@@ -96,11 +96,11 @@ const FIELD_SPECS: { id: string; spec: Spec; spanFull: boolean }[] = [
 // Camera: one continuous diagonal glide across the packed wall.
 // ---------------------------------------------------------------------------
 const PLANE_W = 1720;
-const PLANE_H = 2400;
+const PLANE_H = 2200;
 
 const CAM_T = [0, 224];
-const CAM_X = [520, 1180];
-const CAM_Y = [300, 1300];
+const CAM_X = [620, 1105];
+const CAM_Y = [360, 1200];
 const CAM_S = [1.02, 1.1];
 
 const camEasing = Easing.inOut(Easing.cubic);
@@ -130,7 +130,7 @@ export const FieldScene: React.FC = () => {
             transformOrigin: "0 0",
           }}
         >
-          <div className="columns-6 gap-5 p-5">
+          <div className="columns-4 gap-5 p-5">
             {FIELD_SPECS.map((item, i) => {
               const d = 2 + i * 5;
               const enter = interpolate(frame, [d, d + 12], [0, 1], {
@@ -142,6 +142,7 @@ export const FieldScene: React.FC = () => {
                   key={item.id}
                   className="mb-5 break-inside-avoid border border-border bg-card p-4 overflow-hidden"
                   style={{
+                    columnSpan: item.spanFull ? "all" : undefined,
                     opacity: enter,
                     transform: `translateY(${(1 - enter) * 22}px) scale(${
                       0.97 + enter * 0.03
