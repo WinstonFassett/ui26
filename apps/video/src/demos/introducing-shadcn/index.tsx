@@ -16,18 +16,15 @@ import {
 } from "@remotion/transitions";
 import { loadFont as loadSans } from "@remotion/google-fonts/Geist";
 import { loadFont as loadMono } from "@remotion/google-fonts/GeistMono";
-
 import { ScaleDownFade } from "@/components/remocn/scale-down-fade";
 import { ShortSlideRight } from "@/components/remocn/short-slide-right";
 import { KineticCenterBuild } from "@/components/remocn/kinetic-center-build";
 import { LineByLineSlide } from "@/components/remocn/line-by-line-slide";
 import { whipPan } from "@/components/remocn/whip-pan";
-
 import { ShaderSimplexNoise } from "@/components/remocn/shader-simplex-noise";
 import { ShaderSwirl } from "@/components/remocn/shader-swirl";
 import { ShaderDithering } from "@/components/remocn/shader-dithering";
 import { ShaderSmokeRing } from "@/components/remocn/shader-smoke-ring";
-
 import { Button } from "@/demos/_ui/button";
 import {
   Card,
@@ -39,7 +36,6 @@ import {
 import { Input } from "@/demos/_ui/input";
 import { Label } from "@/demos/_ui/label";
 import { Switch } from "@/demos/_ui/switch";
-
 import { FieldScene, S_FIELD } from "./field";
 import { CategoriesScene, categorySceneDuration } from "./categories";
 import { VideoScopeStyle } from "@/demos/_ui/video-scope";
@@ -58,9 +54,9 @@ const SANS =
   "var(--font-geist-sans), -apple-system, BlinkMacSystemFont, sans-serif";
 const MONO = `${MONO_FAMILY}, ui-monospace, SFMono-Regular, monospace`;
 
-// shadcn's own monochrome: zinc-950 canvas, ink foreground. The only color in
+// ui26's own monochrome: zinc-950 canvas, ink foreground. The only color in
 // the video lives inside shader backgrounds — muted tones sampled from
-// shadcn's X avatar (deep plum, dark navy, dusty rose, dusty blue).
+// the ui26 palette (deep plum, dark navy, dusty rose, dusty blue).
 const ZINC = "#09090b";
 const INK = "#fafafa";
 const MUTED = "rgba(250,250,250,0.62)";
@@ -77,7 +73,7 @@ const clampOpts = {
 // ---------------------------------------------------------------------------
 // Scene timings (frames @ 30fps). Transitions overlap.
 // ---------------------------------------------------------------------------
-const S_MEET = 130; //     "This is shadcn/ui"
+const S_MEET = 130; //     "This is ui26"
 const S_TAGLINE = 76; //   "Beautifully designed components"
 const S_CREED_A = 76; //   "Not a component library"
 const S_CREED_B = 96; //   kinetic "How you build your own"
@@ -85,7 +81,7 @@ const S_PILLARS = 104; //  three pillar lines
 const S_INSTALL_TITLE = 70; // "Any component, one command"
 const S_INSTALL_CMD = 150; //  typed command + 3D name rolodex
 const S_PRESET_TITLE = 66; //  "Your whole design system, one preset"
-const S_CREATE = 200; //   shadcn create: settings flip, the preview reacts
+const S_CREATE = 200; //   theme builder: settings flip, the preview reacts
 const S_PRESET = 176; //   init --preset: the code flips, the UI re-themes live
 const S_SWITCH = 64; //    "Switch it any time"
 const S_YOURS = 70; //     "And the code is yours"
@@ -115,7 +111,7 @@ const Scrim: React.FC<{ strength?: number }> = ({ strength = 1 }) => (
 );
 
 // ===========================================================================
-// Scene 2 — This is shadcn/ui. Static on entry (the swirl cover's exit
+// Scene 2 — This is ui26. Static on entry (the swirl cover's exit
 // reveals it with a z-axis scale), then it plays its own exit so the tagline
 // starts on an empty canvas.
 // ===========================================================================
@@ -143,7 +139,7 @@ const MeetScene: React.FC = () => {
           filter: `blur(${exitP * 6}px)`,
         }}
       >
-        This is shadcn/ui
+        This is ui26
       </span>
     </AbsoluteFill>
   );
@@ -155,7 +151,7 @@ const MeetScene: React.FC = () => {
 const TaglineScene: React.FC = () => (
   <AbsoluteFill>
     <ShortSlideRight
-      text="Beautifully designed components"
+      text="Cross-framework components you own"
       fontSize={48}
       fontWeight={400}
       color={INK}
@@ -170,7 +166,7 @@ const CreedAScene: React.FC = () => (
   <AbsoluteFill>
     <Sequence from={20} durationInFrames={56}>
       <ScaleDownFade
-        text="Not a component library"
+        text="Not a package you install"
         fontSize={54}
         fontWeight={400}
         color={INK}
@@ -186,7 +182,7 @@ const CreedBScene: React.FC = () => (
   <AbsoluteFill>
     <Sequence from={6}>
       <KineticCenterBuild
-        text="How you build your own"
+        text="Source you copy and own"
         fontSize={62}
         fontWeight={400}
         color={INK}
@@ -195,7 +191,7 @@ const CreedBScene: React.FC = () => (
   </AbsoluteFill>
 );
 
-// The category montage lives in ./categories — real shadcn/ui blocks,
+// The category montage lives in ./categories — real ui26 blocks,
 // charts, theme flips, and the full Tailwind palette, hard-cut like a
 // montage. The last beat absorbs the dither overlap.
 const S_CATEGORIES = categorySceneDuration(T_DITHER);
@@ -208,7 +204,7 @@ const PillarsScene: React.FC = () => (
     <Sequence from={24}>
       <LineByLineSlide
         text={
-          "Accessible by default\nComposable by design\nOpen code, always"
+          "Accessible by default\nComposable by design\nOpen code, always\nThree frameworks, one source"
         }
         fontSize={50}
         fontWeight={400}
@@ -256,8 +252,8 @@ const InstallTitleScene: React.FC = () => {
 // name becomes a 3D rolodex flipping through the registry — any component,
 // same command.
 // ===========================================================================
-const CMD = "npx shadcn add ";
-const PKG_NAMES = ["button", "dialog", "command", "tabs", "chart-area"];
+const CMD = "npx @winstonfassett/ui26 add ";
+const PKG_NAMES = ["button", "card", "dialog", "tabs", "field"];
 const SIZER = PKG_NAMES.reduce((a, b) => (b.length > a.length ? b : a));
 const CMD_START = 10;
 const FLIP_START = 52; // first flip, after the typed command has settled
@@ -420,7 +416,7 @@ const PresetTitleScene: React.FC = () => {
       }}
     >
       <ShortSlideRight
-        text="Your whole design system, one preset"
+        text="Your whole design system, one theme"
         fontSize={46}
         fontWeight={400}
         color={INK}
@@ -454,7 +450,7 @@ const PresetPreviewCard: React.FC = () => (
 );
 
 // ===========================================================================
-// Scene 8d — shadcn create. The builder from ui.shadcn.com/create: a settings
+// Scene 8d — theme builder. The builder from the docs site: a settings
 // panel — style, base color, theme, font — next to a live preview. One
 // setting flips at a time and the same components reshape in response:
 // Lyra sharpens the corners, stone warms the grays, dark inverts, mono
@@ -747,7 +743,7 @@ const CreateScene: React.FC = () => {
             ),
           }}
         >
-          --preset a1Dg5eFl
+          --theme a1Dg5eFl
         </div>
         <div
           style={{
@@ -793,7 +789,7 @@ const PRESETS = [
   { code: "ad3qkJ7", dark: false, radius: 0 },
   { code: "adtk27v", dark: true, radius: 22 },
 ];
-const PRESET_CMD = "npx shadcn init --preset ";
+const PRESET_CMD = "npx @winstonfassett/ui26 init --theme ";
 const P_SIZER = PRESETS.reduce((a, b) =>
   b.code.length > a.code.length ? b : a,
 ).code;
@@ -1131,8 +1127,8 @@ const CountUpScene: React.FC<{
 // ===========================================================================
 const AppsScene: React.FC = () => (
   <CountUpScene
-    target={1000000}
-    label="apps every month"
+    target={21}
+    label="components, three frameworks"
     fontSize={76}
     labelShift={290}
     pushIn
@@ -1174,14 +1170,14 @@ const WhoLabel: React.FC<{ label: string }> = ({ label }) => {
 const WhoScene: React.FC = () => (
   <AbsoluteFill>
     <Series>
-      {["Startups", "YC", "Fortune 500s"].map((who) => (
+      {["React", "Svelte", "Astro"].map((who) => (
         <Series.Sequence key={who} durationInFrames={WHO_BEAT}>
           <WhoLabel label={who} />
         </Series.Sequence>
       ))}
       <Series.Sequence durationInFrames={56}>
         <ScaleDownFade
-          text="Everyone is building with it"
+          text="Build with any framework"
           fontSize={54}
           fontWeight={400}
           color={INK}
@@ -1214,7 +1210,7 @@ const EcoScene: React.FC = () => {
       }}
     >
       <ShortSlideRight
-        text="A massive ecosystem — and room for you to build"
+        text="Three frameworks. One source tree. Yours."
         fontSize={42}
         fontWeight={400}
         color={INK}
@@ -1303,7 +1299,7 @@ const OutroScene: React.FC = () => {
           position: "relative",
         }}
       >
-        shadcn/ui
+        ui26
       </span>
 
       <span
@@ -1459,7 +1455,7 @@ const blurFade = (): TransitionPresentation<EmptyProps> => ({
 // ===========================================================================
 // Composition root.
 // ===========================================================================
-export const INTRODUCING_SHADCN_DURATION =
+export const INTRODUCING_UI26_DURATION =
   S_FIELD +
   S_MEET +
   S_TAGLINE +
@@ -1482,7 +1478,7 @@ export const INTRODUCING_SHADCN_DURATION =
   S_OUTRO -
   (T_SWIRL + T_DITHER + T_DITHER + T_X * 5 + T_WHIP + T_BLUR);
 
-export const IntroducingShadcnDemo: React.FC = () => {
+export const IntroducingUi26Demo: React.FC = () => {
   return (
     <AbsoluteFill
       className="video-scope"
@@ -1502,9 +1498,8 @@ export const IntroducingShadcnDemo: React.FC = () => {
         softness={0.8}
       />
       <Scrim strength={0.85} />
-
-      <TransitionSeries>
-        {/* 1 — The component field: a camera flight through real shadcn/ui */}
+      <TransitionSeries from={-1}>
+        {/* 1 — The component field: a camera flight through real ui26 */}
         <TransitionSeries.Sequence durationInFrames={S_FIELD}>
           <FieldScene />
         </TransitionSeries.Sequence>
@@ -1513,7 +1508,7 @@ export const IntroducingShadcnDemo: React.FC = () => {
           presentation={swirlCover()}
         />
 
-        {/* 2 — This is shadcn/ui (plays its own exit, hard cut) */}
+        {/* 2 — This is ui26 (plays its own exit, hard cut) */}
         <TransitionSeries.Sequence durationInFrames={S_MEET}>
           <MeetScene />
         </TransitionSeries.Sequence>
@@ -1574,7 +1569,7 @@ export const IntroducingShadcnDemo: React.FC = () => {
           <PresetTitleScene />
         </TransitionSeries.Sequence>
 
-        {/* 8d — shadcn create: settings flip one by one, the live preview
+        {/* 8d — theme builder: settings flip one by one, the live preview
             reshapes (plays its own exit, hard cut) */}
         <TransitionSeries.Sequence durationInFrames={S_CREATE}>
           <CreateScene />
