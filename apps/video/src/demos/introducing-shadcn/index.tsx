@@ -1500,7 +1500,7 @@ export const IntroducingUi26Demo: React.FC = () => {
         softness={0.8}
       />
       <Scrim strength={0.85} />
-      <TransitionSeries from={92}>
+      <TransitionSeries from={73}>
         {/* 1 — The component field: a camera flight through real ui26 */}
         <TransitionSeries.Sequence durationInFrames={S_FIELD}>
           <FieldScene />

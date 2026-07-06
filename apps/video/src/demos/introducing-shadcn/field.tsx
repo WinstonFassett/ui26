@@ -96,11 +96,11 @@ const FIELD_SPECS: { id: string; spec: Spec; spanFull: boolean }[] = [
 // Camera: one continuous diagonal glide across the packed wall.
 // ---------------------------------------------------------------------------
 const PLANE_W = 1720;
-const PLANE_H = 2000;
+const PLANE_H = 2400;
 
 const CAM_T = [0, 224];
-const CAM_X = [620, 1105];
-const CAM_Y = [360, 1100];
+const CAM_X = [520, 1180];
+const CAM_Y = [300, 1300];
 const CAM_S = [1.02, 1.1];
 
 const camEasing = Easing.inOut(Easing.cubic);
@@ -130,10 +130,7 @@ export const FieldScene: React.FC = () => {
             transformOrigin: "0 0",
           }}
         >
-          <div
-            className="grid gap-5 p-5"
-            style={{ gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "min-content" }}
-          >
+          <div className="columns-6 gap-5 p-5">
             {FIELD_SPECS.map((item, i) => {
               const d = 2 + i * 5;
               const enter = interpolate(frame, [d, d + 12], [0, 1], {
@@ -143,9 +140,8 @@ export const FieldScene: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className="border border-border bg-card p-4 overflow-hidden"
+                  className="mb-5 break-inside-avoid border border-border bg-card p-4 overflow-hidden"
                   style={{
-                    gridColumn: item.spanFull ? "span 2" : "span 1",
                     opacity: enter,
                     transform: `translateY(${(1 - enter) * 22}px) scale(${
                       0.97 + enter * 0.03
