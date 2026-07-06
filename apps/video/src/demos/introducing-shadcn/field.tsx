@@ -84,13 +84,13 @@ export const MiniBars: React.FC<{
 // ---------------------------------------------------------------------------
 // The component field — real ui26 examples rendered from JSON Render specs.
 // ---------------------------------------------------------------------------
-const FIELD_SPECS: { id: string; spec: Spec }[] = [
+const FIELD_SPECS: { id: string; spec: Spec; spanFull: boolean }[] = [
   ticketCard, statsCard, kpiStrip, signInForm, activityFeed,
   commandPalette, chatThread, aiMessage, alertGallery, progressCard,
   onboardingCard, accordionCard, notificationList, ticketTable, machineStats,
   tixIssueList, upgradeCard, emptyState, breadcrumbNav, paginationBar,
   badgeCompositions, avatarRow, tooltipCard, workspaceForm,
-].map((s: any) => ({ id: s.id, spec: s.spec }));
+].map((s: any) => ({ id: s.id, spec: s.spec, spanFull: s.span === "full" }));
 
 // ---------------------------------------------------------------------------
 // Camera: one continuous diagonal glide across the packed wall.
@@ -130,7 +130,10 @@ export const FieldScene: React.FC = () => {
             transformOrigin: "0 0",
           }}
         >
-          <div className="columns-4 gap-5 p-5">
+          <div
+            className="grid gap-5 p-5"
+            style={{ gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "min-content" }}
+          >
             {FIELD_SPECS.map((item, i) => {
               const d = 2 + i * 5;
               const enter = interpolate(frame, [d, d + 12], [0, 1], {
@@ -140,8 +143,9 @@ export const FieldScene: React.FC = () => {
               return (
                 <div
                   key={item.id}
-                  className="mb-5 break-inside-avoid border border-border bg-card p-4 overflow-hidden"
+                  className="border border-border bg-card p-4 overflow-hidden"
                   style={{
+                    gridColumn: item.spanFull ? "span 2" : "span 1",
                     opacity: enter,
                     transform: `translateY(${(1 - enter) * 22}px) scale(${
                       0.97 + enter * 0.03
