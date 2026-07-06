@@ -7,21 +7,9 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import {
-  Calculator,
-  Calendar as CalendarIcon,
-  Check,
-  CreditCard,
-  Send,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
 
-import { Avatar, AvatarFallback } from "@/demos/_ui/avatar";
-import { Badge } from "@/demos/_ui/badge";
-import { Button } from "@/demos/_ui/button";
-import { Calendar } from "@/demos/_ui/calendar";
+// ui26 registry components
+import { Button } from "@/ui26/button/button";
 import {
   Card,
   CardContent,
@@ -29,39 +17,55 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/demos/_ui/card";
+} from "@/ui26/card/card";
+import { Input } from "@/ui26/input/input";
+import { Label } from "@/ui26/label/label";
+import { Textarea } from "@/ui26/textarea/textarea";
+import { Separator } from "@/ui26/separator/separator";
+import { Switch } from "@/ui26/switch/switch";
+import { Badge } from "@/ui26/badge/badge";
+import { Avatar, AvatarFallback } from "@/ui26/avatar/avatar";
+import { Progress } from "@/ui26/progress/progress";
+import { Slider } from "@/ui26/slider/slider";
+import { Toggle } from "@/ui26/toggle/toggle";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/demos/_ui/command";
-import { Input } from "@/demos/_ui/input";
-import { Label } from "@/demos/_ui/label";
-import { RadioGroup, RadioGroupItem } from "@/demos/_ui/radio-group";
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/ui26/accordion/accordion";
+import { Alert, AlertTitle, AlertDescription } from "@/ui26/alert/alert";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-} from "@/demos/_ui/select";
-import { Separator } from "@/demos/_ui/separator";
-import { Slider } from "@/demos/_ui/slider";
-import { Switch } from "@/demos/_ui/switch";
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/ui26/breadcrumb/breadcrumb";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/demos/_ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/demos/_ui/tabs";
-import { Textarea } from "@/demos/_ui/textarea";
-import { Toggle } from "@/demos/_ui/toggle";
-import { Progress } from "@/demos/_ui/progress";
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+} from "@/ui26/pagination/pagination";
+import { RadioGroup, RadioGroupItem } from "@/ui26/radio-group/radio-group";
+import { Checkbox } from "@/ui26/checkbox/checkbox";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+  FieldLegend,
+  FieldTitle,
+  FieldSeparator,
+} from "@/ui26/field/field";
+import { Heading } from "@/ui26/heading/heading";
+import { Stack } from "@/ui26/stack/stack";
+import { Grid } from "@/ui26/grid/grid";
 
 const clampOpts = {
   extrapolateLeft: "clamp" as const,
@@ -108,10 +112,8 @@ export const MiniBars: React.FC<{
 };
 
 // ---------------------------------------------------------------------------
-// The component field — the ui.shadcn.com homepage cards, packed tight.
+// The component field — real ui26 components, packed tight.
 // ---------------------------------------------------------------------------
-const SELECTED_DAY = new Date(2026, 6, 3);
-
 const CreateAccountCard = (
   <Card>
     <CardHeader>
@@ -128,14 +130,18 @@ const CreateAccountCard = (
         <span className="text-xs text-muted-foreground">or continue with</span>
         <Separator className="flex-1" />
       </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="fld-email">Email</Label>
-        <Input id="fld-email" placeholder="m@example.com" readOnly />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="fld-pass">Password</Label>
-        <Input id="fld-pass" type="password" defaultValue="password" readOnly />
-      </div>
+      <Field>
+        <FieldLabel htmlFor="fld-email">Email</FieldLabel>
+        <FieldContent>
+          <Input id="fld-email" placeholder="m@example.com" readOnly />
+        </FieldContent>
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="fld-pass">Password</FieldLabel>
+        <FieldContent>
+          <Input id="fld-pass" type="password" defaultValue="password" readOnly />
+        </FieldContent>
+      </Field>
       <Button className="w-full">Create account</Button>
     </CardContent>
   </Card>
@@ -148,17 +154,18 @@ const PaymentCard = (
       <CardDescription>All transactions are secure</CardDescription>
     </CardHeader>
     <CardContent className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="fld-card-name">Name</Label>
-        <Input id="fld-card-name" defaultValue="First Last" readOnly />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="fld-card-num">Card number</Label>
-        <div className="relative">
+      <Field>
+        <FieldLabel htmlFor="fld-card-name">Name</FieldLabel>
+        <FieldContent>
+          <Input id="fld-card-name" defaultValue="First Last" readOnly />
+        </FieldContent>
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="fld-card-num">Card number</FieldLabel>
+        <FieldContent>
           <Input id="fld-card-num" defaultValue="1234 1234 1234 1234" readOnly />
-          <CreditCard className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        </div>
-      </div>
+        </FieldContent>
+      </Field>
       <div className="grid grid-cols-3 gap-3">
         <Input defaultValue="06/28" readOnly />
         <Input defaultValue="CVC" readOnly />
@@ -229,9 +236,7 @@ const ChatCard = (
     </CardContent>
     <CardFooter className="gap-2">
       <Input placeholder="Type your message..." readOnly className="flex-1" />
-      <Button size="icon">
-        <Send />
-      </Button>
+      <Button size="icon">Send</Button>
     </CardFooter>
   </Card>
 );
@@ -261,16 +266,6 @@ const MoveGoalCard = (
       </Button>
     </CardFooter>
   </Card>
-);
-
-const CalendarCard = (
-  <Calendar
-    mode="single"
-    selected={SELECTED_DAY}
-    month={SELECTED_DAY}
-    today={SELECTED_DAY}
-    className="w-full rounded-xl border border-border bg-card [&_td_button]:text-white [&_td_button[data-selected-single=true]]:text-zinc-950"
-  />
 );
 
 const CookieCard = (
@@ -318,36 +313,22 @@ const ReportCard = (
       <CardDescription>What area are you having problems with?</CardDescription>
     </CardHeader>
     <CardContent className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-2">
-          <Label>Area</Label>
-          <Select defaultValue="billing">
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Billing" />
-            </SelectTrigger>
-          </Select>
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label>Severity</Label>
-          <Select defaultValue="s2">
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Severity 2" />
-            </SelectTrigger>
-          </Select>
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="fld-subject">Subject</Label>
-        <Input id="fld-subject" defaultValue="I need help with..." readOnly />
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="fld-desc">Description</Label>
-        <Textarea
-          id="fld-desc"
-          placeholder="Please include all information relevant to your issue."
-          readOnly
-        />
-      </div>
+      <Field>
+        <FieldLabel htmlFor="fld-subject">Subject</FieldLabel>
+        <FieldContent>
+          <Input id="fld-subject" defaultValue="I need help with..." readOnly />
+        </FieldContent>
+      </Field>
+      <Field>
+        <FieldLabel htmlFor="fld-desc">Description</FieldLabel>
+        <FieldContent>
+          <Textarea
+            id="fld-desc"
+            placeholder="Please include all information relevant to your issue."
+            readOnly
+          />
+        </FieldContent>
+      </Field>
     </CardContent>
     <CardFooter className="justify-end gap-2">
       <Button variant="ghost">Cancel</Button>
@@ -384,42 +365,38 @@ const ShareCard = (
   </Card>
 );
 
-const CommandCard = (
-  <Command className="rounded-xl border border-border" value="Calendar">
-    <CommandInput placeholder="Type a command or search..." />
-    <CommandList>
-      <CommandEmpty>No results found.</CommandEmpty>
-      <CommandGroup heading="Suggestions">
-        <CommandItem>
-          <CalendarIcon />
-          <span>Calendar</span>
-        </CommandItem>
-        <CommandItem>
-          <Smile />
-          <span>Search emoji</span>
-        </CommandItem>
-        <CommandItem>
-          <Calculator />
-          <span>Calculator</span>
-        </CommandItem>
-      </CommandGroup>
-      <CommandSeparator />
-      <CommandGroup heading="Settings">
-        <CommandItem>
-          <User />
-          <span>Profile</span>
-        </CommandItem>
-        <CommandItem>
-          <CreditCard />
-          <span>Billing</span>
-        </CommandItem>
-        <CommandItem>
-          <Settings />
-          <span>Settings</span>
-        </CommandItem>
-      </CommandGroup>
-    </CommandList>
-  </Command>
+const AccordionCard = (
+  <Card>
+    <CardHeader>
+      <CardTitle>FAQ</CardTitle>
+      <CardDescription>Frequently asked questions.</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <Accordion className="flex flex-col gap-2">
+        <AccordionItem open>
+          <AccordionTrigger>What is ui26?</AccordionTrigger>
+          <AccordionContent>
+            A cross-framework UI component library for React, Svelte, and Astro.
+            Source-distributed — you own the code.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionTrigger>How do I install components?</AccordionTrigger>
+          <AccordionContent>
+            Run <code className="text-xs">npx @winstonfassett/ui26 add button</code> and
+            the component source is copied into your project.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem>
+          <AccordionTrigger>Which frameworks are supported?</AccordionTrigger>
+          <AccordionContent>
+            React, Svelte 5, and Astro. Every component ships in all three frameworks
+            with a shared tailwind-variants definition.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </CardContent>
+  </Card>
 );
 
 const PlanCard = (
@@ -448,9 +425,7 @@ const PlanCard = (
       </RadioGroup>
     </CardContent>
     <CardFooter>
-      <Button className="w-full">
-        <Check /> Upgrade
-      </Button>
+      <Button className="w-full">Upgrade</Button>
     </CardFooter>
   </Card>
 );
@@ -473,58 +448,44 @@ const ExerciseCard = (
   </Card>
 );
 
-const PaymentsTableCard = (
-  <Card className="py-4">
-    <CardContent className="px-4">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>INV002</TableCell>
-            <TableCell>Pending</TableCell>
-            <TableCell className="text-right">$150.00</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>INV003</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell className="text-right">$350.00</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+const BreadcrumbCard = (
+  <Card>
+    <CardHeader>
+      <CardTitle>Navigation</CardTitle>
+      <CardDescription>Breadcrumb trail.</CardDescription>
+    </CardHeader>
+    <CardContent className="flex flex-col gap-4">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Components</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <Separator />
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" isActive>2</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">3</PaginationLink>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </CardContent>
   </Card>
-);
-
-const TabsCard = (
-  <Tabs defaultValue="account" className="w-full">
-    <TabsList className="w-full">
-      <TabsTrigger value="account">Account</TabsTrigger>
-      <TabsTrigger value="password">Password</TabsTrigger>
-    </TabsList>
-    <TabsContent value="account">
-      <Card>
-        <CardHeader>
-          <CardTitle>Account</CardTitle>
-          <CardDescription>Make changes to your account.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <Label htmlFor="fld-tab-name">Name</Label>
-          <Input id="fld-tab-name" defaultValue="shadcn" readOnly />
-        </CardContent>
-      </Card>
-    </TabsContent>
-  </Tabs>
 );
 
 const StatusCard = (
@@ -605,6 +566,52 @@ const FeedbackCard = (
   </Card>
 );
 
+const AlertCard = (
+  <Card>
+    <CardHeader>
+      <CardTitle>Notifications</CardTitle>
+      <CardDescription>Stay informed about your account.</CardDescription>
+    </CardHeader>
+    <CardContent className="flex flex-col gap-3">
+      <Alert>
+        <AlertTitle>Heads up!</AlertTitle>
+        <AlertDescription>
+          Your subscription expires in 7 days. Renew to avoid interruption.
+        </AlertDescription>
+      </Alert>
+      <Alert variant="secondary">
+        <AlertTitle>New feature</AlertTitle>
+        <AlertDescription>
+          Dark mode is now available in your theme settings.
+        </AlertDescription>
+      </Alert>
+    </CardContent>
+  </Card>
+);
+
+const CheckboxCard = (
+  <Card>
+    <CardHeader>
+      <CardTitle>Preferences</CardTitle>
+      <CardDescription>Choose what you want to receive.</CardDescription>
+    </CardHeader>
+    <CardContent className="flex flex-col gap-4">
+      <div className="flex items-center gap-3">
+        <Checkbox id="fld-email-pref" defaultChecked />
+        <Label htmlFor="fld-email-pref">Email notifications</Label>
+      </div>
+      <div className="flex items-center gap-3">
+        <Checkbox id="fld-sms-pref" />
+        <Label htmlFor="fld-sms-pref">SMS alerts</Label>
+      </div>
+      <div className="flex items-center gap-3">
+        <Checkbox id="fld-push-pref" defaultChecked />
+        <Label htmlFor="fld-push-pref">Push notifications</Label>
+      </div>
+    </CardContent>
+  </Card>
+);
+
 // Order matters: CSS columns fill left to right, so the first cards land in
 // the leftmost columns where the camera opens. The tail cards keep every
 // column tall enough that the end of the glide never sees an empty bottom.
@@ -612,21 +619,21 @@ const FIELD_CARDS: React.ReactNode[] = [
   CreateAccountCard,
   MoveGoalCard,
   ChatCard,
-  CalendarCard,
-  CommandCard,
+  AccordionCard,
+  BreadcrumbCard,
   ExerciseCard,
   PaymentCard,
   CookieCard,
   TeamCard,
-  PaymentsTableCard,
+  AlertCard,
   ReportCard,
   ShareCard,
   PlanCard,
-  TabsCard,
   StatusCard,
   PlayerCard,
   StorageCard,
   FeedbackCard,
+  CheckboxCard,
 ];
 
 // ---------------------------------------------------------------------------
