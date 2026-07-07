@@ -84,23 +84,32 @@ export const MiniBars: React.FC<{
 // ---------------------------------------------------------------------------
 // The component field — real ui26 examples rendered from JSON Render specs.
 // ---------------------------------------------------------------------------
+// 8 full-span (doubles) + 20 singles = 16 + 20 = 36 column units = 6 rows × 6 cols.
+// Ordered so every row fills completely — no empty grid cells.
 const FIELD_SPECS: { id: string; spec: Spec; spanFull: boolean }[] = [
-  ticketCard, statsCard, kpiStrip, signInForm, activityFeed,
-  commandPalette, chatThread, aiMessage, alertGallery, progressCard,
-  onboardingCard, accordionCard, notificationList, ticketTable, machineStats,
-  tixIssueList, upgradeCard, emptyState, breadcrumbNav, paginationBar,
-  badgeCompositions, avatarRow, tooltipCard, workspaceForm,
+  // Row 1: 2,1,1,1,1
+  chatThread, ticketCard, statsCard, kpiStrip, signInForm,
+  // Row 2: 1,1,2,1,1
+  activityFeed, commandPalette, alertGallery, aiMessage, progressCard,
+  // Row 3: 2,2,1,1
+  ticketTable, tixIssueList, onboardingCard, accordionCard,
+  // Row 4: 1,1,2,1,1
+  notificationList, machineStats, breadcrumbNav, upgradeCard, emptyState,
+  // Row 5: 2,2,1,1
+  paginationBar, badgeCompositions, avatarRow, tooltipCard,
+  // Row 6: 1,1,1,2,1
+  workspaceForm, statsCard, kpiStrip, activityFeed, ticketCard,
 ].map((s: any) => ({ id: s.id, spec: s.spec, spanFull: s.span === "full" }));
 
 // ---------------------------------------------------------------------------
 // Camera: one continuous diagonal glide across the packed wall.
 // ---------------------------------------------------------------------------
-const PLANE_W = 1720;
-const PLANE_H = 2200;
+const PLANE_W = 2400;
+const PLANE_H = 1900;
 
 const CAM_T = [0, 224];
-const CAM_X = [620, 1105];
-const CAM_Y = [360, 1200];
+const CAM_X = [440, 1500];
+const CAM_Y = [360, 1100];
 const CAM_S = [1.02, 1.1];
 
 const camEasing = Easing.inOut(Easing.cubic);
@@ -130,7 +139,13 @@ export const FieldScene: React.FC = () => {
             transformOrigin: "0 0",
           }}
         >
-          <div className="columns-4 gap-5 p-5">
+          <div
+            className="grid gap-5 p-5"
+            style={{
+              gridTemplateColumns: "repeat(6, 1fr)",
+              gridAutoRows: 300,
+            }}
+          >
             {FIELD_SPECS.map((item, i) => {
               const d = 2 + i * 5;
               const enter = interpolate(frame, [d, d + 12], [0, 1], {
@@ -139,10 +154,10 @@ export const FieldScene: React.FC = () => {
               });
               return (
                 <div
-                  key={item.id}
-                  className="mb-5 break-inside-avoid border border-border bg-card p-4 overflow-hidden"
+                  key={`${item.id}-${i}`}
+                  className="border border-border bg-card p-4 overflow-hidden"
                   style={{
-                    columnSpan: item.spanFull ? "all" : undefined,
+                    gridColumn: item.spanFull ? "span 2" : "span 1",
                     opacity: enter,
                     transform: `translateY(${(1 - enter) * 22}px) scale(${
                       0.97 + enter * 0.03
