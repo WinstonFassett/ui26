@@ -3,7 +3,6 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500&display=block");
 
 @custom-variant dark (&:is(.dark *));
 
