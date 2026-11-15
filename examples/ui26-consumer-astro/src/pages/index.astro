@@ -1,5 +1,6 @@
 ---
 import Button from "@/components/ui/button.astro";
+import SdkToggle from "@/islands/SdkToggle";
 import "../styles/global.css";
 ---
 
@@ -11,7 +12,10 @@ import "../styles/global.css";
   </head>
   <body>
     <main class="min-h-svh flex items-center justify-center bg-background text-foreground">
-      <Button data-testid="hello">Hello ui26</Button>
+      <div class="flex gap-4">
+        <Button data-testid="hello">Hello ui26</Button>
+        <SdkToggle client:load />
+      </div>
     </main>
   </body>
 </html>
