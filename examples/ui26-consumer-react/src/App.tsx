@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Hardware } from "@/components/ui/hardware";
 import { Tabs } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { FlatKnob } from "@/components/ui/flat-knob";
 
 function App() {
   return (
@@ -14,6 +16,10 @@ function App() {
             { value: "c", label: "Gamma", body: <p>Gamma panel</p> },
           ]}
         />
+      </Hardware>
+      <Hardware keyColor={{ l: 0.64, c: 0.31, h: 48 }} className="flex items-center gap-8 p-8" data-testid="spec01-knobs">
+        <Switch label="Power" />
+        <FlatKnob label="Gain" color="orange" defaultValue={40} />
       </Hardware>
     </main>
   );
