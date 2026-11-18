@@ -1,0 +1,31 @@
+---
+topic: component-dev
+title: Tabs (UI SDK)
+description: Tabs ported to @ui-sdk/react and @ui-sdk/svelte, next to the current machine-based tabs.
+---
+
+import { TabsDemo } from "@registry/tabs/tabs-machine-ui-demo.tsx";
+import TabsDemoSvelte from "@registry/tabs/tabs-machine-ui-demo.svelte";
+import { TabsUiSdkDemo } from "@registry/tabs-uisdk/tabs-uisdk-demo.tsx";
+import TabsUiSdkSvelte from "@registry/tabs-uisdk/tabs-uisdk-demo.svelte";
+
+Same `tabs.tv.ts` styling, behavior from `@ui-sdk/react@0.1.0-beta.10` and `@ui-sdk/svelte@0.1.0-beta.10`.
+
+<div class="not-content grid grid-cols-2 gap-6 my-6">
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Current React</p>
+    <TabsDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">UI SDK React</p>
+    <TabsUiSdkDemo client:only="react" />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Current Svelte</p>
+    <TabsDemoSvelte client:load />
+  </div>
+  <div>
+    <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">UI SDK Svelte</p>
+    <TabsUiSdkSvelte client:load />
+  </div>
+</div>

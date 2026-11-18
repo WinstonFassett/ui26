@@ -80,6 +80,15 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
+      '@ui-sdk/core':
+        specifier: 0.1.0-beta.10
+        version: 0.1.0-beta.10
+      '@ui-sdk/react':
+        specifier: 0.1.0-beta.10
+        version: 0.1.0-beta.10(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.10)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@ui-sdk/svelte':
+        specifier: 0.1.0-beta.10
+        version: 0.1.0-beta.10(@ui-sdk/core@0.1.0-beta.10)(svelte@5.55.4(@typescript-eslint/types@8.59.0))
       '@uiw/codemirror-theme-github':
         specifier: ^4.25.9
         version: 4.25.9(@codemirror/language@6.12.3)(@codemirror/state@6.6.0)(@codemirror/view@6.41.1)
@@ -176,7 +185,7 @@ importers:
         version: 5.2.8
       '@tailwindcss/vite':
         specifier: ^4.1.18
-        version: 4.2.4(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.32.0)(yaml@2.9.0))
+        version: 4.2.4(vite@8.0.9(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.9.0))
       '@types/react':
         specifier: ^19.3.0
         version: 19.3.0
@@ -295,7 +304,7 @@ importers:
         version: 4.2.4(vite@8.0.9(@types/node@24.12.2)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.9.0))
       '@ui-sdk/react':
         specifier: 0.1.0-beta.2
-        version: 0.1.0-beta.2(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: 0.1.0-beta.2(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.10)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -2887,8 +2896,19 @@ packages:
   '@ui-sdk/core@0.1.0-beta.1':
     resolution: {integrity: sha512-sWsZW8RN6Gviir7REQYuDIafm9hierHQE31OJ+2g+1Pp3lDVKp/dk0+0dxFvqOQRmBveRvlE9FiARgNlQ9dMFw==}
 
-  '@ui-sdk/core@0.1.0-beta.2':
-    resolution: {integrity: sha512-y89M4OKL2Oy1IvFS8FEozn/44BJD9FoRjfecWA4XwFhkSuQADcEcI+eoLdfRK1hkrJZhKkHvhJf4Jtfp1y7aJw==}
+  '@ui-sdk/core@0.1.0-beta.10':
+    resolution: {integrity: sha512-Rtm3QtuRT9U5nAlhIwKf2TzNIDZeOq3VmPzIiy55K3nFGeZokpPmHdF5ryaZmsByImNhOdRv5P7TOMro48NB+Q==}
+
+  '@ui-sdk/react@0.1.0-beta.10':
+    resolution: {integrity: sha512-iObTzV2owJmF6GNVIiudpunoPlQ7mnDezdXc7XVajkmBpAzwq6gMuT0xLesWH71ct9wKcWRPkxbWC+E3ahOUPA==}
+    peerDependencies:
+      '@types/react': '>=19.2.10'
+      '@ui-sdk/core': ^0.1.0-beta.10
+      react: '>=19'
+      react-dom: '>=19'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@ui-sdk/react@0.1.0-beta.2':
     resolution: {integrity: sha512-OVOECM3PYGEF69/iOSZ1U0zxv6O6aTWmZuCt88R6c2Ql2ZQxAy+DjFK8o8hyVkRNlYE5nEm357UMOI6bchn70w==}
@@ -2900,6 +2920,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  '@ui-sdk/svelte@0.1.0-beta.10':
+    resolution: {integrity: sha512-btYeuvcUmFs5nMyJsXv3PO+FzuDj5wl94XZuvm+ZNak5fouVoJ/HxQ2dWWRvUwjX9RCBP3kMkBc6ZBC9oE7duA==}
+    peerDependencies:
+      '@ui-sdk/core': ^0.1.0-beta.10
+      svelte: '>=5.33'
 
   '@uiw/codemirror-extensions-basic-setup@4.25.9':
     resolution: {integrity: sha512-QFAqr+pu6lDmNpAlecODcF49TlsrZ0bj15zPzfhiqSDl+Um3EsDLFLppixC7kFLn+rdDM2LTvVjn5CPvefpRgw==}
@@ -10060,11 +10086,19 @@ snapshots:
 
   '@ui-sdk/core@0.1.0-beta.1': {}
 
-  '@ui-sdk/core@0.1.0-beta.2': {}
+  '@ui-sdk/core@0.1.0-beta.10': {}
 
-  '@ui-sdk/react@0.1.0-beta.2(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+  '@ui-sdk/react@0.1.0-beta.10(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.10)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
-      '@ui-sdk/core': 0.1.0-beta.2
+      '@ui-sdk/core': 0.1.0-beta.10
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+    optionalDependencies:
+      '@types/react': 19.2.14
+
+  '@ui-sdk/react@0.1.0-beta.2(@types/react@19.2.14)(@ui-sdk/core@0.1.0-beta.10)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
+    dependencies:
+      '@ui-sdk/core': 0.1.0-beta.10
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
     optionalDependencies:
@@ -10077,6 +10111,11 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
     optionalDependencies:
       '@types/react': 19.3.0
+
+  '@ui-sdk/svelte@0.1.0-beta.10(@ui-sdk/core@0.1.0-beta.10)(svelte@5.55.4(@typescript-eslint/types@8.59.0))':
+    dependencies:
+      '@ui-sdk/core': 0.1.0-beta.10
+      svelte: 5.55.4(@typescript-eslint/types@8.59.0)
 
   '@uiw/codemirror-extensions-basic-setup@4.25.9(@codemirror/autocomplete@6.20.1)(@codemirror/commands@6.10.3)(@codemirror/language@6.12.3)(@codemirror/lint@6.9.5)(@codemirror/search@6.7.0)(@codemirror/state@6.6.0)(@codemirror/view@6.41.1)':
     dependencies:
